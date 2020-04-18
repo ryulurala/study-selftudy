@@ -1,0 +1,46 @@
+Node.JS <JavaScript와 HTTP>
+
+HTTP(Hypertext Transfer Protocol) : html을 Web에서 주고 받는 규칙
+- Web browser -> Web server Request Headers를 보낼 때 규칙.
+- Web server -> Web browser Response Headers를 보낼 때 규칙.
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <소개>
+
+1990 - Tim Berners-Lee에 의해 Web이 탄생.
+1994 - Marc Andreessen에 의해 Netscape Navigator라는 Web browser 탄생.
+1995 - Brendan Eich에 의해 JavaScript 등장으로 Web의 Html의 정적인 페이지가 JavaScript의 동적인 페이지 제어가 가능하게됨.
+2004 - Google의 GMail, GMap Application 등장.
+2008 - Google의 Chrome browser 발표. V8 Engine을 Open source로 공개로 JavaScript가 Web분야 외에 다른 곳에서도 사용하게 됨.
+2009 - Ryan Dahl의 Node.JS 개발. *Node.JS = V8 Engine + Event-driven + Non-blocking I.O
+
+JavaScript
+- Language 측면 : JavaScript (ex. 비유 : 한국어), (ex. alert('Hello world') : JavaScript의 function)
+- RunTime 측면 : Web browser, Node.JS (ex. 비유 : 의학용어, 법 용어 등) (ex. alert('Hello world') : Only Web browser, Node.JS에서 Error)
+
+Node.JS의 경쟁자
+Serverside의 
+- Python
+- JAVA
+- PHP
+- Ruby
+
+Node.JS의 장점
+- 속도(Google의 V8 Engine을 사용하기 때문에)
+- Event-driven program
+- Non-blocking I.O
+
+*JavaScript언어 하나로 Client부터 Server까지 프로그래밍이 가능하다.
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <설치>
+
+
+
+
+
+
+
+
+
+

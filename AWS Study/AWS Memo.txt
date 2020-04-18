@@ -1,0 +1,849 @@
+ioWe.SSU@gmail.com / Dodream2020ioWe!
+
+인프런 AWS
+[AWS 개요]
+
+1강, 2강<Amazon Web Services 수업소개> <수업의 목적>
+
+웹 서비스 -> 클라우드 컴퓨팅
+- 남의 컴퓨터(구름 = 클라우드)를 빌려서 원격 제어로 사용.
+더 오래된 표현 Host
+Hosting Business : 서버 컴퓨터를 빌려주는 임대 사업.(EC2(Elastic Compute Cloud)
+244GB -> 18,000,000원(계속 키면) -> 1시간에 2,000원(컴퓨터를 끈다면)
+RDS(Relational Database Service) : MySQL, SQL Server, ORACLE 
+-> EC2에 바로 해도 됨(하지만 보안적인 단점) -> 그래서 AWS 내에 있는 것을 사용.
+Web, AI, Big data, IOT는 서버 컴퓨터를 필요로 한다. -> 클라우드 컴퓨팅의 중요성
+--------------------------------------------------------------------------------------------------------------
+3강 <나에게 필요한 서비스를 찾기>
+
+AWS 웹 사이트 -> 제품 탭 : 스토리지(파일 저장 서버), 데이터베이스(DB 운영 서버), **비용관리**, **관리 도구**(서비스 상태 관리) 등
+--------------------------------------------------------------------------------------------------------------
+4강 <AWS 요금 따져보기>
+
+EC2는 요금 타입 4개
+- 온 디맨드 : 쓰는 만큼
+- 예약 인스턴스 : 고정된 기간 사용(할인됨)
+
+고려할 것들 : OS 종류에 다른 컴퓨터 선택, 리전(컴퓨터가 있는 지역) 결정, vCPU(virtual CPU갯수), 데이터 전송비(AWS로 업로드(무료), AWS에서 다운로드(유료)), 고정 IP 임대 비용 등
+--------------------------------------------------------------------------------------------------------------
+5강 <프리티어>
+
+프리티어 = 테스트 기간
+12개월 무료 -> 저렴한 사양의 컴퓨터 750시간 등
+--------------------------------------------------------------------------------------------------------------
+6강 <회원가입>
+
+회원가입
+신용카드 보유 필수-> 개인으로 클릭-> 전화번호는 8210... -> 영문주소 검색 -> 전화 -> 플랜(무료) -> 완료
+AWS Management Console(AWS 서비스 제어 관리자 화면)
+--------------------------------------------------------------------------------------------------------------
+7강, 8강 <서비스 켜기 (EC2)> <EC2 원격제어>
+
+콘솔에서 사용할 수 있는 모든 서비스가 나온다. -> EC2 클릭
+인스턴스 3개 = 컴퓨터 3대
+인스턴스 시작 클릭 -> 운영체제가 설치되어 있는 컴퓨터 리스트
+기존 키 페어 선택 or 새 키 페어 생성 = 비밀번호. -> 키 페어 다운로드(Key가 복잡하다는 것을 알려줌 = 절대 노출X ->똑같은 Key는 한 번 다운로드 받으면 재다운X)
+인스턴스 시작 후 인스턴스 상태가 running이면 시작됨을 앎 -> RMB(연결) 클릭 -> Download file -> 1. Microsoft Remote Desktop 10(Mac), 2. 다운로드 파일을 연결(Window) 로 연결프로그램 실행 -> 암호 가져오기(받은 Key로 업로드) -> 암호 Copy -> 연결프로그램에 비밀번호 입력 후 실행
+--------------------------------------------------------------------------------------------------------------
+9강 <서비스 끄기 (EC2)>
+
+EC2 끄기
+- 중지 : 컴퓨터의 전원을 끄기(데이터는 남는다.) ->약간의 비용(데이터 유지 비용)
+- 종료: 컴퓨터의 전원을 끄기(데이터 사라짐.) ->비용 발생X (데이터 사라짐)
+- 시작 : 컴퓨터 시작.(다른 ip부여 = 환경을 재설정 해야함.)
+--------------------------------------------------------------------------------------------------------------
+10강  <돈 관리>
+
+내 결제 대시보드
+EC2(가상 컴퓨터), Route53(도메인 서비스), DataTransfer, S3, Tax 등
+예산 설정(Budgets) : 예산 설정 후 비용>예산일 경우 이메일 전송으로 알림
+--------------------------------------------------------------------------------------------------------------
+11강 <보안 (OTP)>
+
+루트 계정 : 모든 권한
+vs 
+IAM 계정 : 루트 계정에 의해 권한 부여
+보안 상태 관리(IAM)
+- MFA(Multi Factor Authentication) : 기본적인 ID/PW + OTP(One Time Password)(시간 지나면 바뀜) : 아이디, 비밀번호 유출되더라도 OTP를 모르면 로그인X
+
+만약에 OTP를 얻어야할 스마트폰을 잃어버렸다면 AWS 사이트에서 1단계 인증을 하고 고객 센터에 문의해야 한다.
+- 1. 이유 / 2. 한국 국제번호 821099999999 등 해서 제출한다.
+-> 하루, 이틀 사이에 전화가 온다. -> 이메일 확인하고 코드 확인 -> 대화로 코드 읽어줌
+--------------------------------------------------------------------------------------------------------------
+12강 <AWS 계정종료>
+
+사용하지 않는다면 계정을 탈퇴하는 것이 좋다.
+--------------------------------------------------------------------------------------------------------------
+13강 <Tip>
+
+AZ(Availability Zone) : 가용 지역
+한 Region에 여러 AZ가 있다. 따라서 Region내에 AZ끼리는 전용선으로 연결되어 속도가 빠르다.
+따라서 백업과 보안적인 면에서 사용한다. 
+참고! : Region과 Region은 인터넷, Region내에 AZ끼리는 전용선
+
+대표적인 서비스 : S3(Simple Storage Service) = 파일 저장소
+버킷 : 파일을 담을 그릇.
+웹 콘솔, 콘솔, 직접 프로그래밍으로 업로드 가능하다.
+
+Cloud Front = Cache server + CDN
+===============================================================
+[AWS S3]
+
+1강 <수업소개>
+
+S3 (Simple Storage Service) : SSD, HD라고 볼 수 있다. vs EC2 = 컴퓨터 한 대
+- AWS에 파일을 업로드 하면 하나의 곳에 저장되는 것이 아니라 여러 곳에다가 저장한다.(AWS의 내구성) - 법쪽으로 계약돼있음
+- 파일 서버로도 사용 가능
+- 예전 버전을 수정해도 예전 버전과 수정한 버전도 관리할 수 있도록 '버전 관리' 기능도 지원함.
+- Simple Storage Service -> Complicate Storage Service
+--------------------------------------------------------------------------------------------------------------
+2강 <수업의 목적>
+
+걍 목적 강의
+--------------------------------------------------------------------------------------------------------------
+3강 <구성요소>
+
+S3의 구성 요소
+- Bucket (= 하나의 프로젝트)
+- Folder
+- Object (= File 또는 File+...)
+--------------------------------------------------------------------------------------------------------------
+4강 <버킷 생성>
+
+버킷 이름 - 아마존 S3의 고유한 이름으로 지정! (= 남들과 다른 name만 지정 가능)
+리전(= 지역) 선택 - 빠르게 서비스하기 위해 주변 지역 Go!
+버전 관리 - 수정 파일 이외에 과거 파일까지 보관하여 복원하는 관리 기능
+서버 액세스 로깅 - 나중에 웹 서버를 이용할 때 접근에 대한 기록 일지
+기본 암호화 - 암호화된 상태로 AWS에 보관(AWS도 못보게)
+퍼블릭 액세스 설정(ACL) - 공개 파일 업로드 설정(첫 번째 옵션), 공개 파일이더라도 비공개 파일로 간주(두 번째 옵션)
+--------------------------------------------------------------------------------------------------------------
+5강 <버킷 읽기, 수정, 삭제>
+
+버킷(이름 제외 부분 클릭) - 속성 창에서 수정 가능
+버킷(이름 부분 클릭) - 개요로 이동
+버킷 삭제 - 이름 타이핑 후 삭제
+--------------------------------------------------------------------------------------------------------------
+6강 <폴더>
+
+폴더 만들기 -> 폴더 이름 지정 후 저장
+이름을 바꾸려면 폴더 생성(이름 수정) -> 수정 전 폴더 내용 옮김 -> 수정 전 폴더 삭제
+--------------------------------------------------------------------------------------------------------------
+7강 <객체파일>
+
+파일을 드래그앤드롭 하면 됨 or 업로드 (파일 다이얼로그)
+--------------------------------------------------------------------------------------------------------------
+8강 <공유와 권한>
+
+파일의 속성 창에서 권한 설정하여 public 액세스 설정을 열게 되면 파일을 볼 수 있다.
+--------------------------------------------------------------------------------------------------------------
+9강 <스토리지 클래스>
+
+Storage Class (파일의 성격에 따라서 설정할 옵션)
+- 스탠다드(초심자 추천) : 자주 접속하는, 가용 영역(몇 개의 똑같은 파일을 AWS에서 만드는 지)
+- 스탠다드 IA(Infrequent Access) : 자주 접속하지 않는 if) 자주 접속하면 돈을 더 내게 되는 셈
+- 단일 영역 IA : 가용 영역이 적으면서 + 자주 접속 X
+- Glacier : 얼려 놓을 파일들(영수증, 법적 보관서류?? 등)
+- 중복 감소 : 설정
+
+보관과 다운로드와 업로드와 이런 요소들에 따라 모두 가격이 다르다.
+해당 클래스가 싸고 비싸고를 따질 수 없다.
+--------------------------------------------------------------------------------------------------------------
+10강 <요금체계>
+
+스토리지 요금 - 저장 공간에 대한 요금 (ex 1TB : 100원, 2TB : 200원 등)
+요청 요금 - 본인의 사용에 대한 요금(Storage Class에 따라 다름)
+데이터 전송 요금 - 인터넷 요금(사람들이 얼마나 다운 받고 하는지)
+
+S3에 업로드 요금은 공짜!
+S3에서 다운로드 요금은 요금 체계가 있다.
+--------------------------------------------------------------------------------------------------------------
+11강 <요금체계 비교>
+
+보관과 다운로드와 업로드와 이런 요소들에 따라 모두 가격이 다르다.
+해당 클래스가 싸고 비싸고를 따질 수 없다.
+--------------------------------------------------------------------------------------------------------------
+12강 <Tip>
+
+- S3는 Web server hosting기능이 기본적으로 내장돼있음. 정적 웹 사이트 호스팅 기능을 켜면 웹으로 볼 수 있다.
+- 버킷을 리전별로 지정하게 되어 있다. 그럼 리전별로 느릴 수 밖에 없다. 이를 Cloud Front(Cache + CDN)으로 속도를 일정하게 할 수 있다.
+- 버전 관리 기능을 포함한다. 버전 관리 기능을 켜면 수정한 파일의 수정 전 파일 복원이 가능하다.
+- Life cycle을 통하여 Storage Class를 자동 변경시키며 요금을 유연하게 설정 가능하다.
+===============================================================
+[AWS Cloud Front]
+
+1강, 2강 <수업소개, 수업의 목적>
+
+Cloud Front = Cache Server(저장해주는 서버) + CDN(Content Delivery Network)(속도 일정)
+--------------------------------------------------------------------------------------------------------------
+3강 <클라우드프론트 생성>
+
+Web server가 있어야 함. -> Cloud Front 기능을 켠 후 시작.
+Web server를 origin으로 칭하고 Cloud Front를 Distribution이라 칭함.
+- Origin Domain Name : 오로지 Domain만 써야함(http : x, ip : x, file name : x)
+- HTTP Port : Origin의 Port를 적는다.
+
+문제점 : Origin의 data가 바뀌어도 Distribution이 바뀌지 않는다. -> Cache를 통해 해결
+--------------------------------------------------------------------------------------------------------------
+4강 <캐쉬 설정 1>
+
+Cloud Console에서 Distribution 관리자 화면의 Behaviors 텝으로 들어간다.
+Edit를 클릭 후 Object Caching을 편집한다.
+--------------------------------------------------------------------------------------------------------------
+5강 <캐쉬 설정 2>
+
+웹 서버쪽에서 log파일(접속자)을 실시간으로 출력하기 위해 콘솔을 하나 더 킴.
+tail -f 아파치 액세스 로그위치 : tail -f 는 실시간 출력을 위한 명령어
+.html파일에서 php언어로 header("Cache-Control: max-age-시간(초)"); 작성
+캐시 무효화 필요
+--------------------------------------------------------------------------------------------------------------
+6강 <캐쉬 설정 3 (무효화)>
+
+캐시 무효화(= Invalidation) -> 돈이 듦
+
+Behaviors 관리창에서 Object Caching을 Customize하면
+- Minimum TTL(Time To Live) : 캐시를 얼마 동안 살아있게 할 것인가의 최소값
+- Maximum TTL : 캐시를 얼마 동안 살아있게 할 것인가의 최대값
+- Default TTL : Origin에서 캐싱타임을 지정하지 않았다면 해당 초가 살아있다.
+- Query String Forwarding : Cloud Front가 php id값에 따라 다른 접속으로 여김
+--------------------------------------------------------------------------------------------------------------
+7강 <캐쉬 설정 4>
+
+AWS에서 Cloud Front를 사용한다는 것은 CDN 사용이 내재돼있다.
+Edge Location(= Cache Server)
+--------------------------------------------------------------------------------------------------------------
+8, 9강 <CDN, 요금>
+
+1. 모든 HTTP 메서드에 대한 요청의 수 요금(http < https)
+2. 리전 데이터를 인터넷으로 전송량 요금
+3. 오리진 데이터를 리전으로 전송량 요금
+4. 캐시 무효화 요청 요금(1000개 까지는 무료)
+5. 기타 여러가지 요금
+--------------------------------------------------------------------------------------------------------------
+10강 <Tip>
+
+Cloud Front를 끄려면 관리 콘솔에서 Disable 버튼을 눌러 사용을 중지한다.
+이후 삭제를 하려면 Delete까지...
+Cloud Front는 기본적으로 HTTPS를 제공
+도메인을 붙이려면 Route53
+===============================================================
+[RDS]
+
+1강 <수업소개>
+
+RDS = Relational Database Service : 비싸다는 단점!!!
+보안을 해주는 것을 데이터베이스 회사에 넘기는 것이기 때문에 비싸다....
+--------------------------------------------------------------------------------------------------------------
+2강 <데이터베이스 생성1>
+
+RDS 콘솔로 들어가 인스턴스를 추가한다.
+회사(My SQL, Maria DB, ORACLE 등)를 선택.
+DB 인스턴스 클래스는 처음에 작은 것을 사고 5분만에 업그레이드가 가능하다.
+다중 AZ(Availability Zone) = 고가용성 지역 : 다른 가용성 지역에 생성이 된다. 데이터 유실, 서비스 중지를 방지. 비용이 2배(컴퓨터가 2개라서)
+일반 범용(SSD)는 Storage가 클수록 속도가 빨라진다.
+프로비저닝된 IOPS(SSD)는 스토리지 용량 따로, 속도 따로 지정 가능.(비싸다!)
+DB 인스턴스 식별자 - DB 인스턴스 이름.
+마스터 사용자 이름 - 관리할 컴퓨터 이름
+--------------------------------------------------------------------------------------------------------------
+3강 <데이터베이스 생성2>
+
+VPC(Virtual Private Cloud) : 보안적인 부분을 위한 것으로 게이트웨이로 접근을 하며 나머지는 제한하도록 한다. 안에는(EC2 + RDS 등)
+VPC Security Group : VPC내에 특정 인스턴스만 접속 가능하게 함.
+데이터베이스 이름 : 기본 데이터베이스를 지정(직접 만들기)
+포트 : 데이터베이스에 접근할 때 포트 정보.
+모니터링 : 상세한 상태에 대한 지정.
+--------------------------------------------------------------------------------------------------------------
+4강 <접속1 - 퍼블릭 방식으로 접속>
+
+Public Access 방식(쉬움, 불안전)
+- DB 인스턴스 Edit를 눌러 Public Access를 "예"로 바꾼다.
+Security Group으로 인해 지정한 Port의 DB만 접근할 수 있다.
+인바운드 : DB서버 입장에서 들어오는 것
+아웃바운드 : DB서버 입장에서 나가는 것
+각각 바운드의 규칙을 편집할 수 있다.
+접속은 해당 DB회사의 Client Shell(Monitor)을 통해 접속한다.
+--------------------------------------------------------------------------------------------------------------
+5강 <접속2 - 비공개 상태로 접속>
+
+Private Access 방식(어려움, 슈퍼 안전)
+VPC와 Security Group을 만들어서 직접 접속을 막는다.
+- DB 인스턴스 Edit를 눌러 Public Access를 "아니오"로 지정 -> RDS의 보안그룹에서 인바운드 편집(아무것도 없게)
+-> EC2에서 VPC설정을 RDS와 같은 값을 지정. -> 보안 그룹 구성에서 SSH(22번 포트)를 설정 -> EC2 원격 접속
+-> sudo apt install을 통해 해당 DB 회사의 Client설치. -> 해당 DB 회사 접속(같은 VPC안에 소속되어도 Security Group이 허용이 안되어있으면 접속 불가)
+-> 접속 불가 상태라면 RDS의 인바운드의 소스(사용자 지정)를 편집한다.(EC2의 IP or EC2의 Security Group ID(권장)를 넘겨줌)
+--------------------------------------------------------------------------------------------------------------
+6강 <모니터링>
+
+모니터링 : 서버의 상태 파악
+CloudWatch : 모든 인프라에 관제할 수 있는 독립적인 서비스
+IOPS(Input Output Per Seconds) : 속도 지표.
+확장모니터링 : OS안에 프로그램을 심어서 알려주는 서비스(돈 듦, 정교한 데이터)
+--------------------------------------------------------------------------------------------------------------
+7강 <백업과 복원>
+
+백업에 대한 설정을 직접 바꿀 수 있다.
+스냅샷(snapshot)은 과거의 한 때 존재하고 유지시킨 컴퓨터 파일, 디렉터리의 모음
+특정 시점으로 스냅샷을 정교하게 복구 가능하다.
+자동 백업은 인스턴스를 삭제하면 자동 삭제된다.
+수동 백업은 인스턴스를 삭제해도 삭제되지 않는다.(나중에 복원 가능)
+인스턴스를 삭제하기 전에 스냅샷을 수동으로 미리 만들어 놓고 삭제하는 것을 권장한다.
+--------------------------------------------------------------------------------------------------------------
+8강 <가격>
+
+DB 인스턴스 비용, DB 스토리지 비용, 백업 스토리지 비용, 데이터 전송 비용
+--------------------------------------------------------------------------------------------------------------
+9강 <Tip>
+
+요금 폭탄을 막기 위해 사용하지 않는 인스턴스를 삭제하자.(삭제 방지를 해제하면 삭제 가능)
+삭제할 경우 스냅샷 생성 여부(항상 체크 필수), 자동 백업 여부를 설정
+컴퓨터를 업그레이드 = Scale Up
+쓰기와 읽기를 구분하여 인스턴스를 생성.
+Scale Out = 옆으로 확장.
+MySQL, PostsgreSQL을 Amazon Aurora로 바꿀 수 있다.
+Aurora는 처음에 10GB로 지정하고 꽉차도 자동으로 단계별로 최대 64TB까지 확장됨.
+Serverless : 서버를 사용한 만큼 비용을 지불하도록 하는 기능.
+Auto Scaling : 사용량이 많아지면 더 높은 사양으로 인스턴스가 교체되는 기능.
+
+* 다른 클라우드 서비스도 크게 다르지 않음.
+
+
+
+===============================================================
+Youtube
+
+EC2 1강 <소개>
+
+인스턴스 만들기
+-> OS 선택
+-> 인스턴스 유형 선택
+-> 인스턴스 갯수 설정(잘못 입력하면 요금 폭탄!)
+-> 메모리 설정
+-> 태그 설정(이름 지정)
+
+--------------------------------------------------------------------------------------------------------------
+EC2 2강 <인스턴스 타입>
+
+Amazon Linux, Red Hat, SUSE Linux, Ubuntu, Windows(SQL Server가 있으면 유료) 등이 있다.
+'r'로 시작하면 같은 가격에 Memory가 좋음.
+'c'로 시작하면 같은 가격에 CPU가 좋음.
+'g'로 시작하면 같은 가격에 GPU가 좋음.
+'m' or 't'로 시작하면 일반적인 목적의 가격.
+'d'로 시작하면 저장 공간 목적의 가격. 등등
+적절한 인스턴스를 생성
+--------------------------------------------------------------------------------------------------------------
+EC2 3강 <가격정책>
+
+온디맨드 = 주문형(후불)
+예약 인스턴스(전체 선결제, 부분 선결제, 선결제 없음 등) - 서버 경우는 절약된다. 할인율(최대 75%)
+스팟 인스턴스 - AWS에 노는 컴퓨터들이 많을 경우 쌈. 아닐 경우 비쌈.(가변적인 가격 정책 as like 주식)
+--------------------------------------------------------------------------------------------------------------
+EC2 4강 <인스턴스 장치 설정>
+
+1. 인스턴스 갯수 체크!
+2. 네트워크와 관련된 설정
+3. Shutdown behavior : Shutdown 했을 시 컴퓨터를 중단 or 종료 선택
+4. Enable termination protection : 실수로 인스턴스를 삭제했을 때를 방지
+5. Monitoring : 디테일하게 모니터링을 하고 싶으면 체크(유료)
+6. 저장 장치 설정 가능, 속도도
+7. 저장 장치(SSD)는 컴퓨터와 분리돼있다. 그래서 따로 체크(종료할 때 삭제할 것인지)
+--------------------------------------------------------------------------------------------------------------
+EC2 5강 <태그와 보안그룹>
+
+인스턴스에 대해 태그 : 일종의 인스턴스에 대한 설명 또는 이름을 지정.(자유롭게)
+
+Security Group : 보안을 위해 접속할 수 있는 네트워크만을 Group에 생성.(해당 컴퓨터만 접근할 수 있도록)
+
+Security Group name 지정 : web(보안 그룹 이름 지정)
+Description : for web server(보안 그룹 이름에 대한 설명)
+
+*Security Group type* - 제한된 방법으로 네트워크 통신을 함.(프로토콜 + IP지정)
+SSH : 리눅스 인스턴스로 원격 접속(서버에 대한 원격 접속은 보안성을 위해 My IP를 지정하거나 허용할 IP를 지정.)
+HTTP or HTTPS: 웹에 접속(웹은 모두가 접속하므로 Anywhere을 선택하는 것을 권장)
+RDP : 윈도우 인스턴스로 원격 접속(리눅스 원격접속 프로토콜이 다르다.)
+FTP : 파일 업로드 프로토콜
+- 특정한 영역을 더 하고 싶으면 SSH하나 더 추가하고 Custom IP를 하면 된다.
+--------------------------------------------------------------------------------------------------------------
+EC2 6강(리눅스 서버에 대해) <인스턴스 비밀번호 생성>
+
+Launch를 누르면 (복잡한) 비밀번호를 지정한다. Create를 클릭 후 Key pair name을 지정. 한 번 파일을 다운 받으면 아마존에서 다시 안준다. (중요!!), 주는 방법 복잡
+
+[6-1] <OSX에서 리눅스 인스턴스로 접속>
+
+리눅스에서 원격 제어 :
+RMB -> Connect -> Open an SSH client(터미널을 키라는 소리) -> (C드라이브\dev폴더\key폴더\password 파일 이동) ->
+'pwd'확인하며 key가 있는 쪽으로 cd 후 -> 
+'chmod 400 ows_password.pem' 입력(만약 .txt가 있으면 삭제) : 읽기 권한을 바꿈(비밀 번호는 소유자도 읽기만 한다.) ->
+commsion 에러가 뜬다면 앞에 sudo를 입력, password는 현재 컴퓨터 비밀번호. ->
+-r-----------@로 뜬다면 성공! -> 
+Example로 나와 있는 대로 터미널에 입력(ssh는 프로토콜이면서 프로그램 + -i는 password를 제출하기 위한 명령어 + 접속할 컴퓨터의 ID@위치(ID를 바꾸기 위해선 일단 접속한 후 바꿈)(ubuntu가 아닐 경우 : ec2-user) ->
+끄고 싶을 경우 exit
+
+[6-2] <Windows에서 리눅스 인스턴스로 접속>
+
+윈도우에서 원격 제어 : 
+윈도우는 SSH가 없으므로 SSH client역할을 하는 프로그램을 깔아야한다. -> PuTTY 혹은 Xshell 다운로드 ->
+https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/putty.html
+
+*PuTTY*
+Alternative binary files
+putty.exe 64bit
+-서버에 원격 접속을 하기 위한 Client 
++ 
+puttygen.exe 64bit
+- PuTTY에서는 SSH 키의 Private key 형식을 기본적으로 지원하지 않는다. Private key(.pem파일)을 PuTTY 형식(.ppk파일)로 변환하여야 한다.
+
+
+[6-3] <리눅스 서버에서 웹서버 사용>
+
+Apache2 설치 :
+'sudo apt-get install apache2' -> error뜰 경우 sudo apt-get update; -> 다시 sudo apt-get install apache2 입력 ->
+AWS Instance의 Domain을 통해 들어가면 해당 인스턴스의 index.html을 볼 수 있다. 이는 sudo rm 으로 관리자 삭제 후 index.html을 다시 만들 수 있다.
+AWS 관리 콘솔에서 Security Groups로 들어가 Type 지정으로 Protocol을 막거나 생기게 할 수 있다.(inbound : 접속)
+--------------------------------------------------------------------------------------------------------------
+EC2 7강(윈도우 인스턴스 접속에 대해) : 리눅스 서버 다룰 예정이므로 Skip!!
+--------------------------------------------------------------------------------------------------------------
+EC2 8강 <AMIs>
+
+Images - AMIs(Amazon Machine Images)
+Machine : 가상머신 = 인스턴스를 뜻함.
+Images : 컴퓨터가 가지고 있는 상태(설정, 실행되는 프로그램 등) -> 나중에 얼려서 저장하고 새로운 인스턴스에 적용 가능
+
+이미지로 얼리는 방법 : 인스턴스 선택 후 Image -> Create Image
+- Image name : 그냥 이름 지정
+- Size를 지정하여 나중에 새로운 인스턴스의 메모리 사이즈를 지정한다.(나중에 변경 가능, 단지 디폴트로 설정될 뿐)
+- 원본 인스턴스는 일시적으로 정지한다.(서버의 잠깐 중지는 심각하여 미리 인지하고 있어야 한다.)
+
+이미지를 가지고 새로운 인스턴스 생성
+- Image를 클릭 후 Launch -> 새로운 인스턴스 생성 과정과 일치
+- 단지 Security Group은 다시 설정하여야 한다.(다른 보안적인 설정들도)
+
+*백업용으로 사용한다.*
+--------------------------------------------------------------------------------------------------------------
+EC2 9강 <AWS Marketplace (ex] Wordpress(블로그 같은 웹 페이지 제작) 설치)>
+
+인스턴스를 선택할 때 운영체제를 선택하는 창이 모두 AMI다.
+- 모두 이미지로 만들어 놓은 상태.
+
+AWS Marketplace : Image Store라고 해도 무방
+- 누군가 이미지로 만들어 놓고 용도에 맞게 편리하게 사용할 수 있도록 함.
+- 가격이 더 비싸진다.(아마존 요금+ 이미지생성 개발자)
+
+사용 방법
+Region을 선택 후 -> Version -> Instance Type -> Security Group(Default option or customize)
+-> 가격 확인 후 -> Launch
+
+관리자로 접속 방법(안내 : 메시지 or 이메일)
+제일 중요한 것은 *인증*
+- Instance 접속 : 설정한 key로 인증 후 접속
+- 나머지는 doc 보면서 접속
+--------------------------------------------------------------------------------------------------------------
+EC2 10강 <Scalability>
+
+가상머신(VMWare, VirtualBox, Parallels) : 소프트웨어로, 운영체제를 추가하여 개발할 수 있다.
+물리적 기계(실제 컴퓨터)를 만드는 기업은 사양이 아주 낮은 기계를 생산하지 않는다.
+- AWS는 저렴한 인스턴스는 물리적 기계의 가상머신으로 잘게 나눠서 사용한다.
+물리적 기계를 만드는 기업은 사양이 아주 높은 기계를 생산하지 않는다.
+- AWS는 고가의 사양이 아주 높은 인스턴스는 물리적 기계를 여러 개 모아서 사용한다.
+
+[전통적인 모델 vs 클라우드 컴퓨팅 모델]
+*전통적인 모델(물리적 기게를 늘려서 서버를 늘리는 경우)
+- 서버 효율이 5단위가 한계인 서버에 6단위의 사용자가 들어오면 10단위로 낭비적으로 늘려야 한다.
+- 3단위의 사용자로 줄으면 서버 효율은 10단위를 사용하여 낭비적이다.
+
+*클라우드 컴퓨팅 모델
+- 서버 효율이 5단위가 한계인 서버에 6단위의 사용자가 들어오면 6단위로 서버 효율을 늘릴 수 있다.
+- 사용자 효율이 3단위로 줄어도 서버 효율도 마찬가지로 3단위로 바로 줄일 수 있다.
+
+Scalability : 서버를 필요한만큼 서버를 늘리고 서버가 줄은만큼 서버를 줄이는 기능.
+- Scale Up
+- Scale Out
+--------------------------------------------------------------------------------------------------------------
+EC2 11강 <*Scale Up* vs Scale Out>
+
+[11-1] <Scale Up 개요>
+
+수요가 증가할 때, 인스턴스를 Upgrade(수요가 감소할 때, 인스턴스를 Downgrade하기에는 이미 빌린 Instance를 낮추는 것은 불가능)
+
+[11-2] <스트레스 테스트 준비>
+
+top -> 현재 Instance의 상태(CPU상태 볼 수 있음)
+sudo apt-get install apache2-utils -> y -> ab(apache가 만든 부하(접속) 발생기) -> ab(apache bench) [options] : ab의 option 보기 : -n(인원), -c(동시 접속자)
+
+[11-3] <스트레스 테스트 시작>
+
+(요청), (동시 접속), (총 소요시간), (실패), (초당 처리 속도), (개별 처리 속도)
+- (초당 처리 속도)는 거의 일정하지만 (동시 접속자)가 증가 할수록 (개별 처리 속도) 증가한다.
+
+[11-4] <Elastic IPs>
+
+변동 IP
+- 인스턴스를 멈췄다가 다시 키면 IP가 변한다.
+- IPv4 : IP는 40억개 정도 컴퓨터만을 인터넷을 사용 가능하다.
+- AWS는 인스턴스를 안쓰면 IP를 회수해 간다.(IP 돌려막기)
+
+고정 IP(Elastic IP)
+- 유료(1개까지는 무료)
+- Elastic IP를 받은 후에 인스턴스와 연결하지 않았을 경우 과금
+- Release Address : Elastic IP 삭제
+- Elastic IP 받기
+Allocate New Address -> 할당받은 IP 클릭 후 Associate Address를 클릭 -> Instance(running) 선택 -> Associate 클릭
+
+[11-5] <인스턴스 교체(Scale Up)>
+
+- Instance 교체(Scale Up)
+Image 생성(Instance Stop됨) -> Image로 더 큰 type launch -> 작은 Instance : Elastic IP Disassociate -> 큰 Instance : Elastic IP Associate
+--------------------------------------------------------------------------------------------------------------
+EC2 12강 <Scale Up vs *Scale Out*>
+
+[12-1] <Scale Out 개요>
+
+- Scale Out은 손실이 발생할 수 있다. (Communication cost 등) : 미래에 대한 대비?
+- 복잡함(불필요한 시스템(어떤 Instance?)을 중지하기 때문)
+
+[12-2] <Scale Out의 흐름>
+
+웹 애플리케이션 서비스(예시) 
+- Web Server : 문지기 역할 (ex. apache, nginx, ...) - 하나의 서비스 접속 IP
+- Middle ware : 실질적인 웹 애플리케이션이 논리적으로 동작하는 방법 정의하고 있는 부분(ex. PHP, ASP, JSP&Spring, Django, Rails, ...)
+- Database : 가장 중요한 정보 보관, 관리 = 금고 역할 (ex. MySQL, Oracle, SQL Server, ...)
+
+Scale Out : = 서버 분산
+- 복잡함.
+- Database, Middle ware는 여러 대로 분산 가능.
+- Web Server는 하나의 IP를 사용하기 때문에 분산 불가능.
+해결 1. DNS(전화번호부 역할)이용해서 여러 Web Server(IP)에 접속하게 하여 분산 가능.
+해결 2. Load Balancer(부하 균형 장치, ELB = Elastic Load Balancer) - 서비스 접속 IP를 대신하여 균형 있게 Web Server에 배치.
+
+[12-3] <ELB 생성>
+
+Load Balancer(부하 균형 장치) - 구매한다면 비용이 비싸다, 직접 구축한다면 어려워 시간이 오래 걸린다.
+
+ELB(Elasic Load Balancer)
+- AWS에서 Load balancing을 해주는 서비스. 
+- AWS Console에서 Load Balancers  탭에서 Load Balancer를 생성
+- Load Balancer Port : Client가 Load Balancer에 접속하는 Port(Protocol). ex) port = 80이면 HTTP
+- Instance Port : Load Balancer가 EC2 Instance에 접속하는 Port(Protocol). ex) port = 80이면 HTTP
+- 만약 Load Balancer Port가 HTTPS면, Instance Port는 HTTP만 해도 된다. (Load Balancer와 EC2 Instance사이는 안전하게 통신 가능하기 때문에)
+*HTTPS를 사용한다는 것은 더 많은 CPU를 사용한다.(암호화, 복호화 때문에) - Load Balancer에 HTTPS를 쓰면 EC2 Instance에 부담이 안간다.(비용이 같으니 HTTPS 쓰자.) 
+- Health Check : 각각의 Instance의 상태 검사(Ping 이용) : Timeout, Interval, Unhealthy Threshold, Healthy Threshold 지정.
+
+[12-4] <ELB 적용>
+
+Load Balancers 탭에서 Instances - Edit Instances를 클릭하여 Instances를 추가한다.
+Client는 ELB의 Domain을 통해 접속 -> Instances로 Load Balancing
+AWS의 ELB는 한계는? - 알 수 없지만 ELB로 문제될 것은 없다.
+ELB와 Auto Scaling을 합쳐서 쓴다.
+
+[12-5] <ELB 주의사항>
+
+DB가 있는 서버 구조는 ELB를 쓸려면 *같은 DB*를 참조하는 구조를 구축해야한다.
+--------------------------------------------------------------------------------------------------------------
+EC2 13강 <Auto Scaling>
+
+[13-1] <Auto Scaling 소개>
+
+Auto Scaling : Instance를 자동으로 생성되서 바로 서비스를 시작하게 했다가 또는 그 반대로 서비스를 중지하는 것으로 AWS 꽃이라 할 수 있다.(탄력성)
+Launch : Instance를 생성하는 행위.(Instance type 결정)
+Configurations : Images 설정.(Instance안에 파일 등)
+- Launch Configurations : Auto Scaling에 사용될 Image를 설정으로 Inastance를 생성하게 하는 행위.
+- Auto Scaling Groups : Launch Configuration으로 설정된 것을 어떤 조건(언제)으로 Auto Scaling할 것인지
+
+[13-2] <Auto Scaling Group 생성 1>
+
+Auto Scaling Group 생성
+- Launch Configuration, Group name 지정 -> Group size 설정(처음 시작할 Instance 개수), Subnet(가용 구역) 설정
+-> Advanced Details(Load Balancing 설정[Load Balance 서버로 할 것인지 등]) -> Policy 설정 -> Notification 설정 -> Tag 설정 -> Review(설정된 부분을 요약)
+
+Policy 설정
+- Keep this group at its initial size : 처음에 Initial한 개수를 유지.(ex. 10개 설정하고 1개가 죽으면 1개를 생성하여 10개로 계속되게 함.)
+- Use scaling policies to adjust the capacity of this group : Instance를 추가하고 감소하는 정책을 설정.
+
+[13-4] <Auto Scaling Group 생성 2>
+
+Use scaling policies to adjust the capacity of this group
+- Scale between ( ) and ( ) instances : Auto Scaling을 통해서 너무 적어지거나 너무 많아지는 것을 방지.
+- Increase Group Size : Instance를 추가하게 되는 조건 설정(alarm 설정(CPU 점유율 ( )%가 ( )분 지속 되는 것에 대한 설정) -> action 설정
+- Decrease Group Size : Instance를 감소하게 되는 조건 설정(alarm 설정(CPU 점유율 ( )%가 ( )분 지속 되는 것에 대한 설정) -> action 설정
+
+Notification 설정
+- System에 문제가 생겼을 수도 있는 점(Auto Scaling을 한다는 것)을 통보 받을 수 있다.(처음은 승인 받아야됨)
+
+Auto Scaling Group - Instances을 통해 현재 Auto Scaling을 통해 생성된 Instance를 볼 수 있다.
+
+[13-5] <Auto Scaling Group Test>
+
+Cloud Watch : AWS 쓰고 있는 기능들을 감지할 수 있다.
+- Alarm : Auto Scaling을 통해 설정한 alarm 등을 관리.
+
+Istance는 소모품으로 생각하며, AMI를 중요하게 생각해야 한다.
+
+Auto Scaling을 중지
+- Auto Scaling Group을 삭제(Auto Scaling Group을 통해 만든 Instance들이 삭제됨)
+- Cloud Watch에서 Alarm도 삭제한다.
+- SNS 기능(Notification에 대한 설정 등)에서 Topics, Subscriptions도 삭제
+- ELB도 삭제
+
+
+
+
+===============================================================
+Youtube
+AWS - S3 1강 <소개>
+
+Amazon S3(Simple Storage Service)
+- 간단하게 말하면 파일 창고.
+- 내구성 보장(99.999999%) : 파일이 유실될 가능성(만약 유실되면 AWS에서 법적으로 보상)
+- AWS측은 여러 대의 하드디스크로 파일을 보관함.(직접 파일 서버를 운영하는 것보다 안전)
+- 저렴한 비용
+- 가용성 보장(99.999999%) : 서비스 되는 기간
+- 보안 : 암호화를 통해 데이터 전송
+- 확장 가능 : S3 서버가 마비되지 않음(필요에 따라 확장 or 축소하지 않아도 됨.)
+- 이벤트 알림 전송 : 알림을 통해 작업을 트리거할 수 있는 기능 제공(Amazon SQS or Amazon SNS를 통한 AWS Lambda를 이용한 전송을 통해 실행 자동화)
+- 고성능 : Amazon CloudFront와 통합되어 이용(네트워크 지연 시간 최소화)
+- 콘텐츠 저장 및 배포 : 콘텐츠를 저장하고 배포(ex. Web service라면 Web site의 파일을 전송)
+- 빅 데이터 분석 : 빅 데이터를 분석할 때 데이터들을 바로 저장할 수 있는 기능 마련
+--------------------------------------------------------------------------------------------------------------
+S3 2강 <콘솔을 통한 기본 조작>
+
+S3 시작(AWS Console에서 S3 탭 클릭)
+- Bucket(= Repository) : File 모음 저장.(Bucket 이름 설정할 떄는 AWS 전체에서 사용되지 않는 이름을 지정해야함)
+- Region : Service하는 곳과 가깝게 지정.
+- 파일 업로드
+- 파일의 Property - Link는 접속 가능한 Link라 생각하면 됨.
+
+
+===============================================================
+AWS - 제어 방법들 <Console & CLI & SDK & API>
+
+- 여러 가지 방식으로 AWS를 제어한다.(각각의 방법들이 장, 단점, 특색들이 있다.)
+
+Management Console
+- 기본적인 관리 콘솔
+- GUI 방식(마우스로 아이콘 클릭 방식)
+
+CLI(Command Line Interface)
+- 명렁어를 이용하여 관리(ex. Terminal)
+- ex) Instance 목록 확인(Instance terminal에서)
+aws ec2 describe-instances : EC2 Instances를 보여줌.
+
+- 장점 : 1. (Web site 접속 필요없이) 빠르게 제어를 할 수 있다.
+- 단점 : 여러 개의 명령어를 알아야 한다.
+
+SDK(Software Development Kit)
+- 각자 각각의 언어로 Programing을 하여 지능적이고 섬세한 제어 관리
+- AWS 서비스를 제어.
+ex) ec2.js
+
+var AWS = require('aws-sdk');
+AWS.config.update({region:'op-northeast-2'});
+var ec2 = new AWS.EC2();
+ec2.describeInstances(function(err, data){
+	console.log(data.Reservations[0].Instances[0].PublicIPAddress);
+});
+-> nodejs ec2.js : AWS에서 Instance 목록들의 Public IP를 Log로 출력.
+
+- AWS 여러 가지 언어들의 SDK를 제공하고 있다.
+
+API(Application Programming Interface)
+- 직접 Interface를 작성.(자유도가 높다.)
+- 단점 : 상당히 복잡하고 불편.(어렵기 때문에 AWS에서 공통의 API를 만들고 이를 이용하는 각각 언어의 SDK를 제공하고 있다.)
+
+
+
+
+===============================================================
+Youtube
+AWS - SDK <nodeJS 환경 설정>
+
+NodeJS 설치
+-> nodeJS 웹사이트에서 Install 하는 방법 조사(버전마다 상이)
+-> nodeJS 설치
+-> node -v : nodeJS 버전 확인
+-> sudo chown (owner) : Owner를 변경.
+-> npm init : 현재 디렉토리가 npm에 setting됨.
+-> npm install express : npm을 이용하여 express를 현재 프로젝트에 포함시킴.
+
+웹 애플리케이션 구동(vi app.js)
+var express = require('express');		// Node.JS의 대표 웹프레임워크
+var app = express(); 			// app이라는 변수에다 여러가지 작업 처리하는 객체를 담음.
+app.get('/', function(req, res){  		// Client가 최상위('/')디렉토리로 접근하였을 때 function안에 있는 코드 실행(request, response를 가지고 있는 call-back 함수)
+	res.send('Hello world'); 	 	// 두 번째 인자 res(response)에 send 메소드를 호출하여 Hello world 텍스트를 Client에게 전송
+})
+app.listen(80, function(){   			// Client가 요청해서 들어올 때 80번 port(HTTP)로 들어오면 작성한 function이 반응
+	console.log('Connected 80 port'); 	// Log 출력
+})
+
+node app.js 하면 Error가 난다. (1024번 이하의 port는 root권한만 사용 가능) -> sudo node app.js 하면 해결.
+
+--------------------------------------------------------------------------------------------------------------
+AWS - SDK <nodeJS 시작하기>
+
+aws sdk javascript nodejs 검색
+-> AWS-sdk nodejs 설명 구독
+-> nodeJS 환경 설정 후
+-> npm install aws-sdk --save : aws-sdk가 package.json에 기록이 되어 다른 시스템을 구축할 때 편리해짐
+-> JS파일에 var AWS = require('aws-sdk'); 선언
+-> Global Configuration or Passing extra configuration to a service : AWS.config.region = ('(aws region list에서 EC2 region 명칭)') - 어떤 지역을 제어할 것인지 지정.
+-> Setting AWS Credentials(자격 증명)
+1. EC2 권장(Loaded IAM role 지정) : ID/PW 없이 가능, 따라서 보안성 증가
+2. credentials파일(ID/PW)을 만들어서 Loaded : AWS Console에서 IAM에서 Users에서 user추가한 후 Access key ID와 Secret Access key를 얻어서 credentials 파일에 붙여넣기.
+
+--------------------------------------------------------------------------------------------------------------
+AWS - SDK <NodeJS put(업로드)>
+
+*put : S3에서 업로드를 의미.
+
+var AWS = require('aws-sdk'); 		// AWS의 객체를 가져옴
+var fs = require('fs');			// nodeJS에서 파일 핸들링 모듈
+AWS.config.region = 'ap-northeast-2'; 		// 기본적인 지역을 지정
+var s3 = new AWS.S3(); 			// S3 객체 만듬.
+var param = {
+	'Bucket' : 'Bucket이름',		// 어떤 Bucket
+	'Key' : '파일이름',			// S3에 저장될(업로드될) 파일의 이름
+	'ACL' : 'public-read',     		// 권한 지정
+	'Body' : fs.createReadStream('파일명'),	// fs의 createReadStream 함수로 파일명(ex. 94.png)을 읽는다.
+	'ContentType' : 'image/png'		// 이미지를 바로 다운로드 하는 것을 방지.
+}
+s3.upload({}, function(err, data){ 		// putObject는 주소가 안나와서 upload를 씀, 파일을 전송한 후에 전송이 끝나면 실행되도록 약속돼있는 함수(콜백함수)
+	console.log(err); 			// err 확인	
+	console.log(data);			// data 확인
+});
+
+--------------------------------------------------------------------------------------------------------------
+AWS - SDK <NodeJS to list(목록 가져오기)>
+
+var AWS = require('aws-sdk'); 		// AWS의 객체를 가져옴
+AWS.config.region = 'ap-northeast-2'; 		// 기본적인 지역을 지정
+var s3 = new AWS.S3(); 			// S3 객체 만듬
+s3.listObjects({Bucket : 'Bucket이름'}).on('success', function handlePage(response){	// 앞에 있는 함수를 실행한 결과 'success'라면 뒤에 함수가 실행이 되도록 약속
+	console.log(response.data.Contents);		// response는 함수가 실행됐을 때, 반응하는 객체
+	for(var name in response.data.Contents){
+		console.log(response.data.Contents[name].Key);		// 파일의 이름만 가져옴.
+	}
+	if(response.hasNextPage()){
+		response.nextPage().on('success', handlePage).send();
+	}
+}).send();			// listObjects가 실행되도록 약속 ---- send();
+
+--------------------------------------------------------------------------------------------------------------
+AWS - SDK <NodeJS get(다운로드)>
+
+var AWS = require(aws-sdk'); 		// AWS의 객체를 가져옴
+AWS.config.region = 'ap-northeast-2'; 		// 기본적인 지역을 지정
+var s3 = new AWS.S3(); 			// S3 객체 만듬
+var file = require('fs').createWriteStream('파일위치 및 이름');	// 파일을 쓰는 Stream 생성
+var params = {
+	Bucket : 'Bucket이름',
+	Key : '파일명'
+};
+s3.getObject(params).createReadStream().pipe(file);		// pipe를 연결
+
+--------------------------------------------------------------------------------------------------------------
+AWS - SDK <NodeJS(웹 애플리케이션에서 S3 활용)>
+
+sudo service apache2 stop			// apache2의 서비스 중지
+
+var express = require('express');
+var formidable = require('formidable');
+var AWS = require('aws-sdk');
+var app = express();
+app.get('/s3', function(req, res){
+	res.send('Hello s3');
+});
+app.get('/form', function(req, res){
+	var output = `			// '아님 ~옆에 `임.
+<html>
+<body>
+	<form enctype = "multipart/form-data" method = "post" action = "upload_receiver">
+		<input type = "file" name = "userfile"
+		<input type = "submit">
+	</form>
+</body>
+</html>
+	`;
+	res.send(output);			// 화면에 출력
+});
+app.post('/upload_receiver', function(req, res){
+	var form = new formidable.IncomingForm();
+	form.parse(req, function(err, fields, files){
+		var s3 = new AWS.S3();
+		var params = {
+			Bucket : '버킷이름',
+			Key : files.userfile.name,
+			ACL : 'public-read',
+			Body : require('fs').createReadStream(files.userfile.path)
+		}
+		s3.upload(params, function(err, data){
+			var result = '';
+			if(err)
+				result = 'Fail;
+			else
+				result = `<img src = "S{data.Location}">`;	// 화면에 표시.
+			res.send(`<html><body>${result}</body></html>`);
+		});
+	});
+});
+app.listen(80, function(){
+	console.log('Connected');
+})
+
+
+
+===============================================================
+AWS - RDS <소개>
+
+RDS(Relational Database Service) : 관계형 DB (ex. MySQL, Oracle, SQLServer)
+
+MySQL : Web이 등장하면서 강력해짐. 무료, 오픈소스(ORACLE에서 관리)
+MariaDB : MySQL을 만든 창업자가 만듬. MySQL과 호환됨.
+Aurora : Amazon에서 만듬. MySQL과 호환됨.
+PostgreSQL : 
+ORACLE : 비싸고 큰 기업에서 사용.
+SQL Server : Microsoft에서 만든 서버
+
+--------------------------------------------------------------------------------------------------------------
+AWS - RDS <DB 서버 생성>
+
+RDS 사용 방법
+-> RDS Instance Launch
+-> Engine 선택
+-> Mode 선택(Production - Multi AZ vs Dev/Test - No AZ)
+-> DB Detail 선택(License Model, Version, Instance class, AZ, Storage type, DB memory, Master detail 등)
+-> Advanced Settings 선택(VPC, DB name, Backup 등) *Select window : 직접 지정
+-> Launch Instance
+
+*RDS Instance 생성 시간 > EC2 Instance 생성 시간
+
+--------------------------------------------------------------------------------------------------------------
+AWS - RDS <백업 & 복원>
+
+Instance 설정을 변경하고 싶으면 Instance 선택 후 Modify를 통해 기능을 변경한다. Modify를 하면 변경 되는 동안 접속이 중지된다.
+만약 Multi-AZ 기능을 사용한다면 변경 시간이 줄어들거나 없다.
+
+
+AWS에서 DB의 안정성을 위해 제공하는 기능
+- Multi AZ(Availablity Zone) : 다른 가용 구역에 백업 서버가 하나 생성된다.(시스템 다운 방지, 시스템 장애 복구), 성능 향상 X
+- Snapshot : 비용 발생, RDS Instance의 데이터 백업(= State freezing) -> Restore Snapshot : 새로운 Instance를 만들어냄.
+- Restore point to time : 복원 지점으로 되돌아감. Instance를 새롭게 만듬. (자동 백업 시스템을 이용했어야 함.)
+
+--------------------------------------------------------------------------------------------------------------
+AWS - RDS <Scale up & out>
+
+Scalability의 전략 2 가지
+- Scale up : 사용자가 수요가 증가할 때, *1개*의 Instance의 성능을 업그레이드. 한계가 존재.
+- Scale out : 여러 대의 Instance가 일을 함.
+
+Scale up
+-> RDS Instance를 선택 후 Modify를 통해 Instance의 class를 변경한다.
+
+Scale out
+-> Master server와 Slave server로 나눈다.
+-> Slave server는 Master server의 내용을 동기화.
+-> 쓰기(update, delete, insert 등)는 Master server에, 읽기(select)는 읽기는 Slave에
+-> 만약 Master server의 성능이 부족할 경우, Sharding을 함.(매우 복잡)
+
+Slave server 생성
+-> Slave server를 만들기 위해 RDS Instance(Master server)를 선택 후 Create Read Replica를 클릭
+-> Source(Master server) 선택 및 여러 가지 Option 선택
+-> Create Replica
+-> Aplication 언어를 코딩하여 쓰기, 읽기에 따라 Instance를 선택하게 함.
+
