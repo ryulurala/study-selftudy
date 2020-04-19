@@ -1,95 +1,95 @@
-[Unity]
+ï»¿[Unity]
 
-<±âº» Ä³¸¯ÅÍ ¿òÁ÷ÀÓ>
-Unity¿¡¼­´Â X°¡ ÁÂ, ¿ì // Z°¡ Á¤¸é°ú µÚ // Y°¡ Á¡ÇÁ(°øÁß)
+<ê¸°ë³¸ ìºë¦­í„° ì›€ì§ì„>
+Unityì—ì„œëŠ” Xê°€ ì¢Œ, ìš° // Zê°€ ì •ë©´ê³¼ ë’¤ // Yê°€ ì í”„(ê³µì¤‘)
 
-Debug.Log(ÀÎÀÚ);
-- ÀÎÀÚ °ªÀ» ÄÜ¼ÖÃ¢¿¡ ÂïÀ½
+Debug.Log(ì¸ì);
+- ì¸ì ê°’ì„ ì½˜ì†”ì°½ì— ì°ìŒ
 
 [SerializeField]
-- private·Î ¼±¾ğÇØµµ ÀÎ½ºÆåÅÍ Ã¢¿¡¼­ ½±°Ô ¾²°Ô ÇÑ´Ù.(¿¹¿Üµµ ÀÖ´Ù.)
+- privateë¡œ ì„ ì–¸í•´ë„ ì¸ìŠ¤í™í„° ì°½ì—ì„œ ì‰½ê²Œ ì“°ê²Œ í•œë‹¤.(ì˜ˆì™¸ë„ ìˆë‹¤.)
 
 Rigidbody
-- Collider·Î Ãæµ¹ ¿µ¿ªÀ» ¼³Á¤ÇÏ°í Rigidbody·Î Collider¿¡ ¹°¸®ÇĞÀ» ÀÔÈû
+- Colliderë¡œ ì¶©ëŒ ì˜ì—­ì„ ì„¤ì •í•˜ê³  Rigidbodyë¡œ Colliderì— ë¬¼ë¦¬í•™ì„ ì…í˜
 
 myRigid = GetComponent<Rigidbody>();
-- Rigidbody Component¸¦ myRigid¿¡ Àû¿ë
+- Rigidbody Componentë¥¼ myRigidì— ì ìš©
 
 float _moveDirX = Input.GetAxisRaw("Horizontal");
-- (Horizontal : ¡ç(1), ¡æ(-1) or A(1), D(-1) µî)ÀÇ ÀÔ·ÂÀÌ ÀÌ·ç¾îÁö¸é 1°ú -1, ¾È´­¸®¸é 0ÀÌ Return (VerticalÀº ¹İ´ë)
+- (Horizontal : â†(1), â†’(-1) or A(1), D(-1) ë“±)ì˜ ì…ë ¥ì´ ì´ë£¨ì–´ì§€ë©´ 1ê³¼ -1, ì•ˆëˆŒë¦¬ë©´ 0ì´ Return (Verticalì€ ë°˜ëŒ€)
 
 Vector3 _moveHorizontal = transform.right * _moveDirX;
-- transform(À§Ä¡)ÀÇ right°ª(1, 0, 0)°ú ÀÔ·ÂÀÌ ´­¸®´Â °ª°ú °öÇÑ °ÍÀÌ Vector¿¡ ( , , )¿¡ ÀúÀå
+- transform(ìœ„ì¹˜)ì˜ rightê°’(1, 0, 0)ê³¼ ì…ë ¥ì´ ëˆŒë¦¬ëŠ” ê°’ê³¼ ê³±í•œ ê²ƒì´ Vectorì— ( , , )ì— ì €ì¥
 
-transform.forward´Â (0, 0, 1)À» ¶æÇÔ = transform.TransformDirection(Vector3.forward)
+transform.forwardëŠ” (0, 0, 1)ì„ ëœ»í•¨ = transform.TransformDirection(Vector3.forward)
 
 Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
-- normalized´Â ¹æÇâÀÌ °°°í 1·Î Á¤±ÔÈ­ ½ÃÄÑÁÜ(1ÃÊ¿¡ ¾ó¸¶³ª ÀÌµ¿½ÃÅ³°ÇÁö °ªÀ» ÁöÁ¤ÇØÁÙ ¼ö ÀÖ´Â ÆíÀÇ)
+- normalizedëŠ” ë°©í–¥ì´ ê°™ê³  1ë¡œ ì •ê·œí™” ì‹œì¼œì¤Œ(1ì´ˆì— ì–¼ë§ˆë‚˜ ì´ë™ì‹œí‚¬ê±´ì§€ ê°’ì„ ì§€ì •í•´ì¤„ ìˆ˜ ìˆëŠ” í¸ì˜)
 
 myRigid.MovePosition(transform.position + _velocity * Time.deltaTime);
-- MovePositionÀº PositionÀ» ¿òÁ÷¿©ÁÖ°í Time.deltaTime(¾à 0.016)Àº Á¶±İ¾¿ ¿òÁ÷ÀÏ ¼ö ÀÖµµ·Ï ÇÔ(¼ø°£ÀûÀÎ ÀÌµ¿ ¹æÁö)
+- MovePositionì€ Positionì„ ì›€ì§ì—¬ì£¼ê³  Time.deltaTime(ì•½ 0.016)ì€ ì¡°ê¸ˆì”© ì›€ì§ì¼ ìˆ˜ ìˆë„ë¡ í•¨(ìˆœê°„ì ì¸ ì´ë™ ë°©ì§€)
 
 private float lookSensitivity
-- ¸¶¿ì½º¸¦ ¼ø½Ä°£¿¡ ¿òÁ÷ÀÌÁö ¸øÇÏµµ·Ï ¹Î°¨µµ ÁöÁ¤
+- ë§ˆìš°ìŠ¤ë¥¼ ìˆœì‹ê°„ì— ì›€ì§ì´ì§€ ëª»í•˜ë„ë¡ ë¯¼ê°ë„ ì§€ì •
 
 currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotatonLimit, cameraRotationLimit);
-- Ã¹ ¹øÂ° ÀÎÀÚ °ªÀ» µÎ ¹øÂ° ÀÎÀÚ °ª°ú ¼¼ ¹øÂ° ÀÎÀÚ °ª »çÀÌ·Î °¡µĞ´Ù.
+- ì²« ë²ˆì§¸ ì¸ì ê°’ì„ ë‘ ë²ˆì§¸ ì¸ì ê°’ê³¼ ì„¸ ë²ˆì§¸ ì¸ì ê°’ ì‚¬ì´ë¡œ ê°€ë‘”ë‹¤.
 
 theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
-- transform.localEulerAngles´Â °£´ÜÇÏ°Ô transform¿¡ ÀÖ´Â Rotation 3ÁÂÇ¥¸¦ ¶æÇÔ
+- transform.localEulerAnglesëŠ” ê°„ë‹¨í•˜ê²Œ transformì— ìˆëŠ” Rotation 3ì¢Œí‘œë¥¼ ëœ»í•¨
 
-RotationÀº ³»ºÎÀûÀ¸·Î Quaternion°ª(»ç¿ø¼ö)À» °¡Áø´Ù.
+Rotationì€ ë‚´ë¶€ì ìœ¼ë¡œ Quaternionê°’(ì‚¬ì›ìˆ˜)ì„ ê°€ì§„ë‹¤.
 
-<½ÉÈ­ Ä³¸¯ÅÍ ¿òÁ÷ÀÓ>
+<ì‹¬í™” ìºë¦­í„° ì›€ì§ì„>
 
-if(Input.GetKey(KeyCode.LeftShift)){} - GetKey´Â ´©¸£°í ÀÖÀ¸¸é °è¼Ó ´­¸² GetKeyDownÀº ÇÑ ¹ø ´­¸²
-- LeftShiftÀÇ KeyCode¸¦ ¾ò¾î ´­·¯ÀÖ´ÂÁö Return
+if(Input.GetKey(KeyCode.LeftShift)){} - GetKeyëŠ” ëˆ„ë¥´ê³  ìˆìœ¼ë©´ ê³„ì† ëˆŒë¦¼ GetKeyDownì€ í•œ ë²ˆ ëˆŒë¦¼
+- LeftShiftì˜ KeyCodeë¥¼ ì–»ì–´ ëˆŒëŸ¬ìˆëŠ”ì§€ Return
 
 if(Input.GetKeyUp(KeyCode.LeftShift)){}
-- LeftShiftÀÇ KeyCode¸¦ ¾ò¾î ¶¼¾îÁ³À»¶§¸¦ Return
+- LeftShiftì˜ KeyCodeë¥¼ ì–»ì–´ ë–¼ì–´ì¡Œì„ë•Œë¥¼ Return
 
 isGround = Physics.Raycast(transform.position, Vector3.down, capsuleColider.bounds.extents.y + 0.1f);
-- PhysicsÅ¬·¡½ºÀÇ Raycast´Â ·¹ÀÌÀú¸¦ ½î°í Ã¹ ¹øÂ° ÀÎÀÚ À§Ä¡¿¡¼­ µÎ ¹øÂ° ÀÎÀÚ À§Ä¡¹æÇâÀ¸·Î Ä¸½¶ÀÇ ¹Ù¿îµåÀÇ ¹İÀÇ 0.1f(¿©À¯)¸¸Å­ ½ğ´Ù.
+- Physicsí´ë˜ìŠ¤ì˜ RaycastëŠ” ë ˆì´ì €ë¥¼ ì˜ê³  ì²« ë²ˆì§¸ ì¸ì ìœ„ì¹˜ì—ì„œ ë‘ ë²ˆì§¸ ì¸ì ìœ„ì¹˜ë°©í–¥ìœ¼ë¡œ ìº¡ìŠì˜ ë°”ìš´ë“œì˜ ë°˜ì˜ 0.1f(ì—¬ìœ )ë§Œí¼ ìœë‹¤.
 
 transform.position vs transform.localposition
-- transformÀÇ default position °ªÀº world ±âÁØÀÌÁö¸¸ player¾È¿¡ ³»ºÎ °´Ã¼·Î »ı¼ºµÇ¸é player±âÁØÀ¸·Î ÃøÁ¤µÈ´Ù. µû¶ó¼­ localÀ» ½á¼­ »ó´ëÀûÀÎ ±âÁØ(Player)À¸·Î »ç¿ë
+- transformì˜ default position ê°’ì€ world ê¸°ì¤€ì´ì§€ë§Œ playerì•ˆì— ë‚´ë¶€ ê°ì²´ë¡œ ìƒì„±ë˜ë©´ playerê¸°ì¤€ìœ¼ë¡œ ì¸¡ì •ëœë‹¤. ë”°ë¼ì„œ localì„ ì¨ì„œ ìƒëŒ€ì ì¸ ê¸°ì¤€(Player)ìœ¼ë¡œ ì‚¬ìš©
 
 IEnumerator CrouchCoroutine(){}
-- º´·ÄÃ³¸®¸¦ À§ÇÑ ÇÔ¼ö(½ÇÁ¦·Î CPU°¡ º´·ÄÃ³¸® ÇÏÁö ¾ÊÀ½)
-- StartCoroutine(ÀÎÀÚ) : ÀÎÀÚÄÚ·çÆ¾À» ½ÇÇà
+- ë³‘ë ¬ì²˜ë¦¬ë¥¼ ìœ„í•œ í•¨ìˆ˜(ì‹¤ì œë¡œ CPUê°€ ë³‘ë ¬ì²˜ë¦¬ í•˜ì§€ ì•ŠìŒ)
+- StartCoroutine(ì¸ì) : ì¸ìì½”ë£¨í‹´ì„ ì‹¤í–‰
 
 yield return new WaitForSeconds(1f);
-- 1ÃÊ¸¦ ±â´Ù¸²
+- 1ì´ˆë¥¼ ê¸°ë‹¤ë¦¼
 
 Mathf.Lerp(1, 2, 0.5)
-- 1¿¡¼­ 2±îÁö 0.5ÀÇ ºñÀ²·Î °¨(1->1.5->1.75->....->2)
+- 1ì—ì„œ 2ê¹Œì§€ 0.5ì˜ ë¹„ìœ¨ë¡œ ê°(1->1.5->1.75->....->2)
 
-<ÁöÇü Á¦ÀÛ>
+<ì§€í˜• ì œì‘>
 
-<ÆÈ ±¸Çö>
+<íŒ” êµ¬í˜„>
 
 private RaycastHit hitInfo;
-- ·¹ÀÌÀú¸¦ ½÷¼­ ´êÀº Á¤º¸°¡ hitInfo¿¡ ÀúÀå 
+- ë ˆì´ì €ë¥¼ ì´ì„œ ë‹¿ì€ ì •ë³´ê°€ hitInfoì— ì €ì¥ 
 
 currentHand.anim.SetTrigger("Attack");
-- currentHand Å¬·¡½ºÀÇ anim¿¡ ÀÖ´Â »óÅÂº¯¼ö Trigger¸¦ "Attack"À¸·Î ¹ßµ¿½ÃÅ´
+- currentHand í´ë˜ìŠ¤ì˜ animì— ìˆëŠ” ìƒíƒœë³€ìˆ˜ Triggerë¥¼ "Attack"ìœ¼ë¡œ ë°œë™ì‹œí‚´
 
-[¸íÁß & ÇÇ°İ ÀÌÆåÆ®]
+[ëª…ì¤‘ & í”¼ê²© ì´í™íŠ¸]
 
-4¹ø Â° ÀÎ¼ö ÀÌ¿ë
-Instantiate(hit_effect_prefab(»ı¼ºÇÒ ¿ÀºêÁ§Æ®), hitInfo.point(¿ÀºêÁ§Æ®°¡ »ı¼ºµÉ À§Ä¡), lookRotation(hitInfo.normal)(¿ÀºêÁ§Æ®°¡ »ı¼ºµÇ´Â ¹æÇâ))
-- point´Â Ãæµ¹ÇÑ °÷ÀÇ ½ÇÁ¦ ÁÂÇ¥, lookRotation(hitInfo.normal)´Â Æ¯Á¤ÇÑ °´Ã¼(hitInfo.normal)¸¦ ¹Ù¶óº½, hitInfo.normalÀº Ãæµ¹ÇÑ À§Ä¡ÀÇ Ç¥¸é
+4ë²ˆ ì§¸ ì¸ìˆ˜ ì´ìš©
+Instantiate(hit_effect_prefab(ìƒì„±í•  ì˜¤ë¸Œì íŠ¸), hitInfo.point(ì˜¤ë¸Œì íŠ¸ê°€ ìƒì„±ë  ìœ„ì¹˜), lookRotation(hitInfo.normal)(ì˜¤ë¸Œì íŠ¸ê°€ ìƒì„±ë˜ëŠ” ë°©í–¥))
+- pointëŠ” ì¶©ëŒí•œ ê³³ì˜ ì‹¤ì œ ì¢Œí‘œ, lookRotation(hitInfo.normal)ëŠ” íŠ¹ì •í•œ ê°ì²´(hitInfo.normal)ë¥¼ ë°”ë¼ë´„, hitInfo.normalì€ ì¶©ëŒí•œ ìœ„ì¹˜ì˜ í‘œë©´
 
 [Weapon Manager]
 
 private Dictionary<string, Gun> gunDictionary = new Dictionary<string, Gun>();
-- stringÀÌ key´Ù(´Ù¸¥ ÇüÀ¸·Î °¡´É), gunDictionary´Â ÀÌ¸§
-- ÀúÀå : gunDictionary.Add("AK47", guns[0]);
-- »ç¿ë : gunDictionary["AK47"]
+- stringì´ keyë‹¤(ë‹¤ë¥¸ í˜•ìœ¼ë¡œ ê°€ëŠ¥), gunDictionaryëŠ” ì´ë¦„
+- ì €ì¥ : gunDictionary.Add("AK47", guns[0]);
+- ì‚¬ìš© : gunDictionary["AK47"]
 
 public static transform currentWeapon;
-- transformÇüÀº °¡Àå ±âº»ÀûÀÎ ÄÄÆ÷³ÍÆ® ÇüÀÌ´Ù.
+- transformí˜•ì€ ê°€ì¥ ê¸°ë³¸ì ì¸ ì»´í¬ë„ŒíŠ¸ í˜•ì´ë‹¤.
 
-- Quaternion.Angle : µÎ °³ÀÇ Rotation a¿Í b »çÀÌÀÇ °¢µµ¸¦ ¹İÈ¯
-- Quaternion.Euler : zÃà ÁÖÀ§·Î z, xÃà ÁÖÀ§·Î x, yÃà ÁÖÀ§·Î y°¢µµ¸¸Å­ È¸ÀüÇÑ Rotation ¹İÈ¯
-- Quaternion.Slerp : from°ú to »çÀÌÀÇ t·Î ±¸Çü º¸°£
+- Quaternion.Angle : ë‘ ê°œì˜ Rotation aì™€ b ì‚¬ì´ì˜ ê°ë„ë¥¼ ë°˜í™˜
+- Quaternion.Euler : zì¶• ì£¼ìœ„ë¡œ z, xì¶• ì£¼ìœ„ë¡œ x, yì¶• ì£¼ìœ„ë¡œ yê°ë„ë§Œí¼ íšŒì „í•œ Rotation ë°˜í™˜
+- Quaternion.Slerp : fromê³¼ to ì‚¬ì´ì˜ të¡œ êµ¬í˜• ë³´ê°„

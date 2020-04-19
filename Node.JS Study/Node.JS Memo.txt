@@ -1,40 +1,111 @@
-Node.JS <JavaScript¿Í HTTP>
+ï»¿Node.JS <JavaScriptì™€ HTTP>
 
-HTTP(Hypertext Transfer Protocol) : htmlÀ» Web¿¡¼­ ÁÖ°í ¹Ş´Â ±ÔÄ¢
-- Web browser -> Web server Request Headers¸¦ º¸³¾ ¶§ ±ÔÄ¢.
-- Web server -> Web browser Response Headers¸¦ º¸³¾ ¶§ ±ÔÄ¢.
+HTTP(Hypertext Transfer Protocol) : htmlì„ Webì—ì„œ ì£¼ê³  ë°›ëŠ” ê·œì¹™
+- Web browser -> Web server Request Headersë¥¼ ë³´ë‚¼ ë•Œ ê·œì¹™.
+- Web server -> Web browser Response Headersë¥¼ ë³´ë‚¼ ë•Œ ê·œì¹™.
 
 ------------------------------------------------------------------------------------------------------------------
-Node.JS <¼Ò°³>
+Node.JS <ì†Œê°œ>
 
-1990 - Tim Berners-Lee¿¡ ÀÇÇØ WebÀÌ Åº»ı.
-1994 - Marc Andreessen¿¡ ÀÇÇØ Netscape Navigator¶ó´Â Web browser Åº»ı.
-1995 - Brendan Eich¿¡ ÀÇÇØ JavaScript µîÀåÀ¸·Î WebÀÇ HtmlÀÇ Á¤ÀûÀÎ ÆäÀÌÁö°¡ JavaScriptÀÇ µ¿ÀûÀÎ ÆäÀÌÁö Á¦¾î°¡ °¡´ÉÇÏ°ÔµÊ.
-2004 - GoogleÀÇ GMail, GMap Application µîÀå.
-2008 - GoogleÀÇ Chrome browser ¹ßÇ¥. V8 EngineÀ» Open source·Î °ø°³·Î JavaScript°¡ WebºĞ¾ß ¿Ü¿¡ ´Ù¸¥ °÷¿¡¼­µµ »ç¿ëÇÏ°Ô µÊ.
-2009 - Ryan DahlÀÇ Node.JS °³¹ß. *Node.JS = V8 Engine + Event-driven + Non-blocking I.O
+1990 - Tim Berners-Leeì— ì˜í•´ Webì´ íƒ„ìƒ.
+1994 - Marc Andreessenì— ì˜í•´ Netscape Navigatorë¼ëŠ” Web browser íƒ„ìƒ.
+1995 - Brendan Eichì— ì˜í•´ JavaScript ë“±ì¥ìœ¼ë¡œ Webì˜ Htmlì˜ ì •ì ì¸ í˜ì´ì§€ê°€ JavaScriptì˜ ë™ì ì¸ í˜ì´ì§€ ì œì–´ê°€ ê°€ëŠ¥í•˜ê²Œë¨.
+2004 - Googleì˜ GMail, GMap Application ë“±ì¥.
+2008 - Googleì˜ Chrome browser ë°œí‘œ. V8 Engineì„ Open sourceë¡œ ê³µê°œë¡œ JavaScriptê°€ Webë¶„ì•¼ ì™¸ì— ë‹¤ë¥¸ ê³³ì—ì„œë„ ì‚¬ìš©í•˜ê²Œ ë¨.
+2009 - Ryan Dahlì˜ Node.JS ê°œë°œ. *Node.JS = V8 Engine + Event-driven + Non-blocking I.O
 
 JavaScript
-- Language Ãø¸é : JavaScript (ex. ºñÀ¯ : ÇÑ±¹¾î), (ex. alert('Hello world') : JavaScriptÀÇ function)
-- RunTime Ãø¸é : Web browser, Node.JS (ex. ºñÀ¯ : ÀÇÇĞ¿ë¾î, ¹ı ¿ë¾î µî) (ex. alert('Hello world') : Only Web browser, Node.JS¿¡¼­ Error)
+- Language ì¸¡ë©´ : JavaScript (ex. ë¹„ìœ  : í•œêµ­ì–´), (ex. alert('Hello world') : JavaScriptì˜ function)
+- RunTime ì¸¡ë©´ : Web browser, Node.JS (ex. ë¹„ìœ  : ì˜í•™ìš©ì–´, ë²• ìš©ì–´ ë“±) (ex. alert('Hello world') : Only Web browser, Node.JSì—ì„œ Error)
 
-Node.JSÀÇ °æÀïÀÚ
-ServersideÀÇ 
+Node.JSì˜ ê²½ìŸì
+Serversideì˜ 
 - Python
 - JAVA
 - PHP
 - Ruby
 
-Node.JSÀÇ ÀåÁ¡
-- ¼Óµµ(GoogleÀÇ V8 EngineÀ» »ç¿ëÇÏ±â ¶§¹®¿¡)
+Node.JSì˜ ì¥ì 
+- ì†ë„(Googleì˜ V8 Engineì„ ì‚¬ìš©í•˜ê¸° ë•Œë¬¸ì—)
 - Event-driven program
 - Non-blocking I.O
 
-*JavaScript¾ğ¾î ÇÏ³ª·Î ClientºÎÅÍ Server±îÁö ÇÁ·Î±×·¡¹ÖÀÌ °¡´ÉÇÏ´Ù.
+*JavaScriptì–¸ì–´ í•˜ë‚˜ë¡œ Clientë¶€í„° Serverê¹Œì§€ í”„ë¡œê·¸ë˜ë°ì´ ê°€ëŠ¥í•˜ë‹¤.
 
 ------------------------------------------------------------------------------------------------------------------
-Node.JS <¼³Ä¡>
+Node.JS <ì„¤ì¹˜>
 
+Node.JS ì„¤ì¹˜
+-> nodejs.org ì ‘ì†
+-> ì»´í“¨í„° ì‚¬ì–‘ì— ë§ê²Œ nodejs ìµœì‹  ë²„ì „ Download *Check : ì½˜ì†”ì—ì„œ node --version
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <ì‹¤í–‰>
+
+ubuntuì—ì„œ ì‹¤í–‰
+-> ë””ë ‰í† ë¦¬ë¥¼ ìƒì„±
+-> sudo chown ubuntu . ë¥¼ ì…ë ¥í•˜ì—¬ ê¶Œí•œì„ ê´€ë¦¬ìë¡œ ë°”ê¾¼ë‹¤.
+
+í™”ë©´ì— ì¶œë ¥
+-> Console.log('Hello world');
+
+ì‹¤í–‰(Linux, Mac, Window ëª¨ë‘)
+-> node (íŒŒì¼ ì´ë¦„).js
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <ê°„ë‹¨í•œ ì›¹ ì•± ë§Œë“¤ê¸° 1 : ì‹¤í–‰>
+
+ì˜ˆì œ ì½”ë“œ
+const http = require('http');
+
+const hostname = '127.0.0.1';
+const port = 1337;
+
+http.createServer((req, res) => {
+	res.writeHead(200, { 'Content-Type' : 'text/plain' });
+	res.end('Hello World\n');
+}).listen(port, hostname, () => {
+	console.log(`Server running at http://${hostname}:${port}/`);
+});
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <ê°„ë‹¨í•œ ì›¹ ì•± ë§Œë“¤ê¸° 2 : ì¸í„°ë„·ì˜ ë™ì‘ ë°©ë²•>
+
+Client -------(Internet)------- Server
+
+Clientì™€ ServerëŠ” ìƒëŒ€ì ì¸ ê°œë…
+- ClientëŠ” Web browserê°€ ì„¤ì¹˜ë¼ìˆëŠ” ì»´í“¨í„°(ì •ë³´ ìš”ì²­)
+- ServerëŠ” (ì •ë³´ ì‘ë‹µ)
+
+Domain : ì»´í“¨í„°ì— ì ‘ì†í•˜ê¸° ì‰½ê²Œ ë³„ëª…
+IP address : Domainì— í•´ë‹¹ë˜ëŠ” êµ¬ì²´ì ì¸ ì£¼ì†Œ
+
+Port : 0 ~ 65536(2^16-1), Clientê°€ Serverì•ˆì˜ ìš”ì²­í•˜ëŠ” ìœ„ì¹˜.
+
+ì„œë²„ì˜ ì¢…ë¥˜
+- DB ì„œë²„
+- ì±„íŒ… ì„œë²„
+- ê²Œì„ ì„œë²„
+- ì›¹ ì„œë²„(http - port : 80) : Port ë²ˆí˜¸ëŠ” ìƒëµ ê°€ëŠ¥í•˜ë‹¤.(ì›¹ì€ ë§ì´ ì‚¬ìš©í•˜ë¯€ë¡œ)
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <ê°„ë‹¨í•œ ì›¹ ì•± ë§Œë“¤ê¸° 2 : ì •ë¦¬>
+
+ì˜ˆì œ ì½”ë“œ
+const http = require('http');
+
+const hostname = '127.0.0.1';
+const port = 1337;
+
+http.createServer((req, res) => {					// Serverë¥¼ ë§Œë“¬.
+	res.writeHead(200, { 'Content-Type' : 'text/plain' });		// 'res'ponse : ì‘ë‹µ
+	res.end('Hello World\n');					// 'res'ponse : ì‘ë‹µ
+}).listen(port, hostname, () => {					// listenì„ í•¨. 1. portë²ˆí˜¸, 2. hostname : IP addressë¼ê³  ìƒê°í•˜ë©´ ë¨.
+	console.log(`Server running at http://${hostname}:${port}/`);	// Server í™”ë©´ ì¶œë ¥
+});
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <ëª¨ë“ˆ 1 : ê¸°ì´ˆ>
 
 
 
