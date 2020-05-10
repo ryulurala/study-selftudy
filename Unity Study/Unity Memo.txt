@@ -93,3 +93,6 @@ public static transform currentWeapon;
 - Quaternion.Angle : 두 개의 Rotation a와 b 사이의 각도를 반환
 - Quaternion.Euler : z축 주위로 z, x축 주위로 x, y축 주위로 y각도만큼 회전한 Rotation 반환
 - Quaternion.Slerp : from과 to 사이의 t로 구형 보간
+
+Cloth Component
+- 버그로 인하여 레이아웃을 디폴트로 해야 GUI가 작용한다.
