@@ -1,0 +1,227 @@
+﻿Node.JS <JavaScript와 HTTP>
+
+HTTP(Hypertext Transfer Protocol) : html을 Web에서 주고 받는 규칙
+- Web browser -> Web server Request Headers를 보낼 때 규칙.
+- Web server -> Web browser Response Headers를 보낼 때 규칙.
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <소개>
+
+1990 - Tim Berners-Lee에 의해 Web이 탄생.
+1994 - Marc Andreessen에 의해 Netscape Navigator라는 Web browser 탄생.
+1995 - Brendan Eich에 의해 JavaScript 등장으로 Web의 Html의 정적인 페이지가 JavaScript의 동적인 페이지 제어가 가능하게됨.
+2004 - Google의 GMail, GMap Application 등장.
+2008 - Google의 Chrome browser 발표. V8 Engine을 Open source로 공개로 JavaScript가 Web분야 외에 다른 곳에서도 사용하게 됨.
+2009 - Ryan Dahl의 Node.JS 개발. *Node.JS = V8 Engine + Event-driven + Non-blocking I.O
+
+JavaScript
+- Language 측면 : JavaScript (ex. 비유 : 한국어), (ex. alert('Hello world') : JavaScript의 function)
+- RunTime 측면 : Web browser, Node.JS (ex. 비유 : 의학용어, 법 용어 등) (ex. alert('Hello world') : Only Web browser, Node.JS에서 Error)
+
+Node.JS의 경쟁자
+Serverside의 
+- Python
+- JAVA
+- PHP
+- Ruby
+
+Node.JS의 장점
+- 속도(Google의 V8 Engine을 사용하기 때문에)
+- Event-driven program
+- Non-blocking I.O
+
+*JavaScript언어 하나로 Client부터 Server까지 프로그래밍이 가능하다.
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <설치>
+
+Node.JS 설치
+-> nodejs.org 접속
+-> 컴퓨터 사양에 맞게 nodejs 최신 버전 Download *Check : 콘솔에서 node --version
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <실행>
+
+ubuntu에서 실행
+-> 디렉토리를 생성
+-> sudo chown ubuntu . 를 입력하여 권한을 관리자로 바꾼다.
+
+화면에 출력
+-> Console.log('Hello world');
+
+실행(Linux, Mac, Window 모두)
+-> node (파일 이름).js
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <간단한 웹 앱 만들기 1 : 실행>
+
+예제 코드
+const http = require('http');
+
+const hostname = '127.0.0.1';
+const port = 1337;
+
+http.createServer((req, res) => {
+	res.writeHead(200, { 'Content-Type' : 'text/plain' });
+	res.end('Hello World\n');
+}).listen(port, hostname, () => {
+	console.log(`Server running at http://${hostname}:${port}/`);
+});
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <간단한 웹 앱 만들기 2 : 인터넷의 동작 방법>
+
+Client -------(Internet)------- Server
+
+Client와 Server는 상대적인 개념
+- Client는 Web browser가 설치돼있는 컴퓨터(정보 요청)
+- Server는 (정보 응답)
+
+Domain : 컴퓨터에 접속하기 쉽게 별명
+IP address : Domain에 해당되는 구체적인 주소
+
+Port : 0 ~ 65536(2^16-1), Client가 Server안의 요청하는 위치.
+
+서버의 종류
+- DB 서버
+- 채팅 서버
+- 게임 서버
+- 웹 서버(http - port : 80) : Port 번호는 생략 가능하다.(웹은 많이 사용하므로)
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <간단한 웹 앱 만들기 2 : 정리>
+
+예제 코드
+const http = require('http');
+
+const hostname = '127.0.0.1';
+const port = 1337;
+
+http.createServer((req, res) => {					// Server를 만듬.(return은 Server라는 객체)
+	res.writeHead(200, { 'Content-Type' : 'text/plain' });		// 'res'ponse : 응답
+	res.end('Hello World\n');					// 'res'ponse : 응답
+}).listen(port, hostname, () => {					// listen을 함. 1. port번호, 2. hostname : IP address라고 생각하면 됨.
+	console.log(`Server running at http://${hostname}:${port}/`);	// Server 화면 출력
+});
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <모듈 1 : 기초>
+
+Node.JS 모듈 : Node.JS가 개발하기 쉽게 만든 부품
+- Node.Js에서만 사용 가능.
+- 모듈은 바뀔 필요가 없기에 const 변수에 할당한다.
+- Node.JS의 Document에 메뉴얼이 있다.
+
+const http = require('http');		// 'http' 모듈을 require한다. const 변수(상수)에 할당.
+var os = require('os');		// 'os' 모듈 require함.
+console.log(os.platform());		// 현재 OS 종류 출력
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <모듈 2 : NPM 소개>
+
+NPM(Node Package Manager)
+- Node계의 앱스토어?
+- 다른 개발자들이 만든 모듈 or 독립적인 애플리케이션을 설치하는 도구
+- 설치, 삭제, 업그레이드, 의존성 관리 가능.
+
+JavaScript 모듈 : ex. Date, String, Array
+- JavaScript가 동작하는 어떤 프레임워크에서 적용 가능.
+
+' npmjs.com ' : 모듈 or 독립적인 애플리케이션을 검색 or 다운받는 사이트.
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <모듈 3 : NPM 독립적인 앱 설치>
+
+npm install ( ) -g 		// global로 설치(컴퓨터 전역에서 사용, 독립적인 소프트웨어)
+npm install ( )		// no -g : 프로젝트 안에서 부품으로 사용.(Local)
+
+예제
+uglify-js : 코드를 못생기게 한다.(줄 바꿈(\n), tab(\t) 삭제) -> 코드의 자원 감소
+- 실행을 위한 필수적인 코드를 제외한 모든 공백들 다 제거
+- 변수 이름 변화(짧게)
+
+npm install uglify-js -g	// uglify-js 설치(-g : 전역적으로)
+
+콘솔 실행
+uglifyjs ( 1 ).js		// 실행
+uglifyjs ( 1 ).js -m		// 변수명을 짧게 minimize함.
+uglifyjs ( 1 ).js -o ( 2 ).js	// ( 1 ).js를 uglify한 것이 ( 2 )에 저장.
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <모듈 4 : NPM으로 모듈 설치>
+
+Directory에서 npm init : package.json을 만드는 역할.
+-> name : ( ) 나오면 Enter
+-> version : ( ) 나오면 Enter
+-> description : 나오면 Enter or 쓰고 Enter
+-> entry point : ( ) 나오면 어떠한 JS Script가 패키지를 구동시키는 건지 지정(나중에 바꿀 수 있다.)
+-> test command : 나오면 이 패키지에서 어떤 명령어를 실행해서 테스트 할 것인가를 지정
+-> git repository : ( ) 나오면 git repository 주소를 지정
+-> keywords : 나오면 Enter
+-> author : 나오면 Enter
+-> license : ( ) 나오면 Enter
+-> yes Enter
+-> package.json 파일이 생성됨.
+
+* npm으로 설치를 하면 프로젝트에 해당 모듈의 폴더가 생기며 설치된다.
+
+underscore : 
+-> npm install underscore			// underscore module이 project에 포함.
+-> extraneous가 뜨면 npm install underscore --save	// dependencies가 추가됨(프로젝트에 반드시 필요할 경우 사용)
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <모듈 5 :모듈 사용법>
+
+* Menual 보면서 사용법 찾기.
+const var _ = require('underscore');		// underscore module을 가져오고 객체를 반환함.(_라는 변수명을 사용하는 관습)
+var arr = [3, 6, 9, 1, 12];
+
+Console.log(arr[0]);				// 배열의 첫 번째 원소 출력
+Console.log(_.first(arr));			// 배열의 첫 번째 원소 출력
+Console.log(arr[arr.length-1]);		// 배열의 마지막 원소 출력
+Console.log(_.last(arr));			// 배열의 마지막 원소 출력
+
+* npm 설치 비교
+npm init			// 폴더를 intialize (필수로 먼저하기)
+npm install ( )		// ( )모듈을 프로젝트에 부품으로 사용.
+npm install ( ) -g		// ( )모듈을 전역적으로 실행할 수 있는 독립적인 소프트웨어로 패키지 설치.(npm init 필요x)
+npm install ( ) --save	// ( )모듈을 의존성을 표시해서 다른 디렉토리에서 사용할 경우 쉽게 가져옴.
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <콜백(Callback)>
+
+* Console에 파일이름을 정하지 않고 node라고 치면 Console에서 한 줄씩 JavaScript를 작성할 수 있다.
+
+Console에서 node + Enter
+a = [3, 1, 2]; a.sort(); console.log(a);	// a(3, 1, 2)를 오름차순 정렬(Default)
+-> [ 1, 2, 3 ]
+
+a = [3, 1, 2]; function b(value1, value2){ return value2 - value1; }; a.sort(b); console.log(a);	// b function의 return 값의 부호를 보고 정렬(return을 0으로 주면 정렬 X)
+-> [ 3, 2, 1 ]
+
+a = [3, 1, 2]; function b(value1, value2){ console.log('c', value1, value2); return value2 - value1; }; a.sort(b); console.log(a);	// b function의 return 값의 부호를 보고 정렬
+-> c 3 1
+-> c 1 2
+-> [ 3, 2, 1 ]
+
+a = [3, 1, 2]; a.sort(function(value1, value2){ return value2 - value1; };); console.log(a);	// 익명 함수(콜백 함수)의 return 값의 부호를 보고 정렬
+-> [ 3, 2, 1 ]
+
+콜백(Callback) 함수 : 누군가에게 호출될 함수.
+- function b가 콜백 함수.
+- sort 함수가 매개변수(function b)를 콜하고 백하기 때문.
+- b라는 이름이 있다는 것은 나중에도 쓸 이유가 있다는 것.
+- 이름이 없는 것은 익명 함수로 대부분 쓴다.
+
+------------------------------------------------------------------------------------------------------------------
+Node.JS <동기와 비동기 1 : 개요>
+
+
+
+
+
+
+
+
+
+
