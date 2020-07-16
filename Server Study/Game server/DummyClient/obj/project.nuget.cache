@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Sek0Sc04jVdSuTIRz+nV7bnCafzapbxKJtnMHJ34CJKcxvfa74PhG8jcPm/0/tP7mWdjhT7+eFb+hwpPn1Q9Gg==",
+  "dgSpecHash": "lzbeyU+nuEzLC72F8GddHlPsIKA0HFq7Oc+vFMZ1wMitQunpkWD4Wk6BiqxRhoru0ytbK0OC9PHh6R64HnKYxQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game server\\DummyClient\\DummyClient.csproj",
+  "projectFilePath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game Server\\DummyClient\\DummyClient.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

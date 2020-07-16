@@ -41,13 +41,48 @@
 - Server는 실질적인 서버
 - ServerCore는 Server가 사용하는 핵심 기능들을 넣어 놓는다.
 - "dotnet new sln"을 통해서 최상위 폴더에 솔루션 파일을 만든다
-- "dotnet sln add csproj위치를 통해서 여러 프로젝트를 담는다.
+- "dotnet sln add *로 해당 폴더부터 하위 폴더 모두를 검사하여 .csproj를 담는다.
+
 ------------------------------------------------------------------------------------------------------------------------
 [멀티쓰레드 개론]
 
-
+- 코어가 1개일 때, 빠른 시간으로 짧게 전환하여 프로그램을 실행한다.
+- 스케줄링으로 코어가 우선순위를 정하여 중요한 프로그램은 실행 시간을 보장한다.
+- Heap 영역(new), Data 영역(static 변수)는 공유하지만 Stack은 각자만의 것이 있다.
+- 멀티쓰레드 환경은 직원을 많이 두어 효율적으로 굴러가게 해야 한다.
 
 ------------------------------------------------------------------------------------------------------------------------
+[쓰레드 생성]
+- C + W + Tab으로 빠른 콘솔 로그를 만들 수 있다.
+
+- Main 함수가 사장이면 Thread는 직원을 고용하는 것이다.
+- Main 함수가 죽으면 쓰레드도 죽는다.
+
+* Thread 생성(= 정직원 고용) --- 길게 일을 할 때 쓴다.
+1. System.Threading; : 쓰레드를 사용하기 위한 using
+2. Static void MainThread(Object state) : 함수를 정의하여 일을 정해준다.
+3. Thread thread = new Thread(MainThread) : MainThread 일을 하는 thread를 생성한다.
+4. thread.Start(); : 쓰레드를 시작한다.
+- thread.name = "..." : 쓰레드의 이름 지정
+- thread.IsBackground = true; : C#은 Default로 ForeGround에서 돌지만(false이지만) BackGround로 돌게 한다.
+- thread.join(); : BackGround 쓰레드가 끝날 때까지 기다린다.(C++도 같은 함수다)
+
+* ThreadPool로 Thread 생성(= 단기 알바 고용) --- 짧게 일을 할 때 쓴다.
+1. ThreadPool.QueueUserWorkItem(MainThread); : MainThread 함수의 일을 하는 Queue를 생성한다.(= 인력사무소)
+- 인원 수를 설정 가능하지만 각자 무슨 일을 하는 것에 대한 것은 불가능하다.
+- 재사용하여 효율적이다.
+- ThreadPool.SetMinThreads(N, N); : 최소 인원을 정하는 함수, (인원 수, IO와 관련된 NetWork)
+- ThreadPool.SetMaxThreads(N, N); : 최대 인원을 정하는 함수, 최대를 넘으면 먹통이 되는 단점이 있다.
+- 먹통되는 단점을 Task로 해결 가능하다.
+- ThreadPool.QueueUserWorkItem(obj => { while (true) { } });  // object를 받아서 => ...일을 해라.
+
+* Task 생성(WorkThreadPool 단점 해결)
+1. System.Threading.Tasks; : Task를 사용하기 위한 using
+2. Task task = new Task(() => { while (true) { } }, TaskCreationOptions.LongRunning);
+3. task.Start();
+- ThreadPool에 포함되지만 옵션을 넣어서 별도 쓰레드로 생성하게 한다.
+- 옵션이 없으면 먹통 상황은 같다.
+- TaskCreationOptions.LongRunning : 오래 걸린다는 것을 알려주는 옵션.
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------

@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game server\\ServerCore\\ServerCore.csproj",
+      "projectUniqueName": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game Server\\ServerCore\\ServerCore.csproj",
       "projectName": "ServerCore",
-      "projectPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game server\\ServerCore\\ServerCore.csproj",
+      "projectPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game Server\\ServerCore\\ServerCore.csproj",
       "packagesPath": "C:\\Users\\SRChoi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game server\\ServerCore\\obj\\",
+      "outputPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game Server\\ServerCore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\SRChoi\\AppData\\Roaming\\NuGet\\NuGet.Config"

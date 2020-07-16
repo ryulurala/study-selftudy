@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game server\\DummyClient\\DummyClient.csproj": {}
+    "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game Server\\DummyClient\\DummyClient.csproj": {}
   },
   "projects": {
-    "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game server\\DummyClient\\DummyClient.csproj": {
+    "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game Server\\DummyClient\\DummyClient.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game server\\DummyClient\\DummyClient.csproj",
+        "projectUniqueName": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game Server\\DummyClient\\DummyClient.csproj",
         "projectName": "DummyClient",
-        "projectPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game server\\DummyClient\\DummyClient.csproj",
+        "projectPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game Server\\DummyClient\\DummyClient.csproj",
         "packagesPath": "C:\\Users\\SRChoi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game server\\DummyClient\\obj\\",
+        "outputPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\Game Server\\DummyClient\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\SRChoi\\AppData\\Roaming\\NuGet\\NuGet.Config"
