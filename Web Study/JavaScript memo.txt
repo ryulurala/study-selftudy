@@ -44,7 +44,53 @@
 - ' . '은 class를 의미
 - class 선택자를 이용해서 광범위하게 효과를 주고 id 선택자를 통해서 예외적으로 처리한다(효율적이다)
 
-[JavaScript-12 : 
-[JavaScript-13 :
-[JavaScript-14 :
+[JavaScript-12 : 제어할 태그 선택하기]
+- document.querySelector('선택자 명') : 해당 선택자를 질의
+- document.querySelector('선택자 명').style : 해당 선택자의 스타일 속성을 정의한다.
+- document.querySelector('선택자 명').style.color = '색깔': 글꼴 색 지정
+- document.querySelector('선택자 명').style.backgroundColor = '색깔': 배경 색 지정
+
+[JavaScript-13 : 프로그램, 프로그래밍, 프로그래머]
+- Program : 시간의 흐름 순서
+- Programming : 순서를 만드는 행위
+- Programer : 순서를 만드는 사람
+
+* HTML vs JavaScript
+- HTML, JavaScript는 컴퓨터 언어이다.
+- JavaScript는 컴퓨터 언어이면서 프로그래밍 언어이다(HTML은 아니다)
+- HTML은 시간의 순서에 따라서 쓰이지 않는다.
+- JavaScript는 시간의 순서에 따라서 쓰인다.(사람과 상호 작용)
+
+[JavaScript-14 : 조건문 예고]
+
+[JavaScript-15 : 비교 연산자와 불리언]
+* 비교 연산자
+- '===' or '=='
+- < or >, <= or >=
+
+* JavaScript Data type
+- Number : variable(변수)
+- String : 문자열
+- Boolean : 'true' or 'false'(참 or 거짓)
+
+[JavaScript-16 : 조건문]
+- <br> : 개행
+- if(Boolead){} else{} : 조건문
+
+[JavaScript-17 : 조건문의 활용]
+* id 값을 지정하여 if 조건문 활용
+1. <input id = "id 명" .... : id를 지정
+2. document.querySelector('#id 명').value : id의 value값 get!
+3. if(value 값 비교) : 비교 연산자를 사용하여 Boolean의 결과 값 도출
+
+[JavaScript-18 : 리팩토링 중복의 제거]
+- this 참조자를 통해 코드를 작성하여 유지보수하기 편리하다.
+- 중복되는 것을 var로 할당 받아 변수로 적용한다.
+
+[JavaScript-19 : 반복문 예고]
+- 배열과 반복문을 통해서 효율적인 코드 작성을 한다.
+
+[JavaScript-20 : 배열]
+
+[JavaScript-21 : ]
 

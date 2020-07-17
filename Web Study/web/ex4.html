@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>WEB</h1>
+    <input
+      id="night_day"
+      type="button"
+      value="night"
+      onclick=" 
+      var target = document.querySelector('body');
+      if(this.value == 'night'){
+    target.style.backgroundColor='black';
+    target.style.color='white';
+    document.querySelector('#night_day').value = 'day';
+    } else{
+    target.style.backgroundColor='white';
+    target.style.color='black';
+    document.querySelector('#night_day').value = 'night';
+    }"
+    />
+  </body>
+</html>
