@@ -1,46 +1,80 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>WEB - html</title>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <h1>
-            <a href="index.html">WEB</a>
-        </h1>
-        <div id="grid">
-            <ol>
-                <li>
-                    <a href="1.html">HTML</a>
-                </li>
-                <li>
-                    <a href="2.html">CSS</a>
-                </li>
-                <li>
-                    <a href="3.html">JavaScript</a>
-                </li>
-                <li>
-                    <a href="box.html">Box</a>
-                </li>
-                <li>
-                    <a href="http://3soccar.io" title="soccar.io" target="_blank">game</a>
-                </li>
-                <li>
-                    <a href="coding.jpg">그림</a>
-                </li>
-            </ol>
-            <div>
-                <h2>Web</h2>
-                이건 Web이다.
-            </div>
-        </div>
-        <!-- <h1><a href="index.html">WEB</a></h1> <ol> <li><a href = "1.html"><font
+  <head>
+    <title>WEB - html</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      function nightDayHandler(self) {
+        var target = document.querySelector("body");
+        if (self.value == "night") {
+          target.style.backgroundColor = "black";
+          target.style.color = "white";
+          self.value = "day";
+          var aList = document.querySelectorAll("a");
+          var i = 0;
+          while (i < aList.length) {
+            // console.log(aList[i]);
+            aList[i].style.color = "powderblue";
+            i++;
+          }
+        } else {
+          target.style.backgroundColor = "white";
+          target.style.color = "black";
+          self.value = "night";
+          var aList = document.querySelectorAll("a");
+          var i = 0;
+          while (i < aList.length) {
+            // console.log(aList[i]);
+            aList[i].style.color = "blue";
+            i++;
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1><a href="index.html">WEB</a></h1>
+    <input
+      id="night_day"
+      type="button"
+      value="night"
+      onclick=" 
+    nightDayHandler(this);
+    "
+    />
+    <div id="grid">
+      <ol>
+        <li>
+          <a href="1.html">HTML</a>
+        </li>
+        <li>
+          <a href="2.html">CSS</a>
+        </li>
+        <li>
+          <a href="3.html">JavaScript</a>
+        </li>
+        <li>
+          <a href="box.html">Box</a>
+        </li>
+        <li>
+          <a href="http://3soccar.io" title="soccar.io" target="_blank">game</a>
+        </li>
+        <li>
+          <a href="coding.jpg">그림</a>
+        </li>
+      </ol>
+      <div>
+        <h2>Web</h2>
+        이건 Web이다.
+      </div>
+    </div>
+    <!-- <h1><a href="index.html">WEB</a></h1> <ol> <li><a href = "1.html"><font
         color = "red">HTML</font></a></li> <li><a href = "2.html"><font color =
         "red">CSS</font></a></li> <li><a href = "3.html"><font color =
         "red">JavaScript</font></a></li> <li><a href = "http://3soccar.io" title =
         "soccar.io" target = "_blank">game</a></li> <li><a href =
         "coding.jpg">그림</a></li> </ol> <input type = "checkbox"> <h2>Web</h2> 이건 Web이다.
         -->
-    </body>
+  </body>
 </html>
