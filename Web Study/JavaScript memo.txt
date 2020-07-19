@@ -179,12 +179,111 @@ function nightDayHandler(self) {
       }
 
 [JavaScript-29 : 객체 예고]
+* 객체를 쓰는 이유
+- 정리 정돈 하기 위해서
+- 객체 안의 함수는 '메소드(method)'라고 부른다.
 
-[JavaScript-30 : ]
-[JavaScript-31 : ]
-[JavaScript-32 : ]
-[JavaScript-33 : ]
-[JavaScript-34 : ]
-[JavaScript-35 : ]
-[JavaScript-36 : ]
-[JavaScript-37 : ]
+[JavaScript-30 : 객체 쓰기와 읽기]
+* 객체 생성
+- 배열은 [], 객체는 { ... } 쓴다.
+
+ex)
+var coworkers = {
+        programer : "Louis",  // key : value
+        designer : "Ryul",    // key : value
+      };
+
+* Input data
+- coworkers.manager = 'Choi'; :: 일반적인 Input data
+- coworkers["data scientist"] = "Seong"; : Space가 있는 것은 배열 접근으로 넣어준다.
+
+[JavaScript-31 : 객체와 반복문]
+* 객체의 데이터를 순회
+- ex)
+for(var key in Object){
+  document.write(key + " : ");
+  document.write(Object[key] + "<br>");
+}
+
+[JavaScript-32 : 객체 프로퍼티와 메소드]
+- Property : 객체에 소속된 변수
+- Method : 객체에 소속된 함수
+
+[JavaScript-33 : 객체의 활용]
+ex 1)
+var Links = {
+        setColor: function (color) {
+          var aList = document.querySelectorAll("a");
+          var i = 0;
+          while (i < aList.length) {
+            // console.log(aList[i]);
+            aList[i].style.color = color;
+            i++;
+          }
+        },
+      };
+
+ex 2)
+var Body = {
+        setColor: function (color) {
+          document.querySelector("body").style.color = color;
+        },
+        setBackgroundColor: function (color) {
+          document.querySelector("body").style.backgroundColor = color;
+        },
+      };
+
+[JavaScript-34 : 파일로 쪼개서 정리 정돈하기]
+1. .js script를 만들어서 Javascript를 작성한다.
+2. <script src = "..."></script>
+
+[JavaScript-35 : 라이브러리와 프레임워크]
+* Library vs Framework
+- 라이브러리 : 정해진 법칙 X
+- 프레임워크 : 정해진 법칙 O 
+
+* jQuery : 라이브러리(Javascript)
+- CDN 서비스 : 한 줄의 <script src = "..."></script>로 jQuery를 쓸 수 있다.
+ex 1) - Microsoft의 CDN 서비스
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.js"></script>
+을 .html 파일의 <head> 태그 안에 삽입한다.
+
+ex 2) - jQuery 예시
+var aList = document.querySelectorAll("a");
+    var i = 0;
+    while (i < aList.length) {
+      // console.log(aList[i]);
+      aList[i].style.color = color;
+      i++;
+    }
+를 단 한 줄로 바꿀 수 있다.
+----> $("a").css("color", color);
+
+- jQuery는 새로운 언어가 아니고 Javascript로 작성된 것이다.
+- 직관적으로 볼 수 있는 장점이 있다.
+
+[JavaScript-36 : UI vs API]
+* UI vs API
+- UI : User Interface
+- API : Application Programming Interface
+
+ex) 
+<input
+  type = "button" 
+  value = "Click me" 
+  onclick = "alert('Hello world')
+  "
+  />
+에서 alert 함수는 API라 한다.
+
+[JavaScript-37 : 수업을 마치며]
+- document 객체 : 웹 페이지에 있는 태그를 삭제하거나 추가할 경우 검색
+- DOM 객체 : document 부모 객체.
+- window 객체 : 웹 페이지의 주소, 웹 브라우저에 대해 화면 크기 등등 알기 위해서 검색
+- ajax : 웹 페이지를 Reload하지 않고 정보를 변경하고 싶을 때
+- cookie : 웹 페이지가 Reload되어도 현재 상태를 유지하고 싶을 때(개인화된 서비스 제공)
+- offline web application : 인터넷이 끊겨도 동작하는 웹 페이지
+- webRTC : 화상 통신 웹 애플리케이션을 만들고 싶을 때
+- speech(API) : 사용자의 음성을 인식하고 정보를 전달하고 싶을 때
+- webGL : 웹의 3차원의 게임을 만들고 싶을 때
+- webVR : 웹의 가상 현실

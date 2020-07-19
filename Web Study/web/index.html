@@ -4,34 +4,8 @@
     <title>WEB - html</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="style.css" />
-    <script>
-      function nightDayHandler(self) {
-        var target = document.querySelector("body");
-        if (self.value == "night") {
-          target.style.backgroundColor = "black";
-          target.style.color = "white";
-          self.value = "day";
-          var aList = document.querySelectorAll("a");
-          var i = 0;
-          while (i < aList.length) {
-            // console.log(aList[i]);
-            aList[i].style.color = "powderblue";
-            i++;
-          }
-        } else {
-          target.style.backgroundColor = "white";
-          target.style.color = "black";
-          self.value = "night";
-          var aList = document.querySelectorAll("a");
-          var i = 0;
-          while (i < aList.length) {
-            // console.log(aList[i]);
-            aList[i].style.color = "blue";
-            i++;
-          }
-        }
-      }
-    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.js"></script>
+    <script src="colors.js"></script>
   </head>
   <body>
     <h1><a href="index.html">WEB</a></h1>
@@ -45,24 +19,14 @@
     />
     <div id="grid">
       <ol>
-        <li>
-          <a href="1.html">HTML</a>
-        </li>
-        <li>
-          <a href="2.html">CSS</a>
-        </li>
-        <li>
-          <a href="3.html">JavaScript</a>
-        </li>
-        <li>
-          <a href="box.html">Box</a>
-        </li>
+        <li><a href="1.html">HTML</a></li>
+        <li><a href="2.html">CSS</a></li>
+        <li><a href="3.html">JavaScript</a></li>
+        <li><a href="box.html">Box</a></li>
         <li>
           <a href="http://3soccar.io" title="soccar.io" target="_blank">game</a>
         </li>
-        <li>
-          <a href="coding.jpg">그림</a>
-        </li>
+        <li><a href="coding.jpg">그림</a></li>
       </ol>
       <div>
         <h2>Web</h2>
