@@ -17,22 +17,16 @@ namespace ServerCore
             // Blocking 함수: 손님이 입장을 안하면 다음 단계 안 넘어감(계속 대기)
             try
             {
-                // 보내는 부분 + 받는 부분 => Session
-                // 받는다
-                byte[] recvBuff = new byte[1024];   // Data Buffer
-                int recvBytes = clientSocket.Receive(recvBuff);  // 몇 바이트 받았는지
-                // 문자에 대한 규약(Data, 시작 인덱스, bytes)
-                string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
-                Console.WriteLine($"[From Client] {recvData}");
+                // 보내는 부분 + 받는 부분 + Disconnect => Session
+                Session session = new Session();    // polling 방식도 가능
+                session.Start(clientSocket);
 
-                // 보낸다
-                byte[] sendBuff = Encoding.UTF8.GetBytes("Welcome to Server !");
+                byte[] sendBuff = Encoding.UTF8.GetBytes("Welcome to Server");
+                session.Send(sendBuff);
 
-                clientSocket.Send(sendBuff);
+                Thread.Sleep(1000);
 
-                // 쫓아낸다
-                clientSocket.Shutdown(SocketShutdown.Both); // 예고(옵션), 듣기도 싫고 말하기도 싫다.
-                clientSocket.Close();
+                session.Disconnect();
             }
             catch (Exception e)
             {

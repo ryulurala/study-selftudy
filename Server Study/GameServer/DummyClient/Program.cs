@@ -28,9 +28,12 @@ namespace DummyClient
                     socket.Connect(endPoint);   // Blocking 함수: 계속 대기-게임에서는 치명적이다
                     // System.Console.WriteLine($"Connected To {socket.RemoteEndPoint.ToString()}");   // RemoteEndPoint: 연결한 반대쪽 대상 
 
-                    // 보낸다
-                    byte[] sendBuff = Encoding.UTF8.GetBytes("Hi!");
-                    int sendBytes = socket.Send(sendBuff);  // SendBuff에 있는 것을 한 번에 보내줌(Blocking 함수)
+                    // 보낸다(5번)
+                    for (int i = 0; i < 5; i++)
+                    {
+                        byte[] sendBuff = Encoding.UTF8.GetBytes("Hi! ");
+                        int sendBytes = socket.Send(sendBuff);  // SendBuff에 있는 것을 한 번에 보내줌(Blocking 함수)
+                    }
 
                     // 받는다
                     byte[] recvBuff = new Byte[1024];
