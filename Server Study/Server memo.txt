@@ -756,18 +756,18 @@ class Listener
   // EventHandler<TEventArgs>(Object sender, TEventArgs e)이기 때문에 매개 변수 일치 시킴
   public OnAcceptCompleted(Object sender, SocketAsyncEventArgs args)
   {
-     // Accept가 성공했는지 확인(SoccetError로 체크 가능)
-     if(args.SocketError == SocketError.Success)
-     {
-       // Accept 성공, 서버가 해줘야 할 일
-       // _onAcceptHandler를 소유한 쓰레드가 args.AcceptSocket 처리
-       _onAcceptHandler.Invoke(args.AcceptSocket);
-     }
-     else
-     {
-       // 에러 처리(성공 이외의)
-     }
-     RegisterAccept(args);  // 다음 턴을 위해 등록(예약)
+    // Accept가 성공했는지 확인(SoccetError로 체크 가능)
+    if(args.SocketError == SocketError.Success)
+    {
+      // Accept 성공, 서버가 해줘야 할 일
+      // _onAcceptHandler를 소유한 쓰레드가 args.AcceptSocket 처리
+      _onAcceptHandler.Invoke(args.AcceptSocket);
+    }
+    else
+    {
+      // 에러 처리(성공 이외의)
+    }
+    RegisterAccept(args);  // 다음 턴을 위해 등록(예약)
   }
 }
 

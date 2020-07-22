@@ -1,0 +1,70 @@
+[WEB2-Home server-1: 수업 소개]
+- IPv4(42억개) -> IPv6
+- IPv4 체계를 IPv6 체계로 바꾸는 것은 어렵다.
+- 해결: 공유기
+
+[WEB2-Home server-2: 공유기]
+- 인터넷에 연결이 될려면 IP가 있어야 한다.
+
+* 공유기
+- WAN(Wide Area Network): 광역 네트워크, 공용 IP(Public)
+- LAN(Local Area Network): 지역 네트워크, 사설 IP(Private)
+- Gateway address or Router address: 192.168.0.1
+
+* IP address
+- 10.0.0.0 ~ 10.255.255.255 : Public IP address
+- 172.16.0.0 ~ 172.31.255.255
+- 192.168.0.0 ~ 192.168.255.255 : Private IP address
+
+[WEB2-Home server-3: NAT]
+* NAT(Network Address Translation)
+- Public IP address <-> Private IP address
+- Client가 요청하여 Server로부터 Data를 받았을 떄, 공유기에서 Client로 찾아가게 IP address를 바꾼다.
+
+[WEB2-Home server-4: IP 주소 알아내기]
+
+[WEB2-Home server-5: Port]
+* Port
+- 내 컴퓨터를 서버로 할 때, 다른 이용자들이 접속할 수 있도록 한다.(SSH 서버(22), Web 서버(80) 등)
+- 0 ~ 1024 : Well-known port, 예약된 포트
+
+* URL(Uniform Resource Locator)
+- 통신규약://
+
+[WEB2-Home server-6: Port Forwarding]
+* 포트포워딩
+- public IP address + port -> private IP address -> 서버의 Port로 가도록 함.
+- 자신의 컴퓨터 포트 번호로 열린 서버를 접속할 수 있도록 라우터에 등록한다.
+
+[WEB2-Home server-7: Dynamic & Static IP address]
+- ISP(Internel Service Provide): (= 통신사)
+
+* 유동 IP vs 고정 IP
+- 변하는 IP
+- 고정된 IP
+
+[WEB2-Home server-8: DHCP-1]
+* DHCP(Dynamic Host Configuration Protocol)
+- 자동으로 Private IP address를 Dynamic하게 중복되지 않도록 세팅해준다.
+- 공유기: DHCP 서버(= DHCP 프로그램)가 필요하다(내장돼있다)
+- 컴퓨터: DHCP 클라이언트(= DHCP 프로그램)이 필요하다(내장돼있다)
+- Mac(Media access) address or Physical address: 기기 식별자(공유기, 컴퓨터 등등)
+- 과정: DHCP Client가 DHCP Server에게 요청하고 응답받는다(IP를 제한 시간만 받을 수도 있다)
+
+[WEB2-Home server-9: DHCP-2]
+* DHCP 설정
+- IP 개수
+- IP 대여시간
+- IP 직접 지정 가능(고정 IP)
+
+[WEB2-Home server-10: 수업을 마치며]
+* NAS(Network Attached Storage)
+- ex) Dropbox, Google Drive, Web hard
+
+* Domain Name System
+- 1년간 무료 : freenom.com
+- dynamic dns
+
+* HTTPS
+- 안전하게 정보를 주고받게 할 수 있다.(웹에서)
+- 무료화되고 있다.(Let's encript)
