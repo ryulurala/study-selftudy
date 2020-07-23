@@ -7,11 +7,11 @@ namespace ServerCore
     class Listener
     {
         Socket _listenSocket;
-        Action<Socket> _onAcceptHandler;
-        public void init(IPEndPoint endPoint, Action<Socket> onAcceptHandler)
+        Func<Session> _sessionFactory;  // Session을 누구로 만들지 정의
+        public void init(IPEndPoint endPoint, Func<Session> sessionFactory)
         {
             _listenSocket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            _onAcceptHandler += onAcceptHandler;
+            _sessionFactory += sessionFactory;
             // 문지기 교육
             _listenSocket.Bind(endPoint);
 
@@ -46,9 +46,17 @@ namespace ServerCore
             // 소켓 에러 체크: 진짜 에러있는 경우 or 성공했다 
             if (args.SocketError == SocketError.Success)
             {
+                // GameSession만 만들 수 있는 단점이 있다.
+                // 보내는 부분 + 받는 부분 + Disconnect => Session
+
+                // 어떤 Session인지 모르므로 루트 부모로 받아서 Invoke한다.
+                Session session = _sessionFactory.Invoke();    // polling 방식도 가능
+                session.Start(args.AcceptSocket);       // 외부에서 사용 X
+                session.OnConnected(args.AcceptSocket.RemoteEndPoint);      // 이쪽에서 클라이언트가 연결을 끊으면 에러
+
                 // Accept 성공
                 // User가 오면 서버가 해야할 일
-                _onAcceptHandler.Invoke(args.AcceptSocket);
+                // _onAcceptHandler.Invoke(args.AcceptSocket);
             }
             else
             {

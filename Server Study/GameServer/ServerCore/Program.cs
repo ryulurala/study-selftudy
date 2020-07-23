@@ -7,32 +7,44 @@ using System.Threading.Tasks;
 
 namespace ServerCore
 {
+    // Session 클래스를 상속받아 사용(콘텐츠단)
+    class GameSession : Session
+    {
+        public override void OnConnected(EndPoint endPoint)
+        {
+            // 연결됨
+            System.Console.WriteLine($"Onconnected: {endPoint}");
+
+            // 연결되고 후처리
+            byte[] sendBuff = Encoding.UTF8.GetBytes("Welcome to Server");
+            Send(sendBuff);
+            Thread.Sleep(1000);
+            Disconnect();
+        }
+
+        public override void OnDisconnected(EndPoint endPoint)
+        {
+            System.Console.WriteLine($"OnDisconnected: {endPoint}");
+        }
+
+        public override void OnRecv(ArraySegment<byte> buffer)
+        {
+            // (버퍼, offset(어디부터 시작), 받은 바이트 수)
+            string recvData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
+            Console.WriteLine($"[From Client] {recvData}");
+        }
+
+        public override void OnSend(int numOfBytes)
+        {
+            // 몇 바이트를 보냈는지
+            System.Console.WriteLine($"Transferred bytes: {numOfBytes}");
+        }
+    }
+
     class Program
     {
         static Listener _listener = new Listener();
-        static void OnAcceptHandler(Socket clientSocket)
-        {
-            // 손님을 입장시킨다
-            // Accept의 return: 대리인(Session)의 Socket
-            // Blocking 함수: 손님이 입장을 안하면 다음 단계 안 넘어감(계속 대기)
-            try
-            {
-                // 보내는 부분 + 받는 부분 + Disconnect => Session
-                Session session = new Session();    // polling 방식도 가능
-                session.Start(clientSocket);
 
-                byte[] sendBuff = Encoding.UTF8.GetBytes("Welcome to Server");
-                session.Send(sendBuff);
-
-                Thread.Sleep(1000);
-
-                session.Disconnect();
-            }
-            catch (Exception e)
-            {
-                System.Console.WriteLine(e.ToString());
-            }
-        }
         static void Main(string[] args)
         {
             // DNS: Domain Name System: DNS서버가 네트워크 망에 하나가 더 있어서 주소를 찾아준다.
@@ -47,7 +59,8 @@ namespace ServerCore
 
             // Initialize
             // 혹시라도 누가 들어오면 OnAcceptHandler로 알려달라
-            _listener.init(endPoint, OnAcceptHandler);
+            // 무엇을 만들지 지정만 해달라.(게임 매니저로 or 람다로)
+            _listener.init(endPoint, () => { return new GameSession(); });      // GameSession을 만든다.
             System.Console.WriteLine("Listening...");
 
             // 24시간 영업: 무한루프 -> 프로그램이 종료되지 않게 함(아무 일도 하지 않지만)
