@@ -11,10 +11,7 @@ C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\Game Server\ServerCor
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\Game Server\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.dll
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\Game Server\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.pdb
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\Game Server\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.genruntimeconfig.cache
-C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\bin\Debug\netcoreapp3.1\ServerCore.exe
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\bin\Debug\netcoreapp3.1\ServerCore.deps.json
-C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\bin\Debug\netcoreapp3.1\ServerCore.runtimeconfig.json
-C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\bin\Debug\netcoreapp3.1\ServerCore.runtimeconfig.dev.json
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\bin\Debug\netcoreapp3.1\ServerCore.dll
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\bin\Debug\netcoreapp3.1\ServerCore.pdb
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.csprojAssemblyReference.cache
@@ -23,4 +20,3 @@ C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.AssemblyInfo.cs
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.dll
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.pdb
-C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\netcoreapp3.1\ServerCore.genruntimeconfig.cache

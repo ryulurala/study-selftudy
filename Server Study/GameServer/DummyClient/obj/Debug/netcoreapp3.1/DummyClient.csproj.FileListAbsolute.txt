@@ -24,3 +24,6 @@ C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\DummyClien
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.dll
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.pdb
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.genruntimeconfig.cache
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\DummyClient\bin\Debug\netcoreapp3.1\ServerCore.dll
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\DummyClient\bin\Debug\netcoreapp3.1\ServerCore.pdb
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.csproj.CopyComplete

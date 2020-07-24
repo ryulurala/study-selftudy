@@ -1059,7 +1059,7 @@ Func<Session> _sessionFactory;
     if(args.SocketError == SocketError.Success)
     {     // GameSession만 만들 수 있는 단점 보완
           // 어떤 Session인지 모르므로 root 부모로 받아서 Invoke한다.
-      Session session = _sessionFactoryd.Invoke();
+      Session session = _sessionFactory.Invoke();
       session.Start(args.AcceptSocket);         // 외부에서 사용 X
       
       // 오버라이드된 함수 호출
@@ -1150,6 +1150,363 @@ public void Disconnect()
 }
 
 ------------------------------------------------------------------------------------------------------------------------
+[Connector]
+
+- 공식적인 명칭 X, Listener의 반대 역할(Client에서의)
+- Server끼리 통신을 하기 위해서 Connector가 필수적이다.
+
+* Connector 만들기(Client가 Async, non-blocking으로 connect하는 예제)
+- 마찬가지로 Async를 위해 Register와 OnCompleted로 구현한다.
+ex)
+public class Connector
+{
+  Func<Session> _sessionFactory;
+  public void Connect(IPEndPoint endPoint, Func<Session> sessionFactory)
+  {
+    // ServerSocket과의 연결
+    Socket socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+    _sessionFactory = sessionFactory;   // 어떤 세션과 연결을 할 지 모르므로
+
+    // 이벤트 생성(for Async)
+    SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+    args.Completed += OnConnectedCompleted;   // 이벤트 등록
+    args.RemoteEndPoint = endPoint;
+    args.UserToken = socket;      // 넘겨줄 정보를 담는다.(object type이므로 모든 type가능)
+
+    RegisterConnect(args);    // 예약 시작
+  }
+}
+
+void RegisterConnect(SocketAsyncEventArgs args)
+{
+  // Socket을 멤버 변수를 두지 않는 이유는 동시다발적으로 socket을 사용하므로
+  Socket socket = args.UserToken as Socket;   // Socket type으로 변환
+  if(socket == null)
+  { // 에러 발생
+    return;
+  }
+  bool pending = socket.ConnectAsync(args);
+  if(pending == false)
+  { // 연결 성공
+    OnConnectedCompleted(null, args);
+  }
+}
+
+void OnConnectedCompleted(object sender, SocketAsyncEventArgs args)
+{ // 성공함 -> 세션 연동
+  if(args.SocketError == SocketError.Success)
+  {
+    // new Session()으로 하는 것이 아닌 콘텐츠 단에서 요구하는 방식대로 만든다.
+    Session session =  _sessionFactory.Invoke();
+    session.Start(args.ConnectSocket);    // 연결한 소켓
+  }
+  else
+  {
+    // 에러 이유 출력
+  }
+}
+
+* ServerCore 라이브러리화
+- ServerCore는 라이브러리로서 output파일이 exe가 아니라 library파일이다.
+1. ServerCore의 .csproj파일 내용에서 기존의 <OutputType>Exe</OutputType>를
+  <OutputType>Library</OutputType>으로 수정한다.
+2. 실질적으로 실행할 Server Project와 DummyClient에서 사용하기 API를 사용하기 위해서
+각각 .csproj 파일 내용에서
+  <ItemGroup>
+    <ProjectReference Include="..\ServerCore\ServerCore.csproj"/>
+  </ItemGroup>
+을 추가한다.
+3. 마지막으로 각각 .cs파일에서 using ServerCore; 를 추가하여 API를 사용한다.
+4. 사용할 클래스들을 public으로 해야 사용 가능하다.
+
+------------------------------------------------------------------------------------------------------------------------
+[TCP vs UDP]
+
+* Packet(패킷)을 주고 받는다.
+
+* TCP vs UDP
+- TCP(Transmission Control Protocol)
+1) 전화 연결 방식, 안전함
+2) 연결형 서비스
+3) 전송 순서 보장O
+4) 속도 느림(UDP에 비교해서)
+5) 신뢰성 높음(분실 일어나면 다시 보냄)
+6) 흐름/혼잡 제어
+
+- UDP(User Datagram Protocol): ex) FPS게임
+1) 우편 전송 방식, 위험함
+2) 비연결형 서비스
+3) 전송 순서 보장X
+4) 속도 빠름
+5) 신뢰성 낮음
+
+------------------------------------------------------------------------------------------------------------------------
+[RecvBuffer]
+
+* Receive buffer 처리 클래스
+필드 변수: 1)버퍼, 2)읽어 처리한 위치 커서, 3)받아서 쓴 위치 커서
+1) buffer
+2) read cursor
+3) write cursor
+
+멤버 함수:
+- [][][][][] : 5 byte
+1) void Clean(): Read, Write Cursor를 버퍼가 빈 상태로 초기화한다. ex) [rw][][][][]: 버퍼가 빈 상태
+1.1) 남은 데이터가 없으면 커서 위치만 리셋(r, w cursor가 겹친 상태) ex) [][][][rw][] -> [rw][][][][]
+1.2) 남은 데이터가 있으면 시작위치로 복사 ex) [][r][][w][] -> [r][][w][][]
+
+2) bool OnRead(int numOfBytes): Read를 했을 때를 처리(에러 or 성공: Read Cursor를 옮김)
+ex) 2 byte씩 읽어서 처리 할 때, [r][][][][w] -> [][][r][][w]
+
+3) bool onWrite(int numOfBytes): Write를 했을 때를 처리(에러 or 성공: Write Cursor를 옮김)
+ex) 3byte를 받아서 써야 할 때, [r][w][][][] -> [r][][][][w]
+
+ex) Receive buffer class
+public class RecvBuffer   // 라이브러리로 사용할 수 있도록 public
+{
+  ArraySegment<byte> _buffer;   // C++에서의 pointer로 하는 것을 C#에서는 Segment로 처리하기 위한 변수 선언
+  int _readPos;       // Read Cursor
+  int _writePos;      // Write Cursor
+
+  public RecvBuffer(int bufferSize)   // 생성자
+  {
+    _buffer = new ArraySegment<byte>(new byte[bufferSize], 0, bufferSize);
+  }
+
+  public int DataSize     // 쌓여있는(처리해야 할) Data 크기
+  {
+    get{ return (_writePos - _readPos); }
+  }
+  public int FreeSize     // 버퍼의 남은 공간
+  {
+    get{ return (_buffer.Count - _writePos); }
+  }
+
+  public ArraySegment<byte> ReadSegment   // 처리할 세그먼트 리턴
+  {
+    get{ return new ArraySegment<byte>(_buffer.Array, _buffer.Offset+_readPos, DataSize); }
+  }
+  public ArraySegment<byte> WriteSegment  // 남은 공간 세그먼트 리턴
+  {
+    get{ return new ArraySegment<byte>(_buffer.Array, _buffer.Offset+_writePos, FreeSize); }
+  }
+
+  public void Clean()
+  {
+    int dataSize = DataSize;
+    if(dataSize == 0)   // r, w cursor가 겹쳤는가?
+    {   // 남은 데이터가 없으면 복사하지 않고 커서 위치만 리셋
+      _readPos = _writePos = 0;
+    }
+    else
+    {   // 남은 데이터가 있으면 시작 위치로 복사한다.
+        // [][][r][][w]
+        // Copy(SourceArray, Source위치, DestinationArray, Destination위치, 복사할 크기)
+        Array.Copy(_buffer.Array, _buffer.Offset+_readPos, _buffer.Array, _buffer.Offset, dataSize);
+        
+        // [r][][w][][]
+        _readPos = 0;
+        _writePos = dataSize;
+    }
+  }
+
+  public bool OnRead(int numOfBytes)    // Read를 했을 때
+  {
+    if(numOfBytes > DataSize)
+    { // 비정상
+      return false;
+    }
+    // Read Cursor를 옮김
+    _readPos += numOfBytes;
+    return true;
+  }
+  public bool OnWrite(int numOfBytes)   // Recv를 했을 때
+  {
+    if(numOfBytes > FreeSize)
+    { // 비정상
+      return false;
+    }
+    // Write Cursor를 옮김
+    _writePos += numOfBytes;
+    return true;
+  }
+}
+
+* in Session 클래스
+- 버퍼 선언
+RecvBuffer _recvBuffer = new RecvBuffer(1024);
+
+- Recv 예약함수 안에서는 처음 부분에,
+_recvBuffer.Clean();  // 커서가 너무 뒤로 이동하는 것을 방지, 버퍼 정리
+
+- Recv완료 함수에서는 데이터를 받았을 때,
+1) Write 커서 이동
+if(_recvBuffer.OnWrite(args.BytesTransferred) == false)
+{ // 버그 발생
+  Disconnect();
+  return;
+}
+
+2) 컨텐츠 단으로 데이터 범위 만큼만 넘기고 얼마나 처리 했는지 받는다.
+int processLength = OnRecv(_recvBuffer.ReadSegment);
+if(processLength < 0 || _recvBuffer.DataSize < processLength)
+{ // 콘텐츠 단에서 이상하게 넣었을 경우
+  Disconnect();
+  return ;
+}
+
+3) Read 커서 이동
+if(_recvBuffer.OnRead(processLength) == false)
+{ // 버그 발생
+  Disconnect();
+  return;
+}
+
+------------------------------------------------------------------------------------------------------------------------
+[SendBuffer]
+
+* Send buffer
+- Send는 Recv와는 다르게 모든 사용자에게 동일한 상황을 주기 위해 많이 실행된다.
+    따라서, Send buffer를 Copy해서 사용하게 되면 Copy의 비용이 너무 들기 때문에 최적화가 필요하다.
+- 아주 큰 사이즈로(Chunk size)로 덩어리처럼 만들고 쪼개서 사용하는 식으로 만든다.
+
+ex) SendBuffer 클래스와 SendBufferHelper 클래스
+  public class SendBuffer   // 실질적으로 Helper class를 사용(일회용)
+  {
+    byte[] buffer;
+    int _usedSize = 0;    // 일종의 사용한 만큼을 나타내는 커서가
+    
+    public SendBuffer(int chunkSize)
+    {
+      _buffer = new byte[chunkSize];
+    }
+
+    public int FreeSize{ get{ return _buffer.Length - _usedSize; } }  // 남은 공간
+
+    public ArraySegment<byte> Open(int reserveSize)   // 매개 변수로 예약 공간을 받아 처리한다.(일종의 예약)
+    {
+      if(reserveSize > FreeSize)
+      {
+        return null;
+      }
+      return new ArraySegment<byte>(_buffer, _usedSize, reserveSize);
+    }
+
+    public ArraySegment<byte> Close(int usedSize)   // 매개 변수로 사용한 사이즈를 처리한다.(일종의 완료)
+    {
+      ArraySegment<byte> segment = new ArraySegment<byte>(_buffer, _usedSize, usedSize);
+      _usedSize += usedSize;    // 커서 옮김
+      return segment;
+    }
+  }
+
+  public class SendBufferHelper
+  { // 쓰레드끼리의 경합을 없앤다.
+    public static ThreadLocal<SendBuffer> CurrentBuffer = new ThreadLocal<SendBuffer>(() => { return null; } );
+    public static int ChunkSize{ get; set; } = 4096 * 100;    // 크게 잡고 분할해서 쓴다.
+
+    public static ArraySegment<byte> Open(int reserveSize)
+    {
+      if(CurrentBuffer.Value == null)   // 한 번도 사용 안했을 때
+      {
+        CurrentBuffer.Value = new SendBuffer(ChunkSize);
+      }
+      if(CurrentBuffer.Value.FreeSize < reserveSize)  // 남은 공간보다 예약할 공간이 더 많을 때
+      {
+        CurrentBuffer.Value = new SendBuffer(ChunkSize);
+      }
+      return CurrentBuffer.Value.Open(reserveSize);   // 남은 공간이 있어서 덩어리 쪼개서 사용
+    }
+    
+    public static ArraySegment<byte> Close(int usedSize)
+    {
+      return CurrentBuffer.Value.Close(usedSize);
+    }
+  }
+
+- Server Class에서의 사용
+ex) 연결되고 후처리로
+  ArraySegment<byte> openSegment = SendBufferHelper.Open(4096);
+  byte[] buffer1 = BitConverter.GetBytes(int ...);  // int type을 byte 배열로 만든다.
+  byte[] buffer2 = BitConverter.GetBytes(int ...);
+
+  // buffer1 + buffer2를 openSegment에 복사한다.
+  Array.Copy(buffer1, 0, openSegment.Array, openSegment.Offset, buffer1.Length);
+  Array.Copy(buffer2, 0, openSegment.Array, openSegment.Offset + buffer1.Length, buffer2.Length);
+
+  // 보낼 버퍼 완료
+  ArraySegment<byte> sendBuff = SendBufferHelper.Close(buffer1.Length + buffer2.Length);
+
+  // 전송
+  Send(sendBuff);
+
+------------------------------------------------------------------------------------------------------------------------
+[PacketSession]
+
+* Packet
+- 실질적으로는 Data를 Packet을 주고 받는다
+- 패킷은 최대한 압축해서 보내야된다.
+- Pack의 기본적인 설계는 다음과 같다.
+  class Packet    // 공통적인 것을 멤버 변수로 하고 이 클래스를 상속 받는다.
+  {
+    public ushort size;     // ushort(2byte) vs uint(4byte)
+    public ushort packetId; // 무슨 패킷인지 구별
+  }
+이다.
+- 이 클래스를 상속받아서 사용한다.
+- 자식 클래스는 size를 모를 수 있으므로 size가 멤버 변수로 선언된다.
+
+* PacketSession
+- Packet Session을 만들어 패킷을 자동으로 유효 범위로만 파싱될 수 있도록 한다.
+
+ex)
+public abstract class PacketSession : Session
+{
+  // [size(2)][packetId(2)][option], [size(2)][packetId(2)][option], ...
+  public static readonly int HeaderSize = 2;    // HeaderSize를 읽기 전용으로 2 byte로 칭한다.
+  
+  // sealed 키워드: 이 클래스의 자식 클래스가 오버라이드 못한다(봉인)
+  public sealed override int OnRecv(ArraySegment<byte> buffer)
+  {
+    int processLength = 0;
+
+    while(ture)
+    {
+      if(buffer.Count < HeaderSize)   // 최소한 헤더는 파싱할 수 있는지 확인
+      {
+        break;
+      }
+
+      // 패킷이 완전체로 도착했는지 확인
+      ushort dataSize = BitConverter.ToInt16(buffer.Array, buffer.Offset);
+      if(buffer.Count < dataSize)
+      {
+        break;
+      }
+
+      // 여기부터는 패킷 조합 가능
+      // 패킷의 유효 범위만을 넘겨준다.(사이즈 전체 or 패킷 내용만(헤더 빼고))
+      // 넘겨줄 때 방식: 1) buffer.Slice() or 2) new ArraySegment<byte>: 힙 영역이 아니므로 같은 결과
+      OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize));
+
+      processLength += dataSize;
+      buffer = new ArraySegment<byte>(buffer.Array, buffer.offset + dataSize, buffer.Count - dataSize);
+    }
+    return processLength;
+  }
+  // 처리할 바이트 수(콘텐츠 단으로 유효한 패킷만 넘김)
+  // PacketSession을 상속 받는 클래스는 이 인터페이스를 오버라이드한다.
+  public abstract void OnRecvPacket(ArraySegment<byte> buffer);
+}
+
+- Server에서는 Packet packet = new Packet() { size = N, packetId = N }; 으로 선언하여 사용한다.
+
+------------------------------------------------------------------------------------------------------------------------
+[Serialization #1]
+
+- 직렬화
+
+
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
@@ -1157,4 +1514,11 @@ public void Disconnect()
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+
 

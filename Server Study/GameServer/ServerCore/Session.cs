@@ -7,12 +7,49 @@ using System.Threading;
 
 namespace ServerCore
 {
-    abstract class Session
+    public abstract class PacketSession : Session
+    {   // sealed 키워드 : 이 클래스의 자식 클래스가 오버라이드 못한다.(봉인)
+        // [size(2)][packetId(2)][...(option)], [size(2)][packetId(2)][...(option)], ...
+        public static readonly int HeaderSize = 2;
+        public sealed override int OnRecv(ArraySegment<byte> buffer)
+        {
+            int processLength = 0;
+
+            while (true)
+            {
+                if (buffer.Count < HeaderSize)    // 최소한 헤더는 파싱할 수 있는지 확인
+                {
+                    break;
+                }
+
+                // 패킷이 완전체로 도착했는지 확인
+                ushort dataSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
+                if (buffer.Count < dataSize)
+                {
+                    break;
+                }
+
+                // 여기까지 오면 패킷 조합 가능
+                // 패킷의 유효 범위를 집어줌 - 1)사이즈 전체를 넘겨줄건지 or 2)패킷내용만 넘길건지)
+                OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize));
+                // buffer.Slice() or new ArraySegment<T> 둘 중 하나로, ArraySegment는 힙 영역이 아니므로 같은 결과다.
+                processLength += dataSize;
+                buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + dataSize, buffer.Count - dataSize);
+            }
+            return processLength;
+        }
+        // 처리한 바이트 수
+        // 유효한 것만 넘긴다.(콘텐츠 단으로)
+        public abstract void OnRecvPacket(ArraySegment<byte> buffer);    // PacketSession을 상속 받는 클래스는 이 인터페이스로 받는다.
+    }
+
+    public abstract class Session
     {
         Socket _socket;
         int _disconnected = 0;
+        RecvBuffer _recvBuffer = new RecvBuffer(1024);      // 버퍼
         object _lock = new Object();    // 락을 쓰기 위해서
-        Queue<byte[]> _sendQueue = new Queue<byte[]>(); // sendBuff를 넣어 한 번에 보내기용
+        Queue<ArraySegment<byte>> _sendQueue = new Queue<ArraySegment<byte>>(); // sendBuff를 넣어 한 번에 보내기용
         // 다른 쓰레드가 예약했는지 구분
         List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();     // ArraySegment 사용하기 위해서
         SocketAsyncEventArgs _sendArgs = new SocketAsyncEventArgs();    // 재사용 하기 위해서
@@ -23,18 +60,12 @@ namespace ServerCore
             recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnRecvCompleted);  // 자동 콜백
             _sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);  // 자동 콜백
 
-            // new SocketAsyncEventArgs().UserToken : 식별자 or 연동하고 싶은 데이터를 받고 싶을 때 사용
-
-            // SetBuffer(메모리, offset, count)
-            // Session끼리 버퍼를 나눠서 쓰기도 하기 때문에 offset과 count가 있다.
-            recvArgs.SetBuffer(new byte[1024], 0, 1024);
-
             RegisterRecv(recvArgs);     // init말고 start 함수로 관리한다.
         }
 
         // 추상 함수(상속해서 사용)
         public abstract void OnConnected(EndPoint endPoint);
-        public abstract void OnRecv(ArraySegment<byte> buffer);
+        public abstract int OnRecv(ArraySegment<byte> buffer);
         public abstract void OnSend(int numOfBytes);
         public abstract void OnDisconnected(EndPoint endPoint);
 
@@ -53,7 +84,7 @@ namespace ServerCore
             _socket.Close();
         }
 
-        public void Send(byte[] sendBuff)       // 언제 할 지 예측 불가
+        public void Send(ArraySegment<byte> sendBuff)       // 언제 할 지 예측 불가
         {
             lock (_lock)    // 한 번에 한 쓰레드만 들어올 수 있게 한다.
             {
@@ -63,11 +94,6 @@ namespace ServerCore
                     RegisterSend();
                 }
             }
-            // _socket.Send(sendBuff);
-            // SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();     // 매번 만들어 비효율
-            // _sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);  // 자동 콜백
-            // _sendArgs.SetBuffer(sendBuff, 0, sendBuff.Length);
-            // RegisterSend();
         }
 
         #region 네트워크 통신
@@ -79,8 +105,8 @@ namespace ServerCore
             // 기본적으로 버퍼의 범위를 표현할 때는 (버퍼, 시작인덱스, 크기)를 넘겨준다.
             while (_sendQueue.Count > 0)
             {
-                byte[] buff = _sendQueue.Dequeue();
-                _pendingList.Add(new ArraySegment<byte>(buff, 0, buff.Length));     // 더 효율적이다(힙 X, 스택 O)
+                ArraySegment<byte> buff = _sendQueue.Dequeue();
+                _pendingList.Add(buff);     // 더 효율적이다(힙 X, 스택 O)
                 // _sendArgs.SetBuffer(buff, 0, buff.Length);      // 실제 있는 Data의 버퍼 길이를 넣어준다
             }
             _sendArgs.BufferList = _pendingList;        // 예약된 목록들이 다 들어있다.(BufferList)
@@ -129,6 +155,11 @@ namespace ServerCore
         }
         void RegisterRecv(SocketAsyncEventArgs args)
         {
+            // 버퍼 정리
+            _recvBuffer.Clean();    // 커서가 너무 뒤로 이동하는 것을 방지
+            ArraySegment<byte> segment = _recvBuffer.WriteSegment;
+            args.SetBuffer(segment.Array, segment.Offset, segment.Count);
+
             // Non-blocking 버전 receive
             bool pending = _socket.ReceiveAsync(args);
             if (pending == false)
@@ -144,8 +175,27 @@ namespace ServerCore
             {   // TODO(Connect: 데이터 받음)
                 try     // 예외 방지
                 {
-                    OnRecv(new ArraySegment<byte>(args.Buffer, args.Offset, args.BytesTransferred));
-                    // 메시지를 받았다는 것을 연동
+                    // 1. Write 커서 이동
+                    if (_recvBuffer.OnWrite(args.BytesTransferred) == false)
+                    {   // 버그발생
+                        Disconnect();
+                        return;
+                    }
+
+                    // 2. 컨텐츠 단으로 데이터 범위 만큼만 넘기고 얼마나 처리했는지 받는다.
+                    int processLength = OnRecv(_recvBuffer.ReadSegment);
+                    if (processLength < 0 || _recvBuffer.DataSize < processLength)
+                    {   // 콘텐츠 단에서 이상하게 넣었다.
+                        Disconnect();
+                        return;
+                    }
+
+                    // 3. Read 커서 이동
+                    if (_recvBuffer.OnRead(processLength) == false)
+                    {
+                        Disconnect();
+                        return;
+                    }
 
                     // Receive를 받을 준비를 다시 함
                     RegisterRecv(args);
