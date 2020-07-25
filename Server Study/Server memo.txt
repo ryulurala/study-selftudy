@@ -1,4 +1,104 @@
-[OT]
+[OT] C# Base
+
+* 동기 vs 비동기
+- 동기: 요청과 그 결과가 동시에 발생 O, 함수의 결과를 호출한 함수에서 처리 O
+- 비동기: 요청과 그 결과가 동시에 발생 X, 함수의 결과를 호출한 함수에서 처리 X
+
+* 콜백 함수
+- 어떤 Event가 발생했을 때 or 수행이 완료됐을 때(Invoke 함수가 완료), 수행해야 하는 함수
+
+ex) Invoke 함수(콜백 함수 안에는 console.log("지금")이 들어 있다.)
+Invoke("콜백 함수", 지연 시간);
+console.log("아직 ");
+Sleep(지연 시간);
+
+- 위의 로직을 보면 Invoke 함수로 콜백 함수(수행되는 함수)를 지연 시간 후에 실행되어
+    출력은 "아직 지금"("지금"은 콜백 함수에 의해 출력)이 된다.
+    
+* Blocking vs Non-blocking
+- Blocking: 내가 일을 하고  있을 때, 내가 제어권을 갖는다.
+- Non-blocking: 내가 일을 하고 있을 때, 날 호출한 쪽이 제어권을 갖는다.
+
+* C#의 문법: 델리게이트(delegate)
+- 델리게이트(delegate): 메소드에 대한 참조 형식, 값이 아닌 코드 자체를 넘기고 싶을 때 사용
+ex)
+delegate int cmp(int num1, int num2);
+int compare1(int num1, int num2){ return 1; }
+int compare2(int num1, int num2){ return 2; }
+
+void sort(int[] array, cmp cmp1);
+
+void main()
+{
+  sort(new int[10], compare1);    // compare1을 참조
+  sort(new int[10], compare2);    // compare2를 참조
+}
+
+* C#의 문법: 델리게이트 체인(Delegate Chain)
+- 델리게이트 체인(Delegate Chain): 체인처럼 함수를 여러 개를 참조할 수 있다.(+=, -=을 쓴다)
+ex)
+void print1(){ console.log("1"); }
+void print2(){ console.log("2"); }
+void print3(){ console.log("3"); }
+delegate void Chain();
+
+void main()
+{
+  Chain chain = new Chain(print1);
+  chain += print2;      // += 연결
+  chain += print3;      // -= 해제
+  chain();        // 123이 출력됨
+}
+
+* C#의 문법: 익명 메소드(Anonymous Method)
+- 익명 메소드(Anonymous Method): 다시 사용 안할 메소드를 참조하여 사용(호출 단계)
+ex) 호출할 때,
+sort(int[] array, delegate(){
+  console.log("익명");
+});
+
+* C#의 문법: 이벤트(Event)
+- 이벤트(Event): 순차적으로 일어나는 과정에서 특정한 상황에서 순차적 진행 과정을 방해하여 실행된다.
+ex) 마우스, 키보드 입력 등.
+- 이벤트 만드는 과정
+1) 델리게이트 delegate 한정자로 선언(클래스 안밖 상관없음)
+2) 델리게이트의 인스턴스를 event 한정자로 선언
+3) 이벤트 핸들러 작성(델리게이트와 일치하는 메소드)
+4) 이벤트 핸들러에 등록(+=/-=으로 등록/해제 가능)
+
+- 이벤트(Event) vs 델리게이트(Delegate)
+- 이벤트(Event): 객체 상태 변화 or 사건의 발생을 알리는 용도
+- 델리게이트(Delegate): 콜백 용도
+- 차이점: 이벤트는 외부에서 직접 사용 불가능하다.
+
+* C#의 문법: 람다식
+- 람다식: 익명 메소드를 단순한 계산식으로 표현한 식
+ex) 호출할 때,
+sort(new int[10], delegate(){
+  console.log("익명")
+});
+
+sort(new int[10], ()=>{
+  console.log("람다")
+});
+와 같다.
+
+- 하지만 반환형을 모르므로 Func 델리게이트를 선언하여 미리 지정한다.
+- 매개변수를 모를 때는 Action 델리게이트를 선언하여 미리 지정한다.
+
+* C#의 문법: Func<>, Action<> : for 익명 메소드
+- 익명 메소드는 반환형과 매개 변수를 모르므로 이를 처리하기 위해 만든 문법이다.
+ex) Func<>: return 값이 있다.
+Func<T1>: return T1
+Func<T1, T2>: 매개 변수 T1 / return T2
+Func<T1, T2, T3>: 매개 변수 T1, T2 / return T3
+Func<T1, T2, T3, T4>: 매개 변수 T1, T2, T3 / return T4
+
+ex) Action<>: return 값이 없다.
+Action 변수 명: 매개 변수 noting
+Action<T1>: 매개 변수 T1
+Action<T1, T2>: 매개 변수 T1, T2
+Action<T1, T2, T3>: 매개 변수 T1, T2, T3
 
 ------------------------------------------------------------------------------------------------------------------------
 [서버 OT]
