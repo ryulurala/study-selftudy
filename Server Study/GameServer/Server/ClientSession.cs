@@ -7,24 +7,111 @@ using ServerCore;
 
 namespace Server
 {
+    // 패킷은 공통적으로 코드를 작성한다.
     // 기본적인 패킷 헤더
-    class Packet    // 패킷은 최대한 압축해서 보내야된다.
+    public abstract class Packet    // 패킷은 최대한 압축해서 보내야된다.
     {
         public ushort size;        // packet size를 모르므로   (ushort(2) vs uint(4))
         public ushort packetId;    // 무슨 패킷인지 구별       (ushort(2) vs uint(4))
+
+        public abstract ArraySegment<byte> Write();
+        public abstract void Read(ArraySegment<byte> seg);
     }
-    class PlayerInfoReq : Packet
+
+    class PlayerInfoReq : Packet    // Client -> Server
     {
         public long playerId;
-    }
+        public string name;
 
-    class PlayerInfoOk : Packet
-    {
-        public int hp;
-        public int attack;
-    }
+        public PlayerInfoReq()      // 생성자
+        {
+            this.packetId = (ushort)PacketID.PlayerInfoReq;
+        }
+        public override void Read(ArraySegment<byte> segment)
+        {
+            // Deserialization
+            ushort count = 0;
 
-    public enum packetID
+            ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+
+            // ushort size = BitConverter.ToUInt16(seg.Array, seg.Offset);
+            count += sizeof(ushort);
+            // ushort id = BitConverter.ToUInt16(seg.Array, seg.Offset + count);
+            count += sizeof(ushort);
+
+            this.playerId = BitConverter.ToInt64(span.Slice(count, span.Length - count));    // 필드 변수를 직접 채워줌
+            count += sizeof(long);
+
+            // string parsing
+            // length[2byte] + byte[]
+            ushort nameLen = BitConverter.ToUInt16(span.Slice(count, span.Length - count));
+            count += sizeof(ushort);
+
+            // Decoding
+            this.name = Encoding.Unicode.GetString(span.Slice(count, nameLen));
+
+            // 범위를 초과하는 값을 Parsing을 하려고 하면 Exception 발생으로 Option이 있다.
+            // BitConverter.ToInt64(new ReadOnlySpan<byte>(segment.Array, segment.Offset + count, segment.Count - count));
+
+            // System.Console.WriteLine($"PlayerInfoReq: {playerId}");
+        }
+
+        public override ArraySegment<byte> Write()
+        {
+            // 연결되고 후처리
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);       // 공간 예약
+
+            ushort count = 0;       // 자동화하기 편리하게
+            bool success = true;
+
+            Span<byte> span = new Span<byte>(segment.Array, segment.Offset, segment.Count);     // for Slice
+
+            // 실패, 성공 여부가 갈림---version 1, 공간이 모자르면 실패
+            count += sizeof(ushort);
+            success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), this.packetId);
+            count += sizeof(ushort);     // 나중에 자동화
+            success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), this.playerId);
+            count += sizeof(long);
+
+            // string(C++은 \0로 판별)
+            // string length [2byte] + byte[]
+            // UTF-16(Unicode)
+
+            // 첫 번째 방법
+            // Length[2byte]
+            // ushort nameLen = (ushort)Encoding.Unicode.GetByteCount(this.name);
+            // success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), nameLen);
+            // count += sizeof(ushort);
+
+            // Index는 count부터 nameLen크기만큼 seg.Array에 복사
+            // byte[]
+            // Array.Copy(Encoding.Unicode.GetBytes(this.name), 0, segment.Array, count, nameLen);
+            // count += nameLen;
+
+            // 두 번째 방법
+            ushort nameLen = (ushort)Encoding.Unicode.GetBytes(this.name, 0, this.name.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), nameLen);
+            count += sizeof(ushort);
+            count += nameLen;
+
+            success &= BitConverter.TryWriteBytes(span, count);         // 마지막 최종 카운트
+
+            if (success == false)
+            {
+                return null;
+            }
+
+            // 사이즈는 마지막에 알 수 있다.
+            return SendBufferHelper.Close(count);
+        }
+    }
+    // class PlayerInfoOk : Packet     // Server -> Client
+    // {
+    //     public int hp;
+    //     public int attack;
+    // }
+
+    public enum PacketID    // 자동화해야 할 내용
     {
         PlayerInfoReq = 1,
         PlayerInfoOk = 2,
@@ -59,20 +146,21 @@ namespace Server
         }
         public override void OnRecvPacket(ArraySegment<byte> buffer)
         {
-            // passing
+            // Deserialization
             ushort count = 0;
             ushort size = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
             count += 2;
             ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
             count += 2;
 
-            switch ((packetID)id)
+            // Parsing
+            switch ((PacketID)id)
             {
-                case packetID.PlayerInfoReq:
+                case PacketID.PlayerInfoReq:
                     {
-                        long playerId = BitConverter.ToInt64(buffer.Array, buffer.Offset + count);
-                        count += 8;
-                        System.Console.WriteLine($"Player InfoReq: {playerId}");
+                        PlayerInfoReq playerInfoReq = new PlayerInfoReq();
+                        playerInfoReq.Read(buffer);     // Deserialize
+                        System.Console.WriteLine($"PlayerInfoReq: {playerInfoReq.playerId} {playerInfoReq.name}");
                     }
                     break;
             }
