@@ -14,7 +14,7 @@
 cout << ... ; : ... 출력(연산자 오버로딩 돼있다)
 cout << endl; : 개행
 
-************************ vector 컨테이너(스택 배열) ************************
+************************ vector 컨테이너 ************************
 - LIFO 구조(Stack)
 - 공간(Capacity)은 기존 메모리의 *2로 증가한다.
 
@@ -25,7 +25,7 @@ cout << endl; : 개행
 ex) vector<Data type> 변수 명;
 - vector<T> v; : vector 컨테이너 v 선언
 - vector<T> v(n) : Default값(0)으로 초기화된 n개가 들어있는 v 선언
-- vector<T> v(n, element) : N으로 초기화된 n개가 들어있는 v 선언
+- vector<T> v(n, element) : element로 초기화된 n개가 들어있는 v 선언
 - vector<T> v2(v1) : v2 선언(v1을 복사한)
 
 3. 멤버 함수(if: vector<T> v1; vector<T> v2;)
@@ -43,8 +43,8 @@ ex) vector<Data type> 변수 명;
 삽입
 - v1.push_back(element) : 마지막 원소 뒤에 element 삽입
 - v1.resize(n) : 크기를 n으로 변경(커진 메모리는 0으로 초기화)
-- v1.insert(index, element) : index위치에 N삽입(삽입한 위치 iterator 리턴)
-- v1.insert(index, n, element) : index위치에 N으로 초기화된 n개 삽입(밀린다)
+- v1.insert(index, element) : index위치에 element삽입(삽입한 위치 iterator 리턴)
+- v1.insert(index, n, element) : index위치에 element으로 초기화된 n개 삽입(밀린다)
 
 삭제
 - v1.pop_back() : 마지막 원소 제거
@@ -56,7 +56,7 @@ ex) vector<Data type> 변수 명;
 
 ************************ Map 컨테이너(노드기반 균형 이진트리 구조) ************************
 - 검색용
-- (Key, Value) : Key 중복 불가능(중복 가능한 것은 <multimap)
+- (Key, Value) : Key 중복 불가능(중복 가능한 것은 <multimap>)
 - 비슷한 컨테이너: <set>, <multiset>
 - 삽입 후 자동 오름차순 정렬
 - 반복자로 순회: ex)
@@ -92,7 +92,7 @@ for(iter = m.begin(); iter != m.end(); iter++)
 - m1.erase(start, end) : start~end 범위 삭제 ex) m1.erase(m1.begin(), m1.end());
 - m.erase(Key) : key로 삭제
 
-************************ Queue 컨테이너(덱(Deque) or List 구조) ************************
+************************ Queue 자료구조(덱(Deque) or List 구조) ************************
 - FIFO 구조(queue)
 
 1. <queue> 헤더 선언
@@ -107,12 +107,13 @@ for(iter = m.begin(); iter != m.end(); iter++)
 X
 
 조회
-- q.front() / q2.back() : 첫 번째 원소 리턴 / 마지막 원소 리턴
+- q.front() / q.back() : 첫 번째 원소 리턴 / 마지막 원소 리턴
 - q.empty() : 큐가 비어있으면 true, 원소가 있으면 false
 - q.size() : 큐 안에 원소 개수 리턴
 
 삽입
 - q.push(element) : 마지막 다음에 value값 삽입
+- q.swap(q, emt) : emt는 비어있는 큐로 clear할 때 유용하다.
 
 삭제
 - q.pop() : 가장 처음 원소 삭제
@@ -142,7 +143,7 @@ X
 - q.pop() : top의 원소를 삭제
 
 * Priority_Queue에서 쓰도록 compare클레스 구조체로 정의
-ex) : valur값으로 key값 정렬하고 value값이 같을 경우 key값으로 정렬
+ex) : valur값으로 key값 정렬하고 value값이 같을 경우 key값으로 정렬(일반 sort의 cmp와 부등호가 반대이다)
 struct cmp{
   bool operator()(pair<int, int> a, pair<int, int> b)
   {
@@ -152,6 +153,7 @@ struct cmp{
       return a.second < b.second;
   }
 };  // 구조체라서 세미콜론(;) 필수
+
 
 ************************ String 클래스(STL은 아님) ************************
 1. <string> 헤더 선언
@@ -174,6 +176,7 @@ struct cmp{
 - str1.capacity() : str1의 할당된 공간 크기
 - str1.empty() : 비어있으면 true, 원소가 있으면 false
 - str1.begin() / str1.end() : st1의 처음 / 마지막에서 다음을 가리키는 iterator 리턴
+- str1.find("s") : s가 있는 인덱스 리턴, 없으면 (int)형 변환할 때 -1 리턴
 
 삽입
 - str1.push_back(char);
@@ -188,6 +191,8 @@ struct cmp{
 - str1.substr() / str1.substr(from) / str1.substr(from, count) :
     그대로 / from부터 끝까지 / from부터 count개수만큼 부분 문자열 리턴
 - str1.replace() : 문자열 대체
+- to_string(T t) : T형의 t를 string으로 변환
+
 ex) 문자열 대체 예제
 1) str1.replace(from, count, str2) : from에서 count개수만큼 str2로 대체
 2) str1.replace(str1.find(""), str1.find("").length(), str2) : str1에서 찾은 문자열을 대체
@@ -329,7 +334,7 @@ for(int i=0; i<root.size(); i++)
 
 int find(int x)
 { // 루트 노드는 부모 노드 번호로 자기 자신을 가진다.
-  if(root[x] == x) 
+  if(x == root[x]) 
     return x;
   else // 각 노드의 부모 노드를 찾아 올라간다.
     return find(root[x]);
@@ -337,8 +342,8 @@ int find(int x)
 
 int union(int x, int y)
 {
-  x = find(x);
-  y = find(y);
+  x = find(x);  // x의 root 찾기
+  y = find(y);  // y의 root 찾기
 
   // 두 값의 root가 같지 않을 때
   if(x != y)
