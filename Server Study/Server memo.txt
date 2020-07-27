@@ -1844,11 +1844,110 @@ ex) Read와 Write (string)
 ------------------------------------------------------------------------------------------------------------------------
 [Serialization #4]
 
-- List<T> 직렬화
+* List<T> 직렬화: string과 다르게 Type도 가변적이며, 길이도 가변적이다.
+- string과 마찬가지로 개수와 같이 보내준다.
+- 구조체가 있다면 함수를 안에 만들어 자동화시킨다.
 
+ex) 구조체 SkillInfo를 갖는 List<SkillInfo>
+public class PlayerInfoReq : Packet
+{
+  public struct SkillInfo
+  {
+    public int id;
+    public short level;
+    public float duration;
 
+    public bool Write(Span<byte> span, ref ushort count)    // count를 참조자로 받아서 값을 넣는다.
+    {
+      bool success = true;
+
+      success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), id);
+      count += sizeof(int);
+
+      success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), level);
+      count += sizeof(short);
+
+      success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), duration);
+      count += sizeof(float);
+
+      return success;
+    }
+
+    public void Read(ReadOnlySpan<byte> span, ref ushort count)
+    {
+      id = BitConverter.ToInt32(span.Slice(count, span.Length - count));
+      count += sizeof(int);
+
+      level = BitConverter.ToInt16(span.Slice(count, span.Length - count));
+      count += sizeof(short);
+
+      // Single: float, Double: double
+      duration = BitConverter.ToSingle(span.Slice(count, span.Length - count));
+      count += sizeof(float);
+    }
+  }
+
+  // 구조체 정의가 끝난 후 선언
+  public List<SkillInfo> skills = new List<SkillInfo>();
+
+  public override ArraySegment<byte> Write()
+  {
+    ArraySegment<byte> segment = SendBufferHelper.Open(4096);   // 공간 예약
+
+    ushort count;     // for 자동화
+    bool success = true;    // for 범위 초과 예외처리
+
+    Span<byte> span = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+    // skill list
+    success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), (ushort)skills.count);
+    count += sizeof(ushort);
+
+    // 스킬 모두 Serialize
+    foreach(SkillInfo skill in skills)
+    {
+      success &= skill.Write(span, ref count);
+    }
+
+    success &= BitConverter.TryWriteBytes(span, count);   // 최종 카운트
+
+    if(success == false) { return null; }
+
+    return SendBufferHelper.Close(count);
+  }
+
+  public override void Read(ArraySegment<byte> segment)
+  {
+    ushort count = 0;
+
+    ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+
+    // Parsing skill list
+    ushort skillLen = BitConverter.ToUInt16(span.Slice(count, span.Lengt - count));
+    count += sizeof(ushort);
+
+    skills.Clear();   // 혹시나 다른 정보가 있을까봐
+    for(int i=0; i<skillLen; i++)
+    {
+      SKillInfo skill = new SkillInfo();
+      skill.Read(span, ref count);
+
+      // 추가
+      skills.Add(skill);
+    }
+  }
+}
+
+* Protocol buffers vs Flat buffers
+- Protocol buffers: 중간에 인스턴스를 만들어 채우고 변환하는 작업(직관적임), 구조화된 데이터를 직렬화
+- Flat buffers: 데이터를 배열에다가 바로 집어넣는 작업, 플랫폼에 상관없다.(게임에 많이 쓴다)
 
 ------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------

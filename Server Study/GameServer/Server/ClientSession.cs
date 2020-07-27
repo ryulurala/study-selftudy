@@ -10,7 +10,7 @@ namespace Server
     // 패킷은 공통적으로 코드를 작성한다.
     // 기본적인 패킷 헤더
     public abstract class Packet    // 패킷은 최대한 압축해서 보내야된다.
-    {
+    {   // 경우에 따라서 제거(size packetId)
         public ushort size;        // packet size를 모르므로   (ushort(2) vs uint(4))
         public ushort packetId;    // 무슨 패킷인지 구별       (ushort(2) vs uint(4))
 
@@ -22,6 +22,37 @@ namespace Server
     {
         public long playerId;
         public string name;
+
+        public struct SkillInfo
+        {
+            public int id;
+            public short level;
+            public float duration;
+
+            public bool Write(Span<byte> span, ref ushort count)
+            {
+                bool success = true;
+                success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), id);
+                count += sizeof(int);
+                success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), level);
+                count += sizeof(short);
+                success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), duration);
+                count += sizeof(float);
+                return success;
+            }
+
+            public void Read(ReadOnlySpan<byte> span, ref ushort count)
+            {
+                id = BitConverter.ToInt32(span.Slice(count, span.Length - count));
+                count += sizeof(int);
+                level = BitConverter.ToInt16(span.Slice(count, span.Length - count));
+                count += sizeof(short);
+                duration = BitConverter.ToSingle(span.Slice(count, span.Length - count));     // Single : float value, Double : double value
+                count += sizeof(float);
+            }
+        }
+
+        public List<SkillInfo> skills = new List<SkillInfo>();
 
         public PlayerInfoReq()      // 생성자
         {
@@ -49,6 +80,22 @@ namespace Server
 
             // Decoding
             this.name = Encoding.Unicode.GetString(span.Slice(count, nameLen));
+            count += nameLen;
+
+            // skill list
+            // 스킬 개수 추출
+            ushort skillLen = BitConverter.ToUInt16(span.Slice(count, span.Length - count));
+            count += sizeof(ushort);
+
+            skills.Clear();     // 혹시나 다른 정보를 들고 있을까봐
+            for (int i = 0; i < skillLen; i++)
+            {
+                SkillInfo skill = new SkillInfo();
+                skill.Read(span, ref count);
+
+                // 추가
+                skills.Add(skill);
+            }
 
             // 범위를 초과하는 값을 Parsing을 하려고 하면 Exception 발생으로 Option이 있다.
             // BitConverter.ToInt64(new ReadOnlySpan<byte>(segment.Array, segment.Offset + count, segment.Count - count));
@@ -75,24 +122,27 @@ namespace Server
 
             // string(C++은 \0로 판별)
             // string length [2byte] + byte[]
-            // UTF-16(Unicode)
 
-            // 첫 번째 방법
+            // UTF-16(Unicode)
             // Length[2byte]
-            // ushort nameLen = (ushort)Encoding.Unicode.GetByteCount(this.name);
-            // success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), nameLen);
-            // count += sizeof(ushort);
+            ushort nameLen = (ushort)Encoding.Unicode.GetByteCount(this.name);
+            success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), nameLen);
+            count += sizeof(ushort);
 
             // Index는 count부터 nameLen크기만큼 seg.Array에 복사
             // byte[]
-            // Array.Copy(Encoding.Unicode.GetBytes(this.name), 0, segment.Array, count, nameLen);
-            // count += nameLen;
-
-            // 두 번째 방법
-            ushort nameLen = (ushort)Encoding.Unicode.GetBytes(this.name, 0, this.name.Length, segment.Array, segment.Offset + count + sizeof(ushort));
-            success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), nameLen);
-            count += sizeof(ushort);
+            Array.Copy(Encoding.Unicode.GetBytes(this.name), 0, segment.Array, count, nameLen);
             count += nameLen;
+
+            // skill list
+            success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), (ushort)skills.Count);
+            count += sizeof(ushort);
+
+            foreach (SkillInfo skill in skills)
+            {
+                // TODO
+                success &= skill.Write(span, ref count);    // 들고 있는 스킬 모두 Serialize
+            }
 
             success &= BitConverter.TryWriteBytes(span, count);         // 마지막 최종 카운트
 
@@ -105,6 +155,7 @@ namespace Server
             return SendBufferHelper.Close(count);
         }
     }
+
     // class PlayerInfoOk : Packet     // Server -> Client
     // {
     //     public int hp;
@@ -161,6 +212,11 @@ namespace Server
                         PlayerInfoReq playerInfoReq = new PlayerInfoReq();
                         playerInfoReq.Read(buffer);     // Deserialize
                         System.Console.WriteLine($"PlayerInfoReq: {playerInfoReq.playerId} {playerInfoReq.name}");
+
+                        foreach (PlayerInfoReq.SkillInfo skill in playerInfoReq.skills)
+                        {
+                            System.Console.WriteLine($"Skill: {skill.id} {skill.level} {skill.duration}");
+                        }
                     }
                     break;
             }

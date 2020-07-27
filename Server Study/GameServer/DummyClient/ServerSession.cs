@@ -22,6 +22,37 @@ namespace DummyClient
         public long playerId;
         public string name;
 
+        public struct SkillInfo
+        {
+            public int id;
+            public short level;
+            public float duration;
+
+            public bool Write(Span<byte> span, ref ushort count)
+            {
+                bool success = true;
+                success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), id);
+                count += sizeof(int);
+                success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), level);
+                count += sizeof(short);
+                success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), duration);
+                count += sizeof(float);
+                return success;
+            }
+
+            public void Read(ReadOnlySpan<byte> span, ref ushort count)
+            {
+                id = BitConverter.ToInt32(span.Slice(count, span.Length - count));
+                count += sizeof(int);
+                level = BitConverter.ToInt16(span.Slice(count, span.Length - count));
+                count += sizeof(short);
+                duration = BitConverter.ToSingle(span.Slice(count, span.Length - count));     // Single : float value, Double : double value
+                count += sizeof(float);
+            }
+        }
+
+        public List<SkillInfo> skills = new List<SkillInfo>();
+
         public PlayerInfoReq()      // 생성자
         {
             this.packetId = (ushort)PacketID.PlayerInfoReq;
@@ -48,6 +79,22 @@ namespace DummyClient
 
             // Decoding
             this.name = Encoding.Unicode.GetString(span.Slice(count, nameLen));
+            count += nameLen;
+
+            // skill list
+            // 스킬 개수 추출
+            ushort skillLen = BitConverter.ToUInt16(span.Slice(count, span.Length - count));
+            count += sizeof(ushort);
+
+            skills.Clear();     // 혹시나 다른 정보를 들고 있을까봐
+            for (int i = 0; i < skillLen; i++)
+            {
+                SkillInfo skill = new SkillInfo();
+                skill.Read(span, ref count);
+
+                // 추가
+                skills.Add(skill);
+            }
 
             // 범위를 초과하는 값을 Parsing을 하려고 하면 Exception 발생으로 Option이 있다.
             // BitConverter.ToInt64(new ReadOnlySpan<byte>(segment.Array, segment.Offset + count, segment.Count - count));
@@ -66,7 +113,7 @@ namespace DummyClient
             Span<byte> span = new Span<byte>(segment.Array, segment.Offset, segment.Count);     // for Slice
 
             // 실패, 성공 여부가 갈림---version 1, 공간이 모자르면 실패
-            count += sizeof(ushort);
+            count += sizeof(ushort);        // 처음 패킷Id
             success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), this.packetId);
             count += sizeof(ushort);     // 나중에 자동화
             success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), this.playerId);
@@ -85,6 +132,16 @@ namespace DummyClient
             // byte[]
             Array.Copy(Encoding.Unicode.GetBytes(this.name), 0, segment.Array, count, nameLen);
             count += nameLen;
+
+            // skill list
+            success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), (ushort)skills.Count);
+            count += sizeof(ushort);
+
+            foreach (SkillInfo skill in skills)
+            {
+                // TODO
+                success &= skill.Write(span, ref count);    // 들고 있는 스킬 모두 Serialize
+            }
 
             success &= BitConverter.TryWriteBytes(span, count);         // 마지막 최종 카운트
 
@@ -125,6 +182,11 @@ namespace DummyClient
             // 연결됨
             System.Console.WriteLine($"Onconnected: {endPoint}");
             PlayerInfoReq packet = new PlayerInfoReq() { playerId = 1001, name = "ABCD", };
+
+            packet.skills.Add(new PlayerInfoReq.SkillInfo() { id = 101, level = 1, duration = 3.0f });
+            packet.skills.Add(new PlayerInfoReq.SkillInfo() { id = 201, level = 2, duration = 4.0f });
+            packet.skills.Add(new PlayerInfoReq.SkillInfo() { id = 301, level = 3, duration = 5.0f });
+            packet.skills.Add(new PlayerInfoReq.SkillInfo() { id = 401, level = 4, duration = 6.0f });
 
             // 보낸다(5번)
             // for (int i = 0; i < 5; i++)
