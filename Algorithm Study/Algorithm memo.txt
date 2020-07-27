@@ -74,13 +74,14 @@ for(iter = m.begin(); iter != m.end(); iter++)
 
 3. 멤버 함수(if: map<T, T> m1; map<T, T> m2;)
 할당
-- m1.begin() / m1.end() : 첫 번째 원소 / 마지막의 *다음* 포인터 리턴(iterator 사용)
+X
 
 조회
 - m1.find(key) : key값에 해당하는 iterator 리턴
 - m1.empty() : 비어있으면 true, 노드가 있으면 false
 - m1.count(key) : key값의 value값 개수 리턴
 - m1.size() : 노드 개수 리턴
+- m1.begin() / m1.end() : 첫 번째 원소 / 마지막의 *다음* 포인터 리턴(iterator 사용)
 
 삽입
 - m1.insert(pair<key, value>) / m1[key] = value : pair 객체로 삽입 / []연산자로 삽입
@@ -90,7 +91,7 @@ for(iter = m.begin(); iter != m.end(); iter++)
 - m1.clear() : 모든 원소 제거
 - m1.erase(iter) : iter 가리키는 원소 삭제(지워진 곳 가리켜서 에러 발생)
 - m1.erase(start, end) : start~end 범위 삭제 ex) m1.erase(m1.begin(), m1.end());
-- m.erase(Key) : key로 삭제
+- ***m.erase(Key) : key로 삭제***
 
 ************************ Queue 자료구조(덱(Deque) or List 구조) ************************
 - FIFO 구조(queue)
@@ -113,7 +114,7 @@ X
 
 삽입
 - q.push(element) : 마지막 다음에 value값 삽입
-- q.swap(q, emt) : emt는 비어있는 큐로 clear할 때 유용하다.
+- swap(q, emt) : emt는 비어있는 큐로 clear할 때 유용하다.
 
 삭제
 - q.pop() : 가장 처음 원소 삭제
@@ -143,7 +144,7 @@ X
 - q.pop() : top의 원소를 삭제
 
 * Priority_Queue에서 쓰도록 compare클레스 구조체로 정의
-ex) : valur값으로 key값 정렬하고 value값이 같을 경우 key값으로 정렬(일반 sort의 cmp와 부등호가 반대이다)
+ex) : value값으로 key값 정렬하고 value값이 같을 경우 key값으로 정렬(일반 sort의 cmp와 부등호가 반대이다)
 struct cmp{
   bool operator()(pair<int, int> a, pair<int, int> b)
   {
@@ -190,12 +191,14 @@ struct cmp{
 - str1.c_str() : string(C++)을 char*(C) type으로 바꿔준다.
 - str1.substr() / str1.substr(from) / str1.substr(from, count) :
     그대로 / from부터 끝까지 / from부터 count개수만큼 부분 문자열 리턴
-- str1.replace() : 문자열 대체
+- str1.replace(pos, count, str2) : 문자열 대체, pos(iterator) 부터 count개수만큼 str2로 바꿈
 - to_string(T t) : T형의 t를 string으로 변환
+- stoi(string str, &pos) : string 형 str을 int로 바꿈(참조), 숫자 외에 문자를 만날 시 pos까지 바꾼다.
+ex) stoi(str); : str을 int형으로 바꾼다(숫자가 나오는데까지)
 
 ex) 문자열 대체 예제
 1) str1.replace(from, count, str2) : from에서 count개수만큼 str2로 대체
-2) str1.replace(str1.find(""), str1.find("").length(), str2) : str1에서 찾은 문자열을 대체
+2) str1.replace(str1.find(""), "".length(), str2) : str1에서 찾은 문자열을 대체
 - str1.find("...") : "..."을 찾는다.
 
 ************************ Sort(Algorithm 클래스) ************************
@@ -213,7 +216,7 @@ sort(v.begin(), v.end(), cmp);
 node[m].push_back(n);
 node[n].push_back(m);
 
-- 2 가지 방법으로 같은 메모리를 사용한다.
+- 2 가지 방법으로 만든다.(재귀 or Stack)
 1) node는 전역 변수로 선언
 2) 함수의 매개 변수를 참조자로 정의
 
@@ -355,4 +358,22 @@ int union(int x, int y)
   return nodeCount[x];
 }
 
+************************ Permutation(Algorithm 클래스) ************************
+* 순열(Permutation)
+- 완전 탐색
+
+* 멤버 함수
+- next_permutation(처음 반복자, 끝 반복자) : 다음 자리를 바꾼다.
+- prev_permutation(처음 반복자, 끝 반복자) : 전 자리를 바꾼다.
+
+ex) 자리를 바꿔가며 조건 검사 예제
+do
+{
+  // 조건 검사
+}
+while(next_permutation(container.begin(), container.end()));
+
+************************  ************************
+************************  ************************
+************************  ************************
 ************************  ************************
