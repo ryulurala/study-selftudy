@@ -193,7 +193,7 @@ struct cmp{
     그대로 / from부터 끝까지 / from부터 count개수만큼 부분 문자열 리턴
 - str1.replace(pos, count, str2) : 문자열 대체, pos(iterator) 부터 count개수만큼 str2로 바꿈
 - to_string(T t) : T형의 t를 string으로 변환
-- stoi(string str, &pos) : string 형 str을 int로 바꿈(참조), 숫자 외에 문자를 만날 시 pos까지 바꾼다.
+- stoi(string str, &pos) : string 형 str을 int로 바꿈(참조), 숫자 외에 문자를 만날 시 pos 전까지 바꾼다.(size_t pos), 반복문에는 segment fault 조심하자.
 ex) stoi(str); : str을 int형으로 바꾼다(숫자가 나오는데까지)
 
 ex) 문자열 대체 예제
