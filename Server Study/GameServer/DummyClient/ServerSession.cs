@@ -8,16 +8,16 @@ namespace DummyClient
 {
     // 패킷은 공통적으로 코드를 작성한다.
     // 기본적인 패킷 헤더
-    public abstract class Packet    // 패킷은 최대한 압축해서 보내야된다.
-    {   // 경우에 따라서 제거(size packetId)
-        public ushort size;        // packet size를 모르므로   (ushort(2) vs uint(4))
-        public ushort packetId;    // 무슨 패킷인지 구별       (ushort(2) vs uint(4))
+    // public abstract class Packet    // 패킷은 최대한 압축해서 보내야된다.
+    // {   // 경우에 따라서 제거(size packetId)
+    //     public ushort size;        // packet size를 모르므로   (ushort(2) vs uint(4))
+    //     public ushort packetId;    // 무슨 패킷인지 구별       (ushort(2) vs uint(4))
 
-        public abstract ArraySegment<byte> Write();
-        public abstract void Read(ArraySegment<byte> seg);
-    }
+    //     public abstract ArraySegment<byte> Write();
+    //     public abstract void Read(ArraySegment<byte> seg);
+    // }
 
-    class PlayerInfoReq : Packet    // Client -> Server
+    class PlayerInfoReq    // Client -> Server
     {
         public long playerId;
         public string name;
@@ -53,11 +53,11 @@ namespace DummyClient
 
         public List<SkillInfo> skills = new List<SkillInfo>();
 
-        public PlayerInfoReq()      // 생성자
-        {
-            this.packetId = (ushort)PacketID.PlayerInfoReq;
-        }
-        public override void Read(ArraySegment<byte> segment)
+        // public PlayerInfoReq()      // 생성자
+        // {
+        //     this.packetId = (ushort)PacketID.PlayerInfoReq;
+        // }
+        public void Read(ArraySegment<byte> segment)
         {
             // Deserialization
             ushort count = 0;
@@ -102,7 +102,7 @@ namespace DummyClient
             // System.Console.WriteLine($"PlayerInfoReq: {playerId}");
         }
 
-        public override ArraySegment<byte> Write()
+        public ArraySegment<byte> Write()
         {
             // 연결되고 후처리
             ArraySegment<byte> segment = SendBufferHelper.Open(4096);       // 공간 예약
@@ -114,7 +114,7 @@ namespace DummyClient
 
             // 실패, 성공 여부가 갈림---version 1, 공간이 모자르면 실패
             count += sizeof(ushort);        // 처음 패킷Id
-            success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), this.packetId);
+            success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), (ushort)PacketID.PlayerInfoReq);
             count += sizeof(ushort);     // 나중에 자동화
             success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), this.playerId);
             count += sizeof(long);
