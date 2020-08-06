@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.xml;
+using System.Xml;
 using System.IO;
 
 namespace PacketGenerator
@@ -9,36 +9,38 @@ namespace PacketGenerator
     class Program
     {
         static string genPackets;       // 실시간으로 만들어지는 패킷 코드
+        static ushort packetId;         // 1, 2, 3, ...
+        static string packetEnums;
         static void Main(string[] args)
         {
-            XMLReaderSettings settings = new XMLReaderSettings()        // 환경 설정
+            XmlReaderSettings settings = new XmlReaderSettings()        // 환경 설정
             {
                 IgnoreComments = true,      // 주석 무시
-                IgnoreWhiteSpace = true     // 스페이스 바 무시
+                IgnoreWhitespace = true     // 스페이스 바 무시
             };
 
-            using (XMLReader reader = XMLReader.Create("PDL.xml", settings))
+            using (XmlReader reader = XmlReader.Create("PDL.xml", settings))
             {
                 reader.MoveToContent();      // 헤더를 건너뛰고 핵심 내용으로 바로 들어감
 
                 while (reader.Read())        // string 방식으로 읽어드림
                 {
-                    if (reader.Depth == 1 && reader.NodeType == XMLNodeType.Element)    // Element 시작, EndElement 끝
+                    if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)    // Element 시작, EndElement 끝
                     {
-                        ParsePacket();
+                        ParsePacket(reader);
                     }
                     // System.Console.WriteLine(reader.Name + " " + reader["name"]);     // ["name"] : name이라는 콘텐츠만 읽는다.
                 }
-
-                File.WriteAllText("GenPacket.cs", genPackets);
+                string fileText = string.Format(PacketFormat.fileFormat, packetEnums, genPackets);
+                File.WriteAllText("GenPacket.cs", fileText);
             }
 
             // reader.Dispose();        // 사용을 닫아줌 or using 사용(알아서 범위 내에서 Dispose 호출)
         }
 
-        public static void ParsePacket(XMLReader reader)
+        public static void ParsePacket(XmlReader reader)
         {
-            if (reader.NodeType == XMLNodeType.EndElement)  // 잘못 들어옴
+            if (reader.NodeType == XmlNodeType.EndElement)  // 잘못 들어옴
             {
                 return;
             }
@@ -57,16 +59,17 @@ namespace PacketGenerator
 
             Tuple<string, string, string> tuple = ParseMembers(reader);
             genPackets += string.Format(PacketFormat.packetFormat, packetName, tuple.Item1, tuple.Item2, tuple.Item3);
+            packetEnums += string.Format(PacketFormat.packetEnumFormat, packetName, ++packetId) + Environment.NewLine + "\t";
         }
 
         // {1} 멤버 변수들
         // {2} 멤버 변수 Read
         // {3} 멤버 변수 Write
-        public static Tuple<string, string, string> ParseMembers(XMLReader reader)
+        public static Tuple<string, string, string> ParseMembers(XmlReader reader)
         {
             string packetName = reader["name"];
 
-            string packetCode = "";     // For Tuple
+            string memberCode = "";     // For Tuple
             string readCode = "";       // For Tuple
             string writeCode = "";      // For Tuple
 
@@ -88,7 +91,7 @@ namespace PacketGenerator
                     memberCode += Environment.NewLine;      // 내용이 있으면 개행
                 }
 
-                string memberType = reader.name.ToLower();
+                string memberType = reader.Name.ToLower();
                 switch (memberType)
                 {
                     case "bool":
@@ -127,7 +130,7 @@ namespace PacketGenerator
             return new Tuple<string, string, string>(memberCode, readCode, writeCode);
         }
 
-        public static Tuple<string, string, string> ParseList(XMLReader reader)
+        public static Tuple<string, string, string> ParseList(XmlReader reader)
         {
             string listName = reader["name"];
             if (string.IsNullOrEmpty(listName))

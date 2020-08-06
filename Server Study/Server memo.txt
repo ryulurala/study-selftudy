@@ -1976,27 +1976,27 @@ ex 2) Packet Generator 프로그램 작성
   {
     static void Main(string[] args)
     {
-      XMLReaderSettings settings = new XMLReaderSettings()    // 환경 설정
+      XmlReaderSettings settings = new XmlReaderSettings()    // 환경 설정
       {
         IgnoreComments = true,      // 주석 무시
         IgnoreWhiteSpace = true     // 스페이스 바 무시
       };    // ';' 필수
 
-      using(XMLReader reader = XMLReader.Create("PDL.xml", settings))   // using으로 하면 나중에 reader.Dispose(); 를 자동으로 해준다.
+      using(XmlReader reader = XmlReader.Create("PDL.xml", settings))   // using으로 하면 나중에 reader.Dispose(); 를 자동으로 해준다.
       {
         reader.MoveToContent();     // 헤더를 건너뛰고 핵심 내용으로 바로 들어간다.
 
         while(reader.Read())        // string 방식으로 읽어드린다.
         {
-          if(reader.Depth==1 && reader.MoveType == XMLNodeType.Element)   // Element: 시작, EndElement: 끝
+          if(reader.Depth==1 && reader.MoveType == XmlNodeType.Element)   // Element: 시작, EndElement: 끝
             ParsePacket();    // 패킷 파싱
         }
       }
     }
 
-    public static void ParsePacket(XMLReader reader)
+    public static void ParsePacket(XmlReader reader)
     {
-      if(reader.NodeType == XMLNodeType.EndElement) return;   // 끝일 경우 들어옴
+      if(reader.NodeType == XmlNodeType.EndElement) return;   // 끝일 경우 들어옴
       if(reader.Name.ToLower() != "packet") return;   // 소문자로 변환 후 packet이 아니면 return
       
       string packetName = reader["name"];
@@ -2005,7 +2005,7 @@ ex 2) Packet Generator 프로그램 작성
       ParseMembers(reader);   // (세부적인)멤버 파싱
     }
 
-    public static void ParseMembers(XMLReader reader)
+    public static void ParseMembers(XmlReader reader)
     {
       string packetName = reader["name"];
       
@@ -2017,7 +2017,7 @@ ex 2) Packet Generator 프로그램 작성
         string memberName = reader["name"];
         if(string.IsNullOrEmpty(memberName)) return;
 
-        string memberType = reader.name.ToLower();    // 소문자 변환
+        string memberType = reader.Name.ToLower();    // 소문자 변환
         switch(memberType)    // 타입 파싱
         {
           case "bool":
@@ -2038,7 +2038,7 @@ ex 2) Packet Generator 프로그램 작성
     }
   }
 
-- Contents: XMLReader reader의 ["..."]
+- Contents: XmlReader reader의 ["..."]
 
 ex 3) PacketFormat 바꿔치기 클래스 작성
   class PacketFormat
@@ -2130,6 +2130,7 @@ ex 3) PacketFormat 바꿔치기 클래스 작성
   }
 
 - 패킷의 포맷을 정의해주고 안에 있는 내용을 바꿔 치기한다.
+- @""를 통해서 길게 string을 지정한다.
 - {}는 한 번씩 추가해서 넣어준다. ex) {{ ... }}
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -2153,8 +2154,8 @@ ex 3) PacketFormat 바꿔치기 클래스 작성
   {
     // 실시간으로 만들어지는 패킷 코드 변수
     // 메인 함수
-    // XML 환경설정 변수
-    // XMLReader using 사용해서 read
+    // Xml 환경설정 변수
+    // XmlReader using 사용해서 read
     // 포맷 파싱
     // (세부적인)멤버 파싱: 포맷 파싱에서 호출
   }
@@ -2264,11 +2265,11 @@ ex 1) PacketFormat 클래스
   ushort {1}Len = BitConverter.ToUInt16(span.Slice(count, span.Length - count));
   count += sizeof(ushort);
   for (int i = 0; i < {1}Len; i++)
-  {
+  {{
     {0} {1} = new {0}();
     {1}.Read(span, ref count);
     {1}.Add({1});
-  }
+  }}
   ";
     // {0} 변수 이름
     // {1} 변수 형식
@@ -2281,7 +2282,7 @@ ex 1) PacketFormat 클래스
     // {0} 변수 이름
     public static string writeStringFormat =
   @"
-  ushort {0}Len = (ushort)Encoding.Unicode.GetBytes(this.{0}, 0, this.{0}.Length, segment.Array, segment.Offset + count + sizeof(ushort))
+  ushort {0}Len = (ushort)Encoding.Unicode.GetBytes(this.{0}, 0, this.{0}.Length, segment.Array, segment.Offset + count + sizeof(ushort));
   success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), {0}Len);
   count += sizeof(ushort);
   count += {0}Len;
@@ -2304,21 +2305,21 @@ ex 2) 실행 프로그램 코드
     static string genPackets;       // 실시간으로 만들어지는 패킷 코드
     static void Main(string[] args)
     {
-      XMLReaderSettings settings = new XMLReaderSettings()        // 환경 설정
+      XmlReaderSettings settings = new XmlReaderSettings()        // 환경 설정
       {
         IgnoreComments = true,      // 주석 무시
-        IgnoreWhiteSpace = true     // 스페이스 바 무시
+        IgnoreWhitespace = true     // 스페이스 바 무시
       };
 
-    using (XMLReader reader = XMLReader.Create("PDL.xml", settings))
+    using (XmlReader reader = XmlReader.Create("PDL.xml", settings))
     {
       reader.MoveToContent();      // 헤더를 건너뛰고 핵심 내용으로 바로 들어감
 
       while (reader.Read())        // string 방식으로 읽어드림
       {
-        if (reader.Depth == 1 && reader.NodeType == XMLNodeType.Element)    // Element 시작, EndElement 끝
+        if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)    // Element 시작, EndElement 끝
         {
-            ParsePacket();
+            ParsePacket(reader);
         }
         // System.Console.WriteLine(reader.Name + " " + reader["name"]);     // ["name"] : name이라는 콘텐츠만 읽는다.
       }
@@ -2329,9 +2330,9 @@ ex 2) 실행 프로그램 코드
       // reader.Dispose();        // 사용을 닫아줌 or using 사용(알아서 범위 내에서 Dispose 호출)
     }
 
-    public static void ParsePacket(XMLReader reader)
+    public static void ParsePacket(XmlReader reader)
     {
-      if (reader.NodeType == XMLNodeType.EndElement) return; // 잘못 들어옴
+      if (reader.NodeType == XmlNodeType.EndElement) return; // 잘못 들어옴
       if (reader.Name.ToLower() != "packet")          // 소문자로 변환 후 packet이 아니면 return
       {
         System.Console.WriteLine("Invalid packet node");
@@ -2352,11 +2353,11 @@ ex 2) 실행 프로그램 코드
     // {1} 멤버 변수들
     // {2} 멤버 변수 Read
     // {3} 멤버 변수 Write
-    public static Tuple<string, string, string> ParseMembers(XMLReader reader)
+    public static Tuple<string, string, string> ParseMembers(XmlReader reader)
     {
       string packetName = reader["name"];
 
-      string packetCode = "";     // For Tuple
+      string memberCode = "";     // For Tuple
       string readCode = "";       // For Tuple
       string writeCode = "";      // For Tuple
 
@@ -2414,7 +2415,7 @@ ex 2) 실행 프로그램 코드
       return new Tuple<string, string, string>(memberCode, readCode, writeCode);
     }
 
-      public static Tuple<string, string, string> ParseList(XMLReader reader)
+      public static Tuple<string, string, string> ParseList(XmlReader reader)
       {
         string listName = reader["name"];
         if (string.IsNullOrEmpty(listName))
@@ -2485,6 +2486,11 @@ ex 2) 실행 프로그램 코드
 - 패킷 인터페이스 코드를 생성한다.
 
 ------------------------------------------------------------------------------------------------------------------------
+[Packet Generator #3]
+
+
+
+
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
