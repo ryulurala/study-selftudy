@@ -400,6 +400,12 @@ vector<int>::iterator iter;
 3) iter = set_difference(v1.begin(), v1.end(), v2.begin(), v2.end(), result.begin()) : v1-v2, 반대로 하려면 v2부터 매개변수를 넣으면 된다.
 result.resize(iter - result.begin()) : 결과의 끝을 return한 iterator이기 때문에 resize해주어야 한다.
 
+* 대소문자 변환(for auto 문으로 바꾸려면 참조자를 써야한다.)
+#include <cctype>   // ::toupper, ::tolower
+#include <algorithm>  // transform
+transform(string.begin(), string.end(), string.begin(), ::toupper);   // :: 필수
+transform(string.begin(), string.end(), string.begin(), ::tolower);
+
 
 ************************ 소수 구하기 ************************
 * 소수 구하기
