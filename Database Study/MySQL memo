@@ -94,13 +94,126 @@ Create table [이름](
 - 생성, 조회, 수정, 삭제
 
 --------------------------------------------------------------------------------------
-[MySQL-10:]
+[MySQL-10: INSERT]
+
+* 조회(READ)
+- SHOW DATABASES; : 전체 스키마(데이터베이스) 조회
+- SHOW TABLES; : 전체 테이블 조회
+- DESC (table 이름); : 해당 테이블의 description 조회 = Insert할 때 유용
+- SELECT * FROM (table 이름) : 해당 테이블의 전체 데이터 조회 
+
+* INSERT(CREATE)
+- INSERT INTO (table 이름) (column 이름, ...) VALUES('...', '...');
+ex)
+INSERT INTO topic (title, description, created) VALUES('MySQL', 'MySQL is ...', NOW(), 'ryul', 'developer');
+
 --------------------------------------------------------------------------------------
-[MySQL-11:]
+[MySQL-11: SELECT]
+
+* 조회(READ)
+ex)
+SELECT (column 목록) FROM (table 이름) WHERE (codition 조건) ORDER BY id DESC LIMIT 2;
+- DESC: 내림차순
+- LIMIT 2: 2 개까지만 보여줌
+
 --------------------------------------------------------------------------------------
-[MySQL-12:]
+[MySQL-12: UPDATE]
+
+* 수정(UPDATE)
+ex)
+UPDATE (table 이름) SET (column 이름 = '...') WHERE (condition 조건);
+
+- WHERE문을 빠뜨리면 안된다.(빠뜨리면 모든 행 업데이트)
+
 --------------------------------------------------------------------------------------
-[MySQL-13:]
+[MySQL-13: DELETE]
+
+* 삭제(DELETE)
+ex)
+DELETE FROM (table 이름) WHERE (condition 조건);
+
 --------------------------------------------------------------------------------------
-[MySQL-14:]
+[MySQL-14: 수업의 정상]
+
+- 데이터베이스는 본질이고 관계형을 추가한 관계형 데이터베이스는 본질에서의 혁신이다.
+
+--------------------------------------------------------------------------------------
+[MySQL-15: 관계형 데이터베이스의 필요성]
+
+- 데이터를 별도로 보관하여 중복이 없다.(참조)
+- 데이터 하나를 바꾸면 해당되는 데이터를 다 바꿀 수 있다.
+
+ex) Before
+topic table
+id    title     description       author    profile
+1     MySQL       MySQL is ...      choi      dev
+2     Oracle      Oracle is ...     ryul      des
+3     MongoDB     MongoDB is ...    choi      dev
+
+ex) After
+topic table
+id    title     description       author_id
+1     MySQL       MySQL is ...        1
+2     Oracle      Oracle is ...       2
+3     MongoDB     MongoDB is ...      1
+
+author table
+id    name     profile
+1     choi       dev
+2     ryul       des
+
+- author_id를 참조하여 author와 profile을 조회한다.
+ex) JOIN을 통해 조회한다.
+SELECT * FROM topic LEFT JOIN author ON topic.author_id = author.id;
+
+--------------------------------------------------------------------------------------
+[MySQL-16: 테이블 분리하기]
+
+- 수동으로 분리
+
+--------------------------------------------------------------------------------------
+[MySQL-17: JOIN]
+
+* JOIN
+- 관계형 데이터베이스의 핵심
+ex)
+SELECT * FROM topic LEFT JOIN autor ON topic.author_id = author.id;
+- topic 테이블과 author와 left join을 하고 topic의 author_id와 autor의 id가 같은 조건으로 모든 column을 조회
+
+--------------------------------------------------------------------------------------
+[MySQL-18: 인터넷과 데이터베이스]
+
+* Client vs Server
+- Client: 요청자, Web Browser, Database Client
+- Server: 제공자, Web Server, Database Server
+
+--------------------------------------------------------------------------------------
+[MySQL-19: MySQL Client]
+
+GUI(그래픽 기반) vs ClI(명령어 기반)
+- GUI: 클릭하고 기다려야하는 단점이 있지만 쉽게 볼 수 있는 장점이 있다.
+- CLI: 즉각적으로 실행하는 장점도 있지만 눈에 잘 안 보일 수 있다는 단점이 있다.
+
+* MySQL Monitor 사용(CLI)
+1) /mysql -uroot -p -h(Server주소)
+ex 1) /mysql -uroot -p -hlocalhost
+ex 2) /mysql -uroot -p -hnaver.com
+
+2) password 입력
+
+--------------------------------------------------------------------------------------
+[MySQL-20: MySQL workbench]
+
+* MySQL workbench 사용(GUI)
+
+--------------------------------------------------------------------------------------
+[MySQL-21: 수업을 마치며]
+
+* Database를 쓰기 위해서 필요한 요구
+- index : SQL
+- modeling
+- backup
+- cloud: AWS RDS
+- programming : Python MySQL API, Java MySQL API, C# MySQL API 등등
+
 --------------------------------------------------------------------------------------
