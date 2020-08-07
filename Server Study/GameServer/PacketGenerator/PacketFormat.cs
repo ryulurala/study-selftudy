@@ -6,11 +6,10 @@ namespace PacketGenerator
 {
     class PacketFormat
     {
-        // {0} 패킷 이름/번호 모곩
+        // {0} 패킷 이름/번호 목록
         // {1} 패킷 목록
         public static string fileFormat =       // using과 enum값
-@"
-using System;
+@"using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
@@ -26,18 +25,14 @@ public enum PacketID
         // {0} 패킷 이름
         // {1} 패킷 번호
         public static string packetEnumFormat =
-@"
-{0} = {1},
-";
-
+@"{0} = {1},";
 
         // {0} 패킷 이름
         // {1} 멤버 변수들
         // {2} 멤버 변수 Read
         // {3} 멤버 변수 Write
         public static string packetFormat =
-@"
-class {0}
+@"class {0}
 {{
     {1}
 
@@ -61,7 +56,7 @@ class {0}
         Span<byte> span = new Span<byte>(segment.Array, segment.Offset, segment.Count);     // for Slice
 
         count += sizeof(ushort);        // 처음 패킷Id
-        success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), (ushort)PacketID.{0});
+        success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)PacketID.{0});
         count += sizeof(ushort);     // 나중에 자동화
         {3}
         success &= BitConverter.TryWriteBytes(span, count);         // 마지막 최종 카운트
@@ -76,9 +71,7 @@ class {0}
         // {0} 변수 형식
         // {1} 변수 이름
         public static string memberFormat =
-@"
-public {0} {1};
-";
+@"public {0} {1};";
 
         // {0} 리스트 이름 [대문자]
         // {1} 리스트 이름 [소문자]
@@ -86,8 +79,7 @@ public {0} {1};
         // {3} 멤버 변수 Read
         // {4} 멤버 변수 Write
         public static string memberListFormat =
-@"
-public struct {0}
+@"public struct {0}
 {{
     {2}
 
@@ -102,25 +94,28 @@ public struct {0}
         {4}
         return success;
     }}
-
-    
 }}
-public List<{0}> {1}s = new List<{0}>();
-";
+
+public List<{0}> {1}s = new List<{0}>();";
 
         // {0} 변수 이름
         // {1} To~ 변수 형식
         // {2} 변수 형식
         public static string readFormat =
-@"
-this.{0} = BitConverter.{1}(span.Slice(count, span.Length - count));
+@"this.{0} = BitConverter.{1}(span.Slice(count, span.Length - count));
 count += sizeof({2});
 ";
 
         // {0} 변수 이름
+        // {1} 변수 형식
+        public static string readByteFormat =
+@"this.{0} = ({1})segment.Array[segment.Offset + count];
+count += sizeof({1});
+";
+
+        // {0} 변수 이름
         public static string readStringFormat =
-@"
-ushort {0}Len = BitConverter.ToUInt16(span.Slice(count, span.Length - count));
+@"ushort {0}Len = BitConverter.ToUInt16(span.Slice(count, span.Length - count));
 count += sizeof(ushort);
 this.{0} = Encoding.Unicode.GetString(span.Slice(count, {0}Len));
 count += {0}Len;
@@ -128,8 +123,7 @@ count += {0}Len;
         // {0} 리스트 이름 [대문자]
         // {1} 리스트 이름 [소문자]
         public static string readListFormat =
-@"
-{1}s.Clear();
+@"{1}s.Clear();
 ushort {1}Len = BitConverter.ToUInt16(span.Slice(count, span.Length - count));
 count += sizeof(ushort);
 for (int i = 0; i < {1}Len; i++)
@@ -142,15 +136,19 @@ for (int i = 0; i < {1}Len; i++)
         // {0} 변수 이름
         // {1} 변수 형식
         public static string writeFormat =
-@"
-success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.{0});
+@"success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), this.{0});
 count += sizeof({1});
 ";
 
         // {0} 변수 이름
+        // {1} 변수 형식
+        public static string writeByteFormat =
+@"segment.Array[segment.Offset + count] = (byte)this.{0};
+count += sizeof({1});
+";
+        // {0} 변수 이름
         public static string writeStringFormat =
-@"
-ushort {0}Len = (ushort)Encoding.Unicode.GetBytes(this.{0}, 0, this.{0}.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+@"ushort {0}Len = (ushort)Encoding.Unicode.GetBytes(this.{0}, 0, this.{0}.Length, segment.Array, segment.Offset + count + sizeof(ushort));
 success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), {0}Len);
 count += sizeof(ushort);
 count += {0}Len;
@@ -159,8 +157,7 @@ count += {0}Len;
         // {0} 리스트 이름 [대문자]
         // {1} 리스트 이름 [소문자]
         public static string writeListFormat =
-@"
-success &= BitConverter.TryWriteBytes(segment.Slice(count, span.Length - count), (ushort){1}.Count);
+@"success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort){1}s.Count);
 count += sizeof(ushort);
 foreach ({0} {1} in this.{1}s)
     success &= {1}.Write(span, ref count);

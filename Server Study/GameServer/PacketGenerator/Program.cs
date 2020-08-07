@@ -13,13 +13,18 @@ namespace PacketGenerator
         static string packetEnums;
         static void Main(string[] args)
         {
+            string pdlPath = "../PDL.xml";         // path를 받아서 실행
+
             XmlReaderSettings settings = new XmlReaderSettings()        // 환경 설정
             {
                 IgnoreComments = true,      // 주석 무시
                 IgnoreWhitespace = true     // 스페이스 바 무시
             };
 
-            using (XmlReader reader = XmlReader.Create("PDL.xml", settings))
+            if (args.Length >= 1)
+                pdlPath = args[0];
+
+            using (XmlReader reader = XmlReader.Create(pdlPath, settings))
             {
                 reader.MoveToContent();      // 헤더를 건너뛰고 핵심 내용으로 바로 들어감
 
@@ -32,7 +37,7 @@ namespace PacketGenerator
                     // System.Console.WriteLine(reader.Name + " " + reader["name"]);     // ["name"] : name이라는 콘텐츠만 읽는다.
                 }
                 string fileText = string.Format(PacketFormat.fileFormat, packetEnums, genPackets);
-                File.WriteAllText("GenPacket.cs", fileText);
+                File.WriteAllText("GenPackets.cs", fileText);
             }
 
             // reader.Dispose();        // 사용을 닫아줌 or using 사용(알아서 범위 내에서 Dispose 호출)
@@ -94,8 +99,13 @@ namespace PacketGenerator
                 string memberType = reader.Name.ToLower();
                 switch (memberType)
                 {
-                    case "bool":
                     case "byte":
+                    case "sbyte":
+                        memberCode += string.Format(PacketFormat.memberFormat, memberType, memberName);
+                        readCode += string.Format(PacketFormat.readByteFormat, memberName, memberType);
+                        writeCode += string.Format(PacketFormat.writeByteFormat, memberName, memberType);
+                        break;
+                    case "bool":
                     case "short":
                     case "ushort":
                     case "int":
