@@ -80,6 +80,7 @@ X
 
 조회
 - m1.find(key) : key값에 해당하는 iterator 리턴
+- m1.find(key)->second : key값에 해당되는 value값
 - m1.empty() : 비어있으면 true, 노드가 있으면 false
 - m1.count(key) : key값의 value값 개수 리턴
 - m1.size() : 노드 개수 리턴
@@ -182,7 +183,8 @@ struct cmp{
 - str1.capacity() : str1의 할당된 공간 크기
 - str1.empty() : 비어있으면 true, 원소가 있으면 false
 - str1.begin() / str1.end() : st1의 처음 / 마지막에서 다음을 가리키는 iterator 리턴
-- str1.find("s") : s가 있는 인덱스 리턴, 없으면 (int)형 변환할 때 -1 리턴
+- str1.find("s") : "s"가 있는 인덱스 리턴, 없으면 (int)형 변환할 때 -1 리턴
+- str1.find("s", from index) : from index부터 "s"를 찾아서 인덱스 리턴, 없으면 -1 리턴
 
 삽입
 - str1.push_back(char);
