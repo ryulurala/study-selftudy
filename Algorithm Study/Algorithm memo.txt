@@ -96,7 +96,7 @@ X
 - m1.erase(start, end) : start~end 범위 삭제 ex) m1.erase(m1.begin(), m1.end());
 - ***m.erase(Key) : key로 삭제***
 
-- if(m1.find(key) != m1.end()):"중복이 아닐 때"라는 뜻, 중복을 검사한다.(set도 마찬가지)
+- if(m1.find(key) == m1.end()):"중복이 아닐 때"라는 뜻 = "end() 까지 갔는데도 중복된게 없다" 라는 뜻, 중복을 검사한다.(set도 마찬가지)
 - Multimap, MultiSet을 이용하여 중복된 것이 있는지 검사하려면 key를 넣고 key의 count 개수를 확인하면 된다. ex) m.count(key);
 
 ************************ Queue 자료구조(덱(Deque) or List 구조) ************************
@@ -183,8 +183,18 @@ struct cmp{
 - str1.capacity() : str1의 할당된 공간 크기
 - str1.empty() : 비어있으면 true, 원소가 있으면 false
 - str1.begin() / str1.end() : st1의 처음 / 마지막에서 다음을 가리키는 iterator 리턴
-- str1.find("s") : "s"가 있는 인덱스 리턴, 없으면 (int)형 변환할 때 -1 리턴
-- str1.find("s", from index) : from index부터 "s"를 찾아서 인덱스 리턴, 없으면 -1 리턴
+- str1.find("s") : "s"가 있는 인덱스 리턴, 없으면 (int)형 변환할 때 string::npos 리턴
+- str1.find("s", from index) : from index부터 "s"를 찾아서 인덱스 리턴, 없으면 string::npos 리턴
+ex) if(string::npos == str1.find(s)) { 못찾았다.}
+
+* 포함 관계(str1 = "abcd"; str2 = "ad";)
+ex 1) find() 함수
+if(string::npos != str1.find(str2))
+: if 절은 false가 된다.(못찾는다.)
+
+ex 2) includes() 함수(in <algorithm>)
+includes(str1.begin(), str1.end(), str2.begin(), str2.end())
+: 부분 집합으로 찾기 때문에 bool 값 true가 리턴된다.
 
 삽입
 - str1.push_back(char);
@@ -400,7 +410,14 @@ vector<int>::iterator iter;
 1) iter = set_union(v1.begin(), v1.end(), v2.begin(), v2.end(), result.begin()) : v1합집합v2
 2) iter = set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), result.begin()) : v1교집합v2
 3) iter = set_difference(v1.begin(), v1.end(), v2.begin(), v2.end(), result.begin()) : v1-v2, 반대로 하려면 v2부터 매개변수를 넣으면 된다.
-result.resize(iter - result.begin()) : 결과의 끝을 return한 iterator이기 때문에 resize해주어야 한다.
+- result.resize(iter - result.begin()) : 결과의 끝을 return한 iterator이기 때문에 resize해주어야 한다.
+- result.erase(iter, result.end()) : iter부터 end()까지 지운다.
+
+* 부분 집합 판별
+vector<int> v1;
+vector<int> v2;
+bool check = includes(v1.begin(), v1.end(), v2.begin(), v2.end());
+if(check == true) : v2는 v1의 부분집합이다. v2 C v1
 
 * 대소문자 변환(for auto 문으로 바꾸려면 참조자를 써야한다.)
 #include <cctype>   // ::toupper, ::tolower
