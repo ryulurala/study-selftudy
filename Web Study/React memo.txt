@@ -46,6 +46,7 @@ npx create-react-app
 ex)
 1) npx create-react-app . : (권장) 현재 디렉토리('.')에서 임시 패키지를 설치하여 프로젝트 생성
 2) create-react-app . : 현재 디렉토리('.')에서 npm으로 설치한 패키지를 이용하여 프로젝트 생성
+
 ex)
   npx create-react-app my-app
   cd my-app
@@ -101,24 +102,224 @@ ex)
 ------------------------------------------------------------------------------
 [React-11: 컴포넌트 만들기]
 
+* 재사용성 효율
+ex)
+class Subject extends Component {   // 클래스명은 대문자로 시작(규칙)
+  render() {    // 컴포넌트는 render()함수가 있어야 한다.
+    // 클래스 안에 소속돼 있는 함수는 "function"을 생략한다.
+    // 컴포넌트 만들 때는 하나의 최상위 태그로 시작해야한다.
+    return (
+      <header>
+        <h1>WEB</h1>
+        world wide web!
+      </header>
+    );
+  }
+}
 
+class TOC extends Component {
+  render() {
+    return (
+      <nav>
+        <ul>
+          <li>
+            <a href="1.html">HTML</a>
+          </li>
+          <li>
+            <a href="2.html">CSS</a>
+          </li>
+          <li>
+            <a href="3.html">JavaScript</a>
+          </li>
+        </ul>
+      </nav>
+    );
+  }
+}
+
+class Content extends Component {
+  render() {
+    return (
+      <article>
+        <h2>HTML</h2>
+        HTML is HyperText Markup Language.
+      </article>
+    );
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Subject></Subject>     // React가 최종적으로 html 코드를 공급해줌.
+        <TOC></TOC>             // 똑같은 코드 두 번 작성하면 두 번 나타난다.
+        <Content></Content>
+      </div>
+    );
+  }
+}
 
 ------------------------------------------------------------------------------
-[React-12: props]
+[React-12: Props]
+
+* Props vs State
+- Props: 부모 컴포넌트가 자식 컴포넌트에게 전달하는 데이터(읽기 전용)
+- State: 자신이 들고 있는 데이터(쓰기 전용)
+
+ex) Props 예제
+class Content extends Component {
+  render() {
+    return (
+      <article>
+        <h2>{this.Props.title}</h2>
+        {this.Props.desc}   //{this.Props.이름}를 써야 한다.
+      </article>
+    );
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Content title="HTML" desc="HTML is HyperText Markup Language." />
+      </div>
+    ); // React가 최종적으로 html 코드를 공급해줌.
+  }
+}
+
+- 따옴표('', "")는 문자열을 나타내고, {}는 JavaScript를 나타낸다.
+
 ------------------------------------------------------------------------------
 [React-13: React Developer Tools]
+
+* React Developer Tools(웹 확장 앱)
+- 현재의 상태(React 코드)를 알아낼 수 있다.
+- 데이터를 수정할 수 있다.
+
 ------------------------------------------------------------------------------
 [React-14: Component 파일로 분리하기]
+
+* 분리
+1) Components 디렉토리 생성 후 .js 파일을 만든다.
+2-1) import React, { Component } from "react"; 를 최상단에 선언해준다.
+2-2) 클래스 작성 후 export default 클래스명; 으로 내보내기 한다.
+3) 해당 컴포넌트를 쓰려는 스크립트에 import 클래스명 from "위치"; 를 추가한다.
+
+ex) 
+(Content.js)
+import React, { Component } from "react";   // 컴포넌트를 쓰기 위한 필수 사항
+
+class Content extends Component {
+  render() {
+    return (
+      <article>
+        <h2>{this.Props.title}</h2>
+        {this.Props.desc}
+      </article>
+    );
+  }
+}
+
+export default Content;     // 내보내기
+
+(App.js)
+import React, { Component } from "react";   // 컴포넌트 필수 사항
+import Content from "./Components/Content"; // Content 컴포넌트를 쓰기 위해 선언
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Content title="HTML" desc="HTML is HyperText Markup Language." />
+      </div>
+    ); // React가 최종적으로 html 코드를 공급해줌.
+  }
+}
+
+export default App;
+
 ------------------------------------------------------------------------------
-[React-15: state]
-소개
-사용
-key
+[React-15: State]
+
+* Props vs State
+- Props: 사용자에게 제공(외부), 사용적인 측면, 읽기 전용
+- State: 컴포넌트 구현의 필요한 데이터(내부), 구현적인 측면, 읽기/쓰기 전용
+
+ex) State 사용
+class App extends Component {
+  constructor(props) {
+    // 생성자
+    super(props); // 초기화
+    this.state = {
+      subject: { title: "WEB", Sub: "World Wide Web!" },
+    };
+  }
+  render() {
+    return (
+      <div className="App">
+        <Subject title={this.state.title} sub={this.state.Sub} />
+      </div>
+    ); // React가 최종적으로 html 코드를 공급해줌.
+  }
+}
+
+* key
+- React가 내부적으로 필요적으로 요청한다.
+- key 값을 안주면 웹 콘솔에서 Warning 발생(컴파일과 실행은 무난하다)
+
+ex)
+class App extends Component {
+  constructor(props) {
+    // 생성자
+    super(props); // 초기화
+    this.state = {
+      contents: [
+        { id: 1, title: "HTML", desc: "THML is HyperText ..." },
+        { id: 2, title: "CSS", desc: "CSS is for design" },
+        { id: 3, title: "JavaScript", desc: "JavaScript is for interactive" },
+      ],
+    };
+  }
+  render() {
+    return (
+      <div className="App">
+        <TOC data={this.state.contents} />
+      </div>
+    ); // React가 최종적으로 html 코드를 공급해줌.
+  }
+}
+
+class TOC extends Component {
+  render() {
+    var lists = [];
+    var data = this.props.data;
+    var i = 0;
+    while (i < data.length) {
+      // Key는 리액트가 필요적으로 요청
+      lists.push(
+        <li key={data[i].id}>   // key 값은 고유값으로
+          <a href={"/content/" + data[i].id}>{data[i].title}</a> // /content/ 폴더안에 저장
+        </li>
+      );
+      i++;
+    }
+    return (
+      <nav>
+        <ul>{lists}</ul>
+      </nav>
+    );
+  }
+}
+
+- 부모에서 state 값을 초기화하고, 자식에게는 props 값을 전달한다.
+
 ------------------------------------------------------------------------------
-[React-16: 이벤트 state props & render 함수]
+[React-16: 이벤트 State ptate & render 함수]
 소개
 이벤트 설치
-이벤트에서 state 변경하기
+이벤트에서 State 변경하기
 이벤트 bind 함수 이해하기
 이벤트 setState 함수 이해하기
 ------------------------------------------------------------------------------
