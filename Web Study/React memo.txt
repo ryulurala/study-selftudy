@@ -317,13 +317,79 @@ class TOC extends Component {
 
 ------------------------------------------------------------------------------
 [React-16: 이벤트 State ptate & render 함수]
-소개
-이벤트 설치
-이벤트에서 State 변경하기
-이벤트 bind 함수 이해하기
-이벤트 setState 함수 이해하기
+
+* render() 함수
+- 화면을 그리는 함수
+- props, state 값이 바뀌면 다시 호출된다.(화면이 다시 그려진다)
+
+* 이벤트(익명함수 이용)
+onclick = function(event){
+  event.preventDefault();     // 기본적인 동작 방법을 막는다.(Reload되지 않음)
+  debugger;         // 디버깅이 가능하도록 여기서 멈춘다.
+}
+
+* 이벤트에서 State 변경
+ex) State 변경 규칙
+function(event){
+  this.setState({     // 리액트의 약속(state를 변경할 때)
+    mode: "welcome"
+  });
+}.bind(this)    // 함수가 끝나고 bind하여 this를 해당 컴포넌트의 this로 묶는다.
+
+* bind() 함수
+- 함수(사용자 정의) 안에서의 this는 undefined 값을 가진다.
+- 함수가 끝나고 데이터를 묶는다.
+- function(a1, a2, a3, e){}.bind(this, a1, a2, a3) 규칙이 있다.
+
+ex)
+var obj = {name: 'ryul'};
+function bindTest(){
+  console.log(this.name);
+}.bind(obj);
+
+- function 안에서의 this를 obj로 묶는다.
+
+* setState() 함수
+- state 값을 바꾸는 약속(in React)
+ex) 
+this.state.mode = "welcome";    // setState()를 안 쓴 경우
+
+- bug 발생: + error 발생(bind() 함수를 안쓰면)
+- 실제로 state는 바뀌었다. 
+- react가 인식하지 못하여 render() 재호출이 안된다.(state, props가 바뀐걸 인식하면 재호출)
+
 ------------------------------------------------------------------------------
 [React-17: 컴포넌트 이벤트 만들기]
+
+* Component Event
+
+ex 1) App.js
+<TOC
+  onChangePage={function (id) {     // 함수가 전달됨.
+    // debugger;
+    this.setState({
+      mode: "read",
+      selected_content_id: Number(id),
+    });
+  }.bind(this)}
+  data={this.state.contents}
+/>
+
+ex 2) TOC.js
+<a
+  href={"/content/" + data[i].id}
+  data-id={data[i].id}  // target(=<a>), dataset(=data).id(=-id) 즉, dataset.id로 속성 값 참조 가능
+  onClick={function (id, e) {
+    // debugger; // e라는 객체의 정보를 보기 위해
+    e.preventDefault(); // 리로드하지 않음.
+    this.props.onChangePage(id);    // props로 전달된 onChangePage 함수 호출
+  }.bind(this, data[i].id)} // 두 번째 인자 값-> 함수의 첫 번째 매개변수 값으로 넣어줌
+>
+
+- 이벤트의 e.target은 해당 함수를 포함하는 태그를 가리킨다.
+- data-id 는 특별해서 dataset.id로 참조한다.
+- App.js에서 while문으로 title과 desc를 바꿔주어 동적인 페이지를 보여준다.
+
 ------------------------------------------------------------------------------
 [React-18: 베이스 캠프]
 ------------------------------------------------------------------------------
