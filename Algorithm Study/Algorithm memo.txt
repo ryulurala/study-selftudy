@@ -35,7 +35,7 @@ ex) vector<Data type> 변수 명;
 
 조회
 - v1.at(index) or v[index] : 값 참조(느림, 안전 or 빠름, 불안전)
-- v1.front() / v.back() : 첫 번째 원소 참조 / 마지막 원소 참조
+- v1.front() / v.back() : 첫 번째 원소 참조 / 마지막 원소 참조 (이므로 v.back()+= v.front()가 가능하다)
 - v1.begin() / v1.end() : 첫 번째 원소 / 마지막의 *다음* 포인터 리턴(iterator 사용)
 - v1.size() / v1.capacity() : 원소 개수 리턴 / 공간 크기 리턴
 - v1.empty(); : v1이 비어있으면 true, 원소가 있으면 false, 공간과 관계X
@@ -73,6 +73,7 @@ for(iter = m.begin(); iter != m.end(); iter++)
 2. 생성자
 - map<T, T> m : 기본 선언(pair<T, T>로 받는다)
 - map<T> m2(m1) : m2를 선언(m1을 복사한)
+- map<T1, T2, greater<T1>> m : 내림차순 map 선언
 
 3. 멤버 함수(if: map<T, T> m1; map<T, T> m2;)
 할당
@@ -132,7 +133,7 @@ X
 2. 생성자
 - priority_queue<T> pq; : 기본 선언
 - priority_queue<T, deque<T>> pq; : deque 구조 선언(default: vector<T>)
-- priority_queue<T, vector<T>, greater<T>> pq; : vector 구조, 오름차순 정렬 방식 선언(default: less<T>)
+- priority_queue<T, vector<T>, greater<T>> pq; : vector 구조, 내림차순 정렬 방식 선언(default: less<T>)
 
 3. 멤버 함수(if: priority_queue<T> q)
 할당
@@ -152,8 +153,7 @@ X
 * Priority_Queue에서 쓰도록 compare클레스 구조체로 정의
 ex) : value값으로 key값 정렬하고 value값이 같을 경우 key값으로 정렬(일반 sort의 cmp와 부등호가 반대이다)
 struct cmp{
-  bool operator()(pair<int, int> a, pair<int, int> b)
-  {
+  bool operator()(pair<int, int> a, pair<int, int> b){
     if(a.second == b.second)
       return a.first < b.first;
     else
@@ -205,13 +205,16 @@ includes(str1.begin(), str1.end(), str2.begin(), str2.end())
 - str1.clear() : 문자열을 지운다(capacity는 그대로)
 
 변환
-- str1.c_str() : string(C++)을 char*(C) type으로 바꿔준다.
+- str1.c_str() : string(C++)을 char*(C)로 바꿔준다.
 - str1.substr() / str1.substr(from) / str1.substr(from, count) :
     그대로 / from부터 끝까지 / from부터 count개수만큼 부분 문자열 리턴
 - str1.replace(pos, count, str2) : 문자열 대체, pos(iterator) 부터 count개수만큼 str2로 바꿈
 - to_string(T t) : T형의 t를 string으로 변환
 - stoi(string str, &pos) : string 형 str을 int로 바꿈(참조), 숫자 외에 문자를 만날 시 pos 전까지 바꾼다.(size_t pos), 반복문에는 segment fault 조심하자.
-ex) stoi(str); : str을 int형으로 바꾼다(숫자가 나오는데까지)
+ex 1) stoi(str); : str을 int형으로 바꾼다(숫자가 아니기 전까지)
+ex 2) stoi(str, nullptr, 2) : str이 2진수로 생각하며(only 0 or 1) int 값을 변환한다.
+** stoi 주의: 처음부터 숫자가 아니면 exception을 발생시킨다.
+
 
 ex) 문자열 대체 예제
 1) str1.replace(from, count, str2) : from에서 count개수만큼 str2로 대체
@@ -386,8 +389,8 @@ int union(int x, int y)
 4) 1로 채워진 곳이 해당 인덱스의 값을 대체하면 된다.
 
 * 멤버 함수
-- next_permutation(처음 반복자, 끝 반복자) : 다음 자리를 바꾼다. (sort less 해야됨)
-- prev_permutation(처음 반복자, 끝 반복자) : 전 자리를 바꾼다. (sort greater 해야됨)
+- next_permutation(처음 반복자, 끝 반복자) : 다음 자리를 바꾼다. (sort less 해야됨 = 오름차순으로 바꿔야댐)
+- prev_permutation(처음 반복자, 끝 반복자) : 전 자리를 바꾼다. (sort greater 해야됨 = 내림차순으로 바꿔야댐)
 
 ex) 자리를 바꿔가며 조건 검사 예제
 do
@@ -424,7 +427,10 @@ if(check == true) : v2는 v1의 부분집합이다. v2 C v1
 #include <algorithm>  // transform
 transform(string.begin(), string.end(), string.begin(), ::toupper);   // :: 필수
 transform(string.begin(), string.end(), string.begin(), ::tolower);
-
+또는 
+- 소문자가 ASCII 코드 값이 더 크다는 점을 이용하여
+1) 소문자 -> 대문자: '문자' -= '소문자'(를) - '대문자'(로);
+2) 대문자 -> 소문자: '문자' -= '대문자'(를) - '소문자'(로);
 
 ************************ 소수 구하기 ************************
 * 소수 구하기

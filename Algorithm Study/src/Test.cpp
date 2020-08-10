@@ -1,19 +1,15 @@
-#include <string>
-#include <algorithm>
 #include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
 int main()
 {
-    string str1 = "abcd";
-    string str2 = "ad";
+    string c= "c";
+    string s = "C";
+    bool check = string::npos != s.find(c);
 
-    if (string::npos != str1.find(str2))
-        cout << "find() success" << endl;
-
-    if (includes(str1.begin(), str1.end(), str2.begin(), str2.end()))
-        cout << "includes success" << endl;
-
+    cout<<check<<endl;
     return 0;
 }

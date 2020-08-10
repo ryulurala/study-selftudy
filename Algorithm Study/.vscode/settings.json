@@ -1,7 +1,5 @@
 {
     "files.associations": {
-        "deque": "cpp",
-        "string": "cpp",
-        "iostream": "cpp"
+        "ostream": "cpp"
     }
 }
