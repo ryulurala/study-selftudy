@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\PacketGenerator\\PacketGenerator.csproj": {}
+    "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\PacketGenerator\\PacketGenerator.csproj": {}
   },
   "projects": {
-    "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\PacketGenerator\\PacketGenerator.csproj": {
+    "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\PacketGenerator\\PacketGenerator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\PacketGenerator\\PacketGenerator.csproj",
+        "projectUniqueName": "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\PacketGenerator\\PacketGenerator.csproj",
         "projectName": "PacketGenerator",
-        "projectPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\PacketGenerator\\PacketGenerator.csproj",
+        "projectPath": "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\PacketGenerator\\PacketGenerator.csproj",
         "packagesPath": "C:\\Users\\SRChoi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\PacketGenerator\\obj\\",
+        "outputPath": "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\PacketGenerator\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\SRChoi\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -25,8 +25,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\ServerCore\\ServerCore.csproj": {
-                "projectPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\ServerCore\\ServerCore.csproj"
+              "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\ServerCore\\ServerCore.csproj": {
+                "projectPath": "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\ServerCore\\ServerCore.csproj"
               }
             }
           }
@@ -58,14 +58,14 @@
         }
       }
     },
-    "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\ServerCore\\ServerCore.csproj": {
+    "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\ServerCore\\ServerCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\ServerCore\\ServerCore.csproj",
+        "projectUniqueName": "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\ServerCore\\ServerCore.csproj",
         "projectName": "ServerCore",
-        "projectPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\ServerCore\\ServerCore.csproj",
+        "projectPath": "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\ServerCore\\ServerCore.csproj",
         "packagesPath": "C:\\Users\\SRChoi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\ServerCore\\obj\\",
+        "outputPath": "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\ServerCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\SRChoi\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -56,7 +56,7 @@ class PlayerInfoReq : IPacket
 	
 	public List<Skill> skills = new List<Skill>();
 
-public ushort Protocol { get { return (ushort)PacketID.PlayerInfoReq; } }
+    public ushort Protocol { get { return (ushort)PacketID.PlayerInfoReq; } }
 
     public void Read(ArraySegment<byte> segment)
     {
@@ -108,7 +108,7 @@ public ushort Protocol { get { return (ushort)PacketID.PlayerInfoReq; } }
 		success &= BitConverter.TryWriteBytes(span.Slice(count, span.Length - count), (ushort)skills.Count);
 		count += sizeof(ushort);
 		foreach (Skill skill in this.skills)
-		success &= skill.Write(span, ref count);
+		    success &= skill.Write(span, ref count);
 		
         success &= BitConverter.TryWriteBytes(span, count);         // 마지막 최종 카운트
         if (success == false)
@@ -121,7 +121,7 @@ class Test : IPacket
 {
     public int testInt;
 
-public ushort Protocol { get { return (ushort)PacketID.Test; } }
+    public ushort Protocol { get { return (ushort)PacketID.Test; } }
 
     public void Read(ArraySegment<byte> segment)
     {

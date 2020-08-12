@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ztM1BnPG04sTS3NQV+Wsv7NJXqP7UZ38+xjNA5kVaoupFHQn/aLvFPBlqKipqAm6lYzDGv0n4BrX5TChP8TTHA==",
+  "dgSpecHash": "D6Qw5g62fPmKDU7+yJrqhy1ryxTfvyNrwYsPKn+kOLBhDhr79F8eeB2GGXkoGxODvGkChAlalE6h3uJxBi8Wuw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\PacketGenerator\\PacketGenerator.csproj",
+  "projectFilePath": "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\PacketGenerator\\PacketGenerator.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

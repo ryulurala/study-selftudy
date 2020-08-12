@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TKVNP6jR1O0TC4/pm+EY8aKWkBLIEBv9md6DRgroK+N0GmCjyhEkaLPK+GFkSyyz1FK5+XHqSvKYu4vf3qixyw==",
+  "dgSpecHash": "dMrG8MXlEb+/1MHlFXEPYm7J9Jrml4ne+pCXK6W5GYMGshhJlJ63MeMs9nJruLva9ig2MfZpc8tm9GRkeQ+57g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\SRChoi\\Desktop\\Self_Study\\Self-Study\\Server Study\\GameServer\\Server\\Server.csproj",
+  "projectFilePath": "C:\\Users\\SRChoi\\Desktop\\Selftudy\\Devtudy\\Server_Study\\RPG_Server\\Server\\Server.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

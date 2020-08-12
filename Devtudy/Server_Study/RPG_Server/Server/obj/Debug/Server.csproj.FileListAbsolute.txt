@@ -14,3 +14,19 @@ C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\Server\obj
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\Server\obj\Debug\Server.pdb
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\Server\obj\Debug\Server.genruntimeconfig.cache
 C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\Server\obj\Debug\Server.csprojAssemblyReference.cache
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\bin\Debug\Server.exe
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\bin\Debug\Server.deps.json
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\bin\Debug\Server.runtimeconfig.json
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\bin\Debug\Server.runtimeconfig.dev.json
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\bin\Debug\Server.dll
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\bin\Debug\Server.pdb
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\bin\Debug\ServerCore.dll
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\bin\Debug\ServerCore.pdb
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\obj\Debug\Server.csprojAssemblyReference.cache
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\obj\Debug\Server.AssemblyInfoInputs.cache
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\obj\Debug\Server.AssemblyInfo.cs
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\obj\Debug\Server.csproj.CopyComplete
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\obj\Debug\Server.dll
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\obj\Debug\Server.pdb
+C:\Users\SRChoi\Desktop\Selftudy\Devtudy\Server_Study\RPG_Server\Server\obj\Debug\Server.genruntimeconfig.cache
