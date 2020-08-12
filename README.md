@@ -1,3 +1,3 @@
-# Devtudy
+# Seftudy
 
-Dev Study
+Develop & Design Study
