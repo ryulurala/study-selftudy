@@ -1,0 +1,134 @@
+[1-1 : 수업 소개]
+
+[1-2 : 프로젝트 동기]
+
+[1-3 : 기획]
+
+[1-4 : 코딩과 HTML]
+- 사람이 하는 Input : Code, Source, Language
+- 기계가 하는 Output : Application, App, Program, Webpage, Website
+
+- HTML의 장점
+1. 쉽다. (프로그래밍 언어 중에 제일 쉽다)
+2. 중요하다.
+
+*HTML(HyperText Markup Language)
+- Public domain : HTML을 사용하는데 저작권 같은 것이 없다(자유롭다)
+
+[1-5 : HTML 코딩과 실습환경 준비]
+편집기(Editor)를 이용하여 .html 파일을 만들어 열기한다.
+ex) atom, VS code를 이용
+
+[1-6 : 기본문법 태그]
+*Tag(열리는 태그, 닫히는 태그) : 설명한다.
+- <strong> ~ </strong> : 진하게
+- <u> ~ </u> : 밑줄(underline)
+
+[1-7 : 혁명적인 변화]
+- W3C : Web을 만드는 곳
+- <h(1~6)> ~ </h(1~6)> : 제목, 줄 바꿈(코드에서 개행해도 App에서는 개행이 되지 않는다)
+
+[1-8 : 통계에 기반한 학습]
+- https://www.advancedwebranking.com/html/
+
+[1-9 : 줄 바꿈 br vs p]
+- <br> : 개행(no 단락 paragraph)
+- <p> ~ </p> : 개행(yes 단락 paragraph) --- 권장(같은 단락임을 알 수 있다)
+
+[1-10 : HTML이 중요한 이유]
+*스타일만 제목같은 코드 vs <h> 태그를 쓰는 코드
+- 검색 엔진에서는 태그를 쓰는 코드를 더 중요시 여긴다. (제목이라는 태그를 쓴 약속이니까)
+
+[1-11 : 최후의 문법 속성 & img]
+*Image 포함시키기(src부터는 속성이라 한다. 위치가 바뀌어도 상관 없다.)
+- <img src="coding.jpg" width = "100%"> : 같은 위치에 coding.jpg를 불러서 100%로 채운다.
+
+[1-12 : 부모자식과 목록]
+*부모 자식 관계
+<parent>
+<child></child>
+</parent>
+
+- <li> ~ </li> : List 태그
+
+*List(<li>)의 부모
+- <ul> ~ </ul> : Unordered List(정렬되지 않은 리스트)
+- <ol> ~ </ol> : Ordered List(정렬된 리스트, 자동 넘버링)
+
+*Alt누르고 커서 여러 개로 제어할 수 있다.
+
+[1-13 : 문서의 구조와 슈퍼스타들]
+- <title> ~ </title> : 탭의 이름이 바뀐다. 필수적으로 쓰자.
+- <meta charset="utf-8"> : Web browser가 이 파일을 열 때, uft-8로 열도록 한다.
+- <head> ~ </head> : 본문을 설명함(필수적인 약속) ---- <title>과 <meta> 등이 들어감
+- <body> ~ </body> : 본문에 해당(필수적인 약속)
+- <html> ~ </html> : 제일 상단 태그
+- <!doctype html> : 관용적으로 html문서 상단에 적어준다.
+
+*문서 구조
+1. <!doctype html>
+2. <html> ~ </html>
+3. <head> ~ </head>
+4. <body> ~ </body>
+
+[1-14 : HTML 태그의 제왕]
+*Link
+- <a href = "http://15.164.172.51" target = "_blank" title = "3soccar.io"> ~ </a> : link할 때 쓴다.
+
+[1-15 : 웹 사이트 완성]
+*Link를 통해서 웹사이트 만들기
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WEB - html</title>
+        <meta charset = "utf-8">
+    </head>
+    <body>
+        <h1><a href="index.html">WEB</a></h1>
+
+        <ol>
+            <li><a href = "1.html">HTML</a></li>
+            <li><a href = "2.html">CSS</a></li>
+            <li><a href = "3.html">JavaScript</a></li>
+            <li><a href = "http://15.164.172.51" title = "soccar.io" target = "_blank">game</a></li>
+            <li><a href = "coding.jpg">그림</a></li>
+        </ol>
+        
+        <h2>Web</h2>
+        이건 Web이다.
+    </body>
+</html>
+
+[1-16 : 원시웹]
+Internet vs Web
+- Web은 Internet에 포함된다(Internet이 더 큰 범위)
+- 1960 : Internet 발달
+- 1990.10 : Web 편집기 개발(Web의 고향 : 스위스)
+- 1990.11 : WWW(World Wide Web) 개발(최초의 웹 브라우저)
+- 1990.12 : Web Server 개발(info.cern.ch : 첫 번째 웹 사이트)
+
+[1-17 : 인터넷을 여는 열쇠 : 서버와 클라이언트]
+*인터넷이 동작하려면 컴퓨터 2대가 필요하다.
+Web Browser ------------(request)----------------Internet--------(response)--------------- Web Server(http://info.cern.ch)
+http://info.cern.ch/index.html							index.html
+
+[1-18 : 웹 호스팅 : Github page]
+Host : 인터넷이 연결돼있는 컴퓨터
+Web hosting : Web server를 제공
+
+[1-19 : 웹 서버 운영하기]
+*Apache http server
+
+http://127.0.0.1/index.html		vs 	file://C:/folder/index.html
+- Web Server 관여의 여부
+
+*웹 서버가 있어야 웹 브라우저가 파일을 찾아서 요청하고 받을 수 있다.
+
+[1-20]
+[1-21]
+- <input type = "checkbox"> : 체크박스
+[1-22]
+- JSP, PHP, Node.js JavaScript, Advertisement, CSS, ASP.net
+
+[1-23]
+- <iframe src=...> : 동영상

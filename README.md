@@ -1,2 +1,3 @@
-# Self-Study
-Self Study
+# Devtudy
+
+Dev Study

@@ -1,0 +1,31 @@
+[DATABASE 1-1: 수업소개]
+
+* Database
+- 정보 기술(IT)의 심장
+- File의 성능, 보안 등을 보완하기 위해서 탄생했다.
+- MySQL, Oracle, SQL Server, MongoDB, PostgreSQL 등
+--------------------------------------------------------------------------------------
+[DATABASE 1-2: 데이터베이스의 본질]
+
+* CRUD
+- Input: *C*reate, *U*pdate, *D*elete
+- Output: *R*ead
+--------------------------------------------------------------------------------------
+[DATABASE 1-3: File vs Database]
+
+* File vs Database
+- File: 검색하면 노이즈(검색한 곳까지 출력), 순서 변경
+- Database: 
+--------------------------------------------------------------------------------------
+[DATABASE 1-4: 수업을 마치며]
+
+* Database 종류
+1) Relational DBMS: Oracle, MySQL, SQL Server, PostgreSQL
+2) Document store: MongoDB
+3) Key-value store: Redis
+4) Search engine: Elasticsearch
+5) Wide column store: Cassandra
+
+- Oracle: 비싸다, 기술 지원, 큰 회사
+- MySQL: 무료, 오픈 소스, 개인or작은 회사
+--------------------------------------------------------------------------------------

@@ -1,0 +1,9 @@
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\bin\Debug\ServerCore.deps.json
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\bin\Debug\ServerCore.dll
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\bin\Debug\ServerCore.pdb
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\ServerCore.csproj.CoreCompileInputs.cache
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\ServerCore.AssemblyInfoInputs.cache
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\ServerCore.AssemblyInfo.cs
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\ServerCore.dll
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\ServerCore.pdb
+C:\Users\SRChoi\Desktop\Self_Study\Self-Study\Server Study\GameServer\ServerCore\obj\Debug\ServerCore.csprojAssemblyReference.cache

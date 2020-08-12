@@ -1,0 +1,403 @@
+------------------------------------------------------------------------------
+[React-1: 수업소개]
+
+* React의 장점(컴포넌트 사용)
+1) 가독성
+2) 재사용성 
+3) 유지보수
+
+------------------------------------------------------------------------------
+[React-2: 공부 전략]
+
+* Coding(개발) -> Run(실행) -> Deploy(배포)
+
+------------------------------------------------------------------------------
+[React-3: 개발 환경의 종류]
+
+* 개발 환경 종류
+1) Online Playgrounds: 온라인으로 환경 설정
+ex) CodeSandbox
+
+2) Add React to a Website: 부분적으로 추가할 때 사용
+
+3) Create a New React App: React로 앱을 개발할 때, 개발 환경, 도구들을 잘 모아서 제공
+
+------------------------------------------------------------------------------
+[React-4: npm을 이용해서 create react app 설치]
+
+* npm
+- Node js의 앱스토어
+
+* npm vs npx
+- npm: 일반 설치
+ex)
+npm install -g create-react-app
+-> 글로벌하게 create-react-app을 설치한다.(EACCES가 뜨면 SUDO를 앞에다 입력해주자.)
+
+- (권장) npx: 임시 설치(최신 상태)
+-> 공식 문서에서 React 다운로드 방법(자주 사용하지 않는 무거운 패키지들이 남기 때문에)
+ex)
+npx create-react-app
+
+------------------------------------------------------------------------------
+[React-5: create react app을 이용해서 개발환경구축]
+
+* React 프로젝트 생성
+ex)
+1) npx create-react-app . : (권장) 현재 디렉토리('.')에서 임시 패키지를 설치하여 프로젝트 생성
+2) create-react-app . : 현재 디렉토리('.')에서 npm으로 설치한 패키지를 이용하여 프로젝트 생성
+
+ex)
+  npx create-react-app my-app
+  cd my-app
+
+- 폴더가 "react"이거나 이름에 대문자가 포함되서는 안된다.
+
+------------------------------------------------------------------------------
+[React-6: 샘플 웹 앱 실행]
+
+* Sample Web App
+- 시작: npm run start
+- 종료: Ctrl + C
+
+------------------------------------------------------------------------------
+[React-7: JS 코딩하는 법]
+
+* public 디렉토리
+- index.html이 있는 곳(처음 실행 파일)
+- id="root" [in index.html] : React component가 있는 곳
+
+* src 디렉토리
+- 개발한 코드들을 넣는 곳
+- index.js : 진입 파일
+- document.getElementById("root") [in index.js] : id 값이 root를 선택하는 선택자.
+- <App /> : 사용자 정의 컴포넌트
+- App.js : 실제 구현 파일(class type OR function type) - ** 개발할 코드 파일 **
+
+------------------------------------------------------------------------------
+[React-8: CSS 코딩하는 법]
+
+- index.css, App.css 를 코딩한다.
+
+------------------------------------------------------------------------------
+[React-9: 배포하는 법]
+
+* Deploy(배포)
+- create-react-app의 환경(개발 환경)은 무겁다.
+- 따라서 build하여 배포하여야 한다.
+ex)
+  npm run build
+- 배포할 파일을 만든다(Release)
+- 실제 서비스할 파일은 build 파일을 써야 한다.
+
+* 웹 서버를 통해 실행
+1) npm install -g serve : serve를 설치
+2) npx serve -s build : 한 번만 실행(npx를 이용), -s 옵션은 build에 있는 것을 root로 하겠다.
+
+------------------------------------------------------------------------------
+[React-10: 리액트가 없다면]
+
+- html 코딩은 하드코딩이라면 react 코딩은 재사용성으로서 코딩하기 때문에 유용하다.
+
+------------------------------------------------------------------------------
+[React-11: 컴포넌트 만들기]
+
+* 재사용성 효율
+ex)
+class Subject extends Component {   // 클래스명은 대문자로 시작(규칙)
+  render() {    // 컴포넌트는 render()함수가 있어야 한다.
+    // 클래스 안에 소속돼 있는 함수는 "function"을 생략한다.
+    // 컴포넌트 만들 때는 하나의 최상위 태그로 시작해야한다.
+    return (
+      <header>
+        <h1>WEB</h1>
+        world wide web!
+      </header>
+    );
+  }
+}
+
+class TOC extends Component {
+  render() {
+    return (
+      <nav>
+        <ul>
+          <li>
+            <a href="1.html">HTML</a>
+          </li>
+          <li>
+            <a href="2.html">CSS</a>
+          </li>
+          <li>
+            <a href="3.html">JavaScript</a>
+          </li>
+        </ul>
+      </nav>
+    );
+  }
+}
+
+class Content extends Component {
+  render() {
+    return (
+      <article>
+        <h2>HTML</h2>
+        HTML is HyperText Markup Language.
+      </article>
+    );
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Subject></Subject>     // React가 최종적으로 html 코드를 공급해줌.
+        <TOC></TOC>             // 똑같은 코드 두 번 작성하면 두 번 나타난다.
+        <Content></Content>
+      </div>
+    );
+  }
+}
+
+------------------------------------------------------------------------------
+[React-12: Props]
+
+* Props vs State
+- Props: 부모 컴포넌트가 자식 컴포넌트에게 전달하는 데이터(읽기 전용)
+- State: 자신이 들고 있는 데이터(쓰기 전용)
+
+ex) Props 예제
+class Content extends Component {
+  render() {
+    return (
+      <article>
+        <h2>{this.Props.title}</h2>
+        {this.Props.desc}   //{this.Props.이름}를 써야 한다.
+      </article>
+    );
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Content title="HTML" desc="HTML is HyperText Markup Language." />
+      </div>
+    ); // React가 최종적으로 html 코드를 공급해줌.
+  }
+}
+
+- 따옴표('', "")는 문자열을 나타내고, {}는 JavaScript를 나타낸다.
+
+------------------------------------------------------------------------------
+[React-13: React Developer Tools]
+
+* React Developer Tools(웹 확장 앱)
+- 현재의 상태(React 코드)를 알아낼 수 있다.
+- 데이터를 수정할 수 있다.
+
+------------------------------------------------------------------------------
+[React-14: Component 파일로 분리하기]
+
+* 분리
+1) Components 디렉토리 생성 후 .js 파일을 만든다.
+2-1) import React, { Component } from "react"; 를 최상단에 선언해준다.
+2-2) 클래스 작성 후 export default 클래스명; 으로 내보내기 한다.
+3) 해당 컴포넌트를 쓰려는 스크립트에 import 클래스명 from "위치"; 를 추가한다.
+
+ex) 
+(Content.js)
+import React, { Component } from "react";   // 컴포넌트를 쓰기 위한 필수 사항
+
+class Content extends Component {
+  render() {
+    return (
+      <article>
+        <h2>{this.Props.title}</h2>
+        {this.Props.desc}
+      </article>
+    );
+  }
+}
+
+export default Content;     // 내보내기
+
+(App.js)
+import React, { Component } from "react";   // 컴포넌트 필수 사항
+import Content from "./Components/Content"; // Content 컴포넌트를 쓰기 위해 선언
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Content title="HTML" desc="HTML is HyperText Markup Language." />
+      </div>
+    ); // React가 최종적으로 html 코드를 공급해줌.
+  }
+}
+
+export default App;
+
+------------------------------------------------------------------------------
+[React-15: State]
+
+* Props vs State
+- Props: 사용자에게 제공(외부), 사용적인 측면, 읽기 전용
+- State: 컴포넌트 구현의 필요한 데이터(내부), 구현적인 측면, 읽기/쓰기 전용
+
+ex) State 사용
+class App extends Component {
+  constructor(props) {
+    // 생성자
+    super(props); // 초기화
+    this.state = {
+      subject: { title: "WEB", Sub: "World Wide Web!" },
+    };
+  }
+  render() {
+    return (
+      <div className="App">
+        <Subject title={this.state.title} sub={this.state.Sub} />
+      </div>
+    ); // React가 최종적으로 html 코드를 공급해줌.
+  }
+}
+
+* key
+- React가 내부적으로 필요적으로 요청한다.
+- key 값을 안주면 웹 콘솔에서 Warning 발생(컴파일과 실행은 무난하다)
+
+ex)
+class App extends Component {
+  constructor(props) {
+    // 생성자
+    super(props); // 초기화
+    this.state = {
+      contents: [
+        { id: 1, title: "HTML", desc: "THML is HyperText ..." },
+        { id: 2, title: "CSS", desc: "CSS is for design" },
+        { id: 3, title: "JavaScript", desc: "JavaScript is for interactive" },
+      ],
+    };
+  }
+  render() {
+    return (
+      <div className="App">
+        <TOC data={this.state.contents} />
+      </div>
+    ); // React가 최종적으로 html 코드를 공급해줌.
+  }
+}
+
+class TOC extends Component {
+  render() {
+    var lists = [];
+    var data = this.props.data;
+    var i = 0;
+    while (i < data.length) {
+      // Key는 리액트가 필요적으로 요청
+      lists.push(
+        <li key={data[i].id}>   // key 값은 고유값으로
+          <a href={"/content/" + data[i].id}>{data[i].title}</a> // /content/ 폴더안에 저장
+        </li>
+      );
+      i++;
+    }
+    return (
+      <nav>
+        <ul>{lists}</ul>
+      </nav>
+    );
+  }
+}
+
+- 부모에서 state 값을 초기화하고, 자식에게는 props 값을 전달한다.
+
+------------------------------------------------------------------------------
+[React-16: 이벤트 State ptate & render 함수]
+
+* render() 함수
+- 화면을 그리는 함수
+- props, state 값이 바뀌면 다시 호출된다.(화면이 다시 그려진다)
+
+* 이벤트(익명함수 이용)
+onclick = function(event){
+  event.preventDefault();     // 기본적인 동작 방법을 막는다.(Reload되지 않음)
+  debugger;         // 디버깅이 가능하도록 여기서 멈춘다.
+}
+
+* 이벤트에서 State 변경
+ex) State 변경 규칙
+function(event){
+  this.setState({     // 리액트의 약속(state를 변경할 때)
+    mode: "welcome"
+  });
+}.bind(this)    // 함수가 끝나고 bind하여 this를 해당 컴포넌트의 this로 묶는다.
+
+* bind() 함수
+- 함수(사용자 정의) 안에서의 this는 undefined 값을 가진다.
+- 함수가 끝나고 데이터를 묶는다.
+- function(a1, a2, a3, e){}.bind(this, a1, a2, a3) 규칙이 있다.
+
+ex)
+var obj = {name: 'ryul'};
+function bindTest(){
+  console.log(this.name);
+}.bind(obj);
+
+- function 안에서의 this를 obj로 묶는다.
+
+* setState() 함수
+- state 값을 바꾸는 약속(in React)
+ex) 
+this.state.mode = "welcome";    // setState()를 안 쓴 경우
+
+- bug 발생: + error 발생(bind() 함수를 안쓰면)
+- 실제로 state는 바뀌었다. 
+- react가 인식하지 못하여 render() 재호출이 안된다.(state, props가 바뀐걸 인식하면 재호출)
+
+------------------------------------------------------------------------------
+[React-17: 컴포넌트 이벤트 만들기]
+
+* Component Event
+
+ex 1) App.js
+<TOC
+  onChangePage={function (id) {     // 함수가 전달됨.
+    // debugger;
+    this.setState({
+      mode: "read",
+      selected_content_id: Number(id),
+    });
+  }.bind(this)}
+  data={this.state.contents}
+/>
+
+ex 2) TOC.js
+<a
+  href={"/content/" + data[i].id}
+  data-id={data[i].id}  // target(=<a>), dataset(=data).id(=-id) 즉, dataset.id로 속성 값 참조 가능
+  onClick={function (id, e) {
+    // debugger; // e라는 객체의 정보를 보기 위해
+    e.preventDefault(); // 리로드하지 않음.
+    this.props.onChangePage(id);    // props로 전달된 onChangePage 함수 호출
+  }.bind(this, data[i].id)} // 두 번째 인자 값-> 함수의 첫 번째 매개변수 값으로 넣어줌
+>
+
+- 이벤트의 e.target은 해당 함수를 포함하는 태그를 가리킨다.
+- data-id 는 특별해서 dataset.id로 참조한다.
+- App.js에서 while문으로 title과 desc를 바꿔주어 동적인 페이지를 보여준다.
+
+------------------------------------------------------------------------------
+[React-18: 베이스 캠프]
+------------------------------------------------------------------------------
+[React-19: create 구현]
+------------------------------------------------------------------------------
+[React-20: update 구현]
+------------------------------------------------------------------------------
+[React-21: delete 구현]
+------------------------------------------------------------------------------
+[React-22: 수업을 마치며]
+------------------------------------------------------------------------------
