@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import "./App.css";
 import TOC from "./Components/TOC";
-import Content from "./Components/Content";
+import ReadContent from "./Components/ReadContent";
 import Subject from "./Components/Subject";
+import Control from "./Components/Control";
 
 class App extends Component {
   constructor(props) {
@@ -61,7 +62,14 @@ class App extends Component {
           }.bind(this)}
           data={this.state.contents}
         />
-        <Content title={_title} desc={_desc} />
+        <ReadContent title={_title} desc={_desc} />
+        <Control
+          onChangeMode={function (_mode) {
+            this.setState({
+              mode: _mode,
+            });
+          }.bind(this)}
+        />
       </div>
     ); // React가 최종적으로 html 코드를 공급해줌.
   }
