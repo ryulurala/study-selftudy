@@ -210,7 +210,7 @@ includes(str1.begin(), str1.end(), str2.begin(), str2.end())
     그대로 / from부터 끝까지 / from부터 count개수만큼 부분 문자열 리턴
 - str1.replace(pos, count, str2) : 문자열 대체, pos(iterator) 부터 count개수만큼 str2로 바꿈
 - to_string(T t) : T형의 t를 string으로 변환
-- stoi(string str, &pos) : string 형 str을 int로 바꿈(참조), 숫자 외에 문자를 만날 시 pos 전까지 바꾼다.(size_t pos), 반복문에는 segment fault 조심하자.
+- stoi(string str, &pos) : string 형 str을 int로 바꿈(참조), 숫자 외에 문자를 만날 시 pos개수를 바꿨다고 리턴.(size_t pos), int형 pos는 에러 발생, 반복문에는 segment fault 조심하자.
 ex 1) stoi(str); : str을 int형으로 바꾼다(숫자가 아니기 전까지)
 ex 2) stoi(str, nullptr, 2) : str이 2진수로 생각하며(only 0 or 1) int 값을 변환한다.
 ** stoi 주의: 처음부터 숫자가 아니면 exception을 발생시킨다.
