@@ -228,8 +228,9 @@ bool cmp(pair<T, T> a, pair<T, T> b)
   return a.second < b.second; // value가 작은게 (선) 큰게 (후)
 }
 vector<pair<T, T>> v;
-sort(v.begin(), v.end(), cmp);
-
+sort(v.begin(), v.end(), cmp); : 퀵정렬   --- 불안정
+stable_sort(v.begin(), v.end(), cmp); : 병합정렬      --- 안정(같은 것에 대해 두 번 비교할 때 사용)
+sort_heap(v.begin(), v.end(), cmp); : 힙정렬    --- 안정
 ************************ DFS(깊이 우선 탐색) ************************
 * 실제로 구현할 때는 vector<int> node[N]; 을 선언하고
 // m과 n를 연결할 때는 다음과 같이 한다.
