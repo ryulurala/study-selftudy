@@ -1,6 +1,14 @@
 import React, { Component } from "react"; // 필수적임
 
 class TOC extends Component {
+  shouldComponentUpdate(newProps, newState) {
+    // console.log("newProps.data :>> ", newProps.data);
+    // console.log("props.data :>> ", this.props.data);
+    if (this.props.data === newProps.data) {
+      return false;
+    }
+    return true;
+  }
   render() {
     console.log("TOC render");
     var lists = [];

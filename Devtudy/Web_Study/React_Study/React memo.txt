@@ -425,18 +425,155 @@ Store를 사용하여 Store 값이 바뀌면 모든 컴포넌트를 바꿀 수 �
 - Create: 링크
 - Read: 링크
 - Update: 링크
-- Delete: 버튼 식으로 한다.(링크로 할 시 치명적인 버그 발생)
+- Delete: Operation(버튼) 식으로 한다.(링크로 할 시 치명적인 버그 발생)
 
 - 이벤트를 생성하는 함수를 "Handler"라 한다.
 
 * Create 구현
+ex) 변수에 넣어서 content 증가 및 state 변경
+  _article = (
+    <CreateContent
+      onSubmit={function (_title, _desc) {
+        this.max_content_id++;
+        var _contents = this.state.contents.concat({
+          id: this.max_content_id,
+          title: _title,
+          desc: _desc,
+        });
+        this.setState({ contents: _contents });
+      }.bind(this)}
+    ></CreateContent>
 - 하위 컴포넌트에서 이벤트 핸들러를 사용하여 App.js의 state를 바꾼다.
-- 
+- 변수를 정의하여 <js파일 이름></js파일 이름> 값을 넣어 해당 js파일의 render() 함수를 사용한다.
+
+ex) <form> 이용
+  <form
+      action="/create_process"
+      method="post"
+      onSubmit={function (e) {
+        e.preventDefault();
+        this.props.onSubmit(e.target.title.value, e.target.desc.value);
+        // alert("Submit!!");
+      }.bind(this)}
+    >
+- <input>의 placeholder 속성은 <form>에서 default로 보여줄 텍스트를 지정한다.
+- <form>의 고유한 속성인 onSubmit는 이벤트를 발생시킨다.
+- event의 preventDefault() 함수를 통해 리로드를 막는다.
+- concat을 통해 원본 값을 바꾸지 않고 리턴되는 변수를 통해서 state를 변경한다.(리로드 필요 여부때문에)
+
+* sholdComponentUpdate(newProps, newState) 함수
+ex) 예시
+  shouldComponentUpdate(newProps, newState) {
+    // console.log("newProps.data :>> ", newProps.data);
+    // console.log("props.data :>> ", this.props.data);
+    if (this.props.data === newProps.data) {
+      return false;
+    }
+    return true;
+  }
+- render() 이전에 호출된다.
+- return이 false: render() 호출 X / true: render() 호출 O
+- newProps.data는 새로운 값, this.props.data는 현재 값 
+- props가 바뀌지 않으면 return을 false하여 리로드되지 않도록 한다.
+- 만약 state를 push해 원본의 값을 바꾸면, newprops와 this.props는 같기 때문에 리로드의 필요를 알 수 없다.
+- Array.from(배열), Object.assign({}, 객체) 함수를 사용하여 복제하여서 push를 사용해도 된다.
+- immutable하여 원본을 바꾸지 않고 복제하여 사용하여야 한다.
 
 ------------------------------------------------------------------------------
 [React-20: Update 구현]
+
+* Update 구현
+ex) 반복되는 코드 함수 처리
+  inputFormHandler(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  }
+
+ex) onChange 속성을 이용해 갱신
+  <textarea
+    name="desc"
+    placeholder="description"
+    value={this.state.desc}
+    onChange={this.inputFormHandler}
+  />
+- onChange를 통해서 바뀔 때마다 setState를 해준다.
+- Create와 마찬가지로 onSubmit 이벤트 함수를 통해서 state 값을 바꿔준다.
+- react에서 html은 유사 html이다.(html과 동일한 것은 아니다.)
+
+ex) App.js에서의 render()
+  <UpdateContent
+    data={_content}
+    onSubmit={function (_id, _title, _desc) {
+      var _contents = Array.from(this.state.contents);
+      var i = 0;
+      while (i < _contents.length) {
+        if (_contents[i].id === _id) {
+          _contents[i] = { id: _id, title: _title, desc: _desc };
+          break;
+        }
+        i++;
+      }
+      this.setState({ contents: _contents, mode: "read" });
+    }.bind(this)}
+  />
+- id를 넘겨서 id와 일치할 시 state값을 갱신한다.
+
 ------------------------------------------------------------------------------
 [React-21: Delete 구현]
+
+* Delete 구현
+ex) App.js의 render()
+<Control
+  onChangeMode={function (_mode) {
+    if (_mode === "delete") {
+      if (window.confirm("really?")) {
+        var _contents = Array.from(this.state.contents);
+        var i = 0;
+        while (i < _contents.length) {
+          if (_contents[i].id === this.state.selected_content_id) {
+            _contents.splice(i, 1);
+            break;
+          }
+          i++;
+        }
+        this.setState({
+          mode: "welcome",
+          contents: _contents,
+        });
+        alert("deleted!");
+      }
+    } else {
+      this.setState({
+        mode: _mode,
+      });
+    }
+  }.bind(this)}
+/>
+- splice()를 사용하여 contents를 삭제한다.
+- window.confirm()을 사용하여 경고창을 띄운다.(true면 if문 안에 들어감)
+- 삭제 후 홈 모드로 바꿔준다.
+
 ------------------------------------------------------------------------------
 [React-22: 수업을 마치며]
+
+* immutable 플러그인
+- 불변성(원본이 변하지 않는다.)
+
+* router 플러그인
+- react router: url에 해당되는 UI를 서비스할 수 있다.
+
+* create-react-app
+- npm run eject: create-react-app의 개발환경을 수정할 수 있다, 한 번하면 되돌아갈 수 없다.
+
+* Redux 플러그인
+- Store를 사용하여 모든 컴포넌트를 연결하여 render()한다.
+
+* React server side rendering 플러그인
+- 서버에서 미리 로딩하여 클라이언트에 제공한다.
+- 초기 구동시간을 단축한다.
+
+* React native 플러그인
+- native 앱을 만들 수 있다.(ios, android)
+
 ------------------------------------------------------------------------------
