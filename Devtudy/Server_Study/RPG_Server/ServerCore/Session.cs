@@ -69,6 +69,15 @@ namespace ServerCore
         public abstract void OnSend(int numOfBytes);
         public abstract void OnDisconnected(EndPoint endPoint);
 
+        void Clear()
+        {
+            lock (_lock)
+            {
+                _sendQueue.Clear();
+                _pendingList.Clear();
+            }
+        }
+
         public void Disconnect()
         {
             // Disconnect를 두 번하면 에러가 난다.
@@ -82,6 +91,8 @@ namespace ServerCore
             // 쫓아낸다
             _socket.Shutdown(SocketShutdown.Both); // 예고(옵션), 듣기도 싫고 말하기도 싫다.
             _socket.Close();
+
+            Clear();
         }
 
         public void Send(ArraySegment<byte> sendBuff)       // 언제 할 지 예측 불가
@@ -111,13 +122,21 @@ namespace ServerCore
             }
             _sendArgs.BufferList = _pendingList;        // 예약된 목록들이 다 들어있다.(BufferList)
 
-            // SendAsync를 여러 번 호출하면 부하가 심하다.
-            bool pending = _socket.SendAsync(_sendArgs);    // 예약되어 있는지 확인하면서 send()
-            if (pending == false)
+            try
             {
-                // 보내는 것이 성공
-                OnSendCompleted(null, _sendArgs);
+                // SendAsync를 여러 번 호출하면 부하가 심하다.
+                bool pending = _socket.SendAsync(_sendArgs);    // 예약되어 있는지 확인하면서 send()
+                if (pending == false)
+                {
+                    // 보내는 것이 성공
+                    OnSendCompleted(null, _sendArgs);
+                }
             }
+            catch (Exception e)
+            {
+                System.Console.WriteLine($"RegisterSend Failed {e}");
+            }
+
         }
         void OnSendCompleted(object sender, SocketAsyncEventArgs args)
         {
@@ -155,17 +174,26 @@ namespace ServerCore
         }
         void RegisterRecv(SocketAsyncEventArgs args)
         {
+            if (_disconnected == 1)
+                return;
+
             // 버퍼 정리
             _recvBuffer.Clean();    // 커서가 너무 뒤로 이동하는 것을 방지
             ArraySegment<byte> segment = _recvBuffer.WriteSegment;
             args.SetBuffer(segment.Array, segment.Offset, segment.Count);
-
-            // Non-blocking 버전 receive
-            bool pending = _socket.ReceiveAsync(args);
-            if (pending == false)
+            try
             {
-                // 성공
-                OnRecvCompleted(null, args);
+                // Non-blocking 버전 receive
+                bool pending = _socket.ReceiveAsync(args);
+                if (pending == false)
+                {
+                    // 성공
+                    OnRecvCompleted(null, args);
+                }
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine($"RegisterRecv Failed {e}");
             }
         }
         void OnRecvCompleted(object sender, SocketAsyncEventArgs args)

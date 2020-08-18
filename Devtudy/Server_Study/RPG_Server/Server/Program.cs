@@ -8,11 +8,10 @@ namespace Server
     class Program
     {
         static Listener _listener = new Listener();
+        public static GameRoom Room = new GameRoom();
 
         static void Main(string[] args)
         {
-            PacketManager.Instance.Register();      // 멀티쓰레드 환경이므로
-
             // DNS: Domain Name System: DNS서버가 네트워크 망에 하나가 더 있어서 주소를 찾아준다.
             string host = Dns.GetHostName();
             System.Console.WriteLine("Host = " + host);
@@ -26,7 +25,7 @@ namespace Server
             // Initialize
             // 혹시라도 누가 들어오면 OnAcceptHandler로 알려달라
             // 무엇을 만들지 지정만 해달라.(게임 매니저로 or 람다로)
-            _listener.init(endPoint, () => { return new ClientSession(); });      // GameSession을 만든다.
+            _listener.init(endPoint, () => { return SessionManager.Instance.Generate(); });      // GameSession을 만든다.
             System.Console.WriteLine("Listening...");
 
             // 24시간 영업: 무한루프 -> 프로그램이 종료되지 않게 함(아무 일도 하지 않지만)

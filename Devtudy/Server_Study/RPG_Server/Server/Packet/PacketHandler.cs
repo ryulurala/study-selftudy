@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Server;
 using ServerCore;
 
 // 패킷이 조립되면 무엇을 호출할 건지
 class PacketHandler
 {
-    public static void C_PlayerInfoReqHandler(PacketSession session, IPacket packet)
+    public static void C_ChatHandler(PacketSession session, IPacket packet)
     {
-        C_PlayerInfoReq p = packet as C_PlayerInfoReq;      // 캐스팅
+        C_Chat chatPacket = packet as C_Chat;      // 캐스팅
+        ClientSession clientSession = session as ClientSession;
 
-        System.Console.WriteLine($"PlayerInfoReq: {p.playerId} {p.name}");
+        if (clientSession.Room == null)
+            return;
 
-        foreach (C_PlayerInfoReq.Skill skill in p.skills)
-        {
-            System.Console.WriteLine($"Skill: {skill.id} {skill.level} {skill.duration}");
-        }
+        clientSession.Room.BroadCast(clientSession, chatPacket.chat);
     }
 }
