@@ -15,6 +15,9 @@ class PacketHandler
         if (clientSession.Room == null)
             return;
 
-        clientSession.Room.BroadCast(clientSession, chatPacket.chat);
+        GameRoom room = clientSession.Room;     // Room이 null로 되어 크래시 발생을 방지
+        room.Push(
+            () => room.BroadCast(clientSession, chatPacket.chat)
+        );
     }
 }

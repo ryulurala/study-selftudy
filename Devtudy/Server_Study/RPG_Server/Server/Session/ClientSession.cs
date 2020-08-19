@@ -16,29 +16,32 @@ namespace Server
         {
             // 연결됨
             System.Console.WriteLine($"Onconnected: {endPoint}");
-            Program.Room.Enter(this);
+
+            Program.Room.Push(
+                () => Program.Room.Enter(this)
+            );
         }
         public override void OnRecvPacket(ArraySegment<byte> buffer)
         {
             PacketManager.Instance.OnRecvPacket(this, buffer);      // Singleton 호출
         }
-
         public override void OnDisconnected(EndPoint endPoint)
         {
             SessionManager.Instance.Remove(this);
             if (Room != null)
             {
-                Room.Leave(this);
+                GameRoom room = Room;   // Room이 null로 되어 크래시 발생을 방지
+                room.Push(
+                    () => room.Leave(this)
+                );
                 Room = null;
             }
             System.Console.WriteLine($"OnDisconnected: {endPoint}");
         }
-
         public override void OnSend(int numOfBytes)
         {
             // 몇 바이트를 보냈는지
-            System.Console.WriteLine($"Transferred bytes: {numOfBytes}");
+            // System.Console.WriteLine($"Transferred bytes: {numOfBytes}");
         }
     }
-
 }
