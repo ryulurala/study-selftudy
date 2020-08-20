@@ -14,15 +14,144 @@
 ------------------------------------------------------------------------------------------------
 [React Function Style-2: 수업의 목표]
 
-프로젝트 시작
-1)
+* 프로젝트 시작
+1) npx create-react-app ./ : 현재 디렉토리에서 app 프로젝트 생성(임시)
+2) npm run start : 시작
 
+* Component구현(Function vs Class)
+- Function은 return만 해주면 된다.(자신이 render() 함수다)
+ex) Function
+function FuncComp() {
+  return (
+    <div className="container">
+      <h2>function style component</h2>
+    </div>
+  );
+}
 
+- Class는 component class를 상속받고 render(){return;}을 해주어야한다.
+ex) Class
+class ClassComp extends Component {
+  render() {
+    return (
+      <div className="container">
+        <h2>class style component</h2>
+      </div>
+    );
+  }
+}
 
 ------------------------------------------------------------------------------------------------
-[React Function Style-3:]
+[React Function Style-3: state 사용]
+
+* props 사용
+- Function: 매개 변수로 props 읽는다.
+ex)
+function FuncComp(props) {
+  return (
+    <div className="container">
+      <h2>function style component</h2>
+      <p>Number: {props.initNumber}</p>
+    </div>
+  );
+}
+
+- Class: this.props로 참조하여 읽는다.
+ex)
+class ClassComp extends Component {
+  render() {
+    return (
+      <div className="container">
+        <h2>class style component</h2>
+        <p>Number: {this.props.initNumber}</p>
+      </div>
+    );
+  }
+}
+
+* 클래스에서 state 사용
+- bind(this)를 통해서 this.setState를 한다.
+ex) 버튼으로 Random한 수로 state 변경
+class ClassComp extends Component {
+  state = {
+    number: this.props.initNumber,
+  };
+  render() {
+    return (
+      <div className="container">
+        <h2>class style component</h2>
+        <p>Number: {this.state.number}</p>
+        <input
+          type="button"
+          value="random"
+          onClick={function () {
+            this.setState({ number: Math.random() });
+          }.bind(this)}
+        />
+      </div>
+    );
+  }
+}
+
+* 함수에서 state 사용(hook 이용)
+- useState(): 내장된 hook,
+Array[2]를 return한다.
+[0]: props 값(참조하여 사용 가능)
+[1]: state 값을 바꿀 수 있는 함수
+- 매개 변수에 있는 것을 Class랑 동일하게 참조하여 현재 state값을 알 수 있다.
+
+ex)
+import React, { useState } from "react";    // for useState
+
+  var numberState = useState(props.initNumber);
+  var number = numberState[0];
+  var setNumber = numberState[1]; 
+
+  var [number, setNumber] = useState(props.initNumber);   // 위에 3개를 축약
+
+  setNumber(Math.random()); // state 쓰기
+
 ------------------------------------------------------------------------------------------------
-[React Function Style-4:]
+[React Function Style-4: Life Cycle(Class vs Function) 구현]
+
+* Life Cycle
+- 생명 주기: 함수 호출 순서
+
+* 클래스에서 라이프 사이클 구현
+- componentWillMount(): render() 전, 실행되는 함수
+componentWillMount(){
+  // TODO
+}
+
+- componentDidMount(): render() 후, 실행되는 함수
+componentDidMount(){
+  // TODO
+}
+
+- shouldComponentUpdate(): props, state가 변하면, 실행되는 함수(성능과 관련)
+shouldComponentUpdate(nextProps, nextState){
+  // TODO
+  return false;   // render() 호출 X
+  return true;    // render() 호출 O
+}
+
+- componentWillUpdate(): shouldComponentUpdate()의 return true면 render() 전, 실행되는 함수
+componentWillUpdate(nextProps, nextState){
+  // TODO
+}
+
+- componentDidUpdate(): shouldComponentUpdate()의 return true면 render() 후, 실행되는 함수
+componentDidUpdate(nextProps, nextState){
+  // TODO
+}
+
+* 함수에서 라이프 사이클 구현
+- useEffect(): render() 전, 호출된다.(componentDidMount + componentDidUpdate와 같은 효과), 여러 번 호출 가능
+useEffect(function(){
+  // TODO
+});
+
+
 ------------------------------------------------------------------------------------------------
 [React Function Style-5:]
 ------------------------------------------------------------------------------------------------
