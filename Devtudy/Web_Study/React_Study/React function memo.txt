@@ -96,7 +96,7 @@ class ClassComp extends Component {
 * 함수에서 state 사용(hook 이용)
 - useState(): 내장된 hook,
 Array[2]를 return한다.
-[0]: props 값(참조하여 사용 가능)
+[0]: props 값(참조하여 사용 가능), useState(variable)에서 variable 값이다.
 [1]: state 값을 바꿀 수 있는 함수
 - 매개 변수에 있는 것을 Class랑 동일하게 참조하여 현재 state값을 알 수 있다.
 
@@ -114,6 +114,9 @@ import React, { useState } from "react";    // for useState
 ------------------------------------------------------------------------------------------------
 [React Function Style-4: Life Cycle(Class vs Function) 구현]
 
+* react의 render()가 두 번 호출되는 이유
+- index.js의 <React.scriptMode>로 인해서 한 번 더 호출된다.
+
 * Life Cycle
 - 생명 주기: 함수 호출 순서
 
@@ -129,29 +132,85 @@ componentDidMount(){
 }
 
 - shouldComponentUpdate(): props, state가 변하면, 실행되는 함수(성능과 관련)
-shouldComponentUpdate(nextProps, nextState){
+shouldComponentUpdate(prevProps, prevState){
   // TODO
   return false;   // render() 호출 X
   return true;    // render() 호출 O
 }
 
 - componentWillUpdate(): shouldComponentUpdate()의 return true면 render() 전, 실행되는 함수
-componentWillUpdate(nextProps, nextState){
+componentWillUpdate(prevProps, prevState){
   // TODO
 }
 
 - componentDidUpdate(): shouldComponentUpdate()의 return true면 render() 후, 실행되는 함수
-componentDidUpdate(nextProps, nextState){
+componentDidUpdate(prevProps, prevState){
+  // TODO
+}
+
+- componentWillUnmount(): 종료 후에 호출됨(clean up 작업)
+componentWillUnmount(){
   // TODO
 }
 
 * 함수에서 라이프 사이클 구현
-- useEffect(): render() 전, 호출된다.(componentDidMount + componentDidUpdate와 같은 효과), 여러 번 호출 가능
+- useEffect(): render() 전, 호출된다.
 useEffect(function(){
   // TODO
-});
 
+  return function(){};
+}), [variable];
+- side effect로서 작용한다.(return은 메인)
+- 복수 개를 정의해서 호출 가능
+- componentDidMount, componentDidUpdate와 같은 효과
+- return function(){}: clean up 작업(이전에 호출된 useEffect()의 // TODO 의 정리하는 작업)
+- [variable]: variable의 값이 바뀌어야 useEffect()는 호출된다(componentDidMount처럼 사용: 빈 배열[] 사용)
 
 ------------------------------------------------------------------------------------------------
-[React Function Style-5:]
+[React Function Style-5: 총 정리]
+
+- hook은 여러 가지 종류가 있고 만들 수도 있다.
+
+ex) 버튼에 따라 컴포넌트 render() 호출 유무
+function App() {
+  var [funcShow, setFuncShow] = useState(true);
+  var [classShow, setClassShow] = useState(true);
+  return (
+    // funcShow, classShow가 true일 경우 실행
+    <div className="container">
+      <h1>Hello World</h1>
+      <input
+        type="button"
+        value="remove func"
+        onClick={function () {
+          setFuncShow(false);
+        }}
+      />
+      <input
+        type="button"
+        value="remove class"
+        onClick={function () {
+          setClassShow(false);
+        }}
+      />
+      <input
+        type="button"
+        value="Insert func"
+        onClick={function () {
+          setFuncShow(true);
+        }}
+      />
+      <input
+        type="button"
+        value="Insert class"
+        onClick={function () {
+          setClassShow(true);
+        }}
+      />
+      {funcShow ? <FuncComp initNumber={2} /> : null}
+      {classShow ? <ClassComp initNumber={2} /> : null}
+    </div>
+  );
+}
+
 ------------------------------------------------------------------------------------------------
