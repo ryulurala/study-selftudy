@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Text;
+using System.Threading;
 using ServerCore;
 
 namespace Server
@@ -10,6 +11,11 @@ namespace Server
         static Listener _listener = new Listener();
         public static GameRoom Room = new GameRoom();
 
+        static void FlushRoom()
+        {
+            Room.Push(() => Room.Flush());
+            JobTimer.Instance.Push(FlushRoom, 250);     // 0.25초마다 하도록 예약
+        }
         static void Main(string[] args)
         {
             // DNS: Domain Name System: DNS서버가 네트워크 망에 하나가 더 있어서 주소를 찾아준다.
@@ -29,7 +35,11 @@ namespace Server
             System.Console.WriteLine("Listening...");
 
             // 24시간 영업: 무한루프 -> 프로그램이 종료되지 않게 함(아무 일도 하지 않지만)
-            while (true) ;
+            JobTimer.Instance.Push(FlushRoom);      // 예약
+            while (true)
+            {
+                JobTimer.Instance.Flush();
+            }
         }
     }
 }

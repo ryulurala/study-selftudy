@@ -14,6 +14,7 @@ namespace ServerCore
         public sealed override int OnRecv(ArraySegment<byte> buffer)
         {
             int processLength = 0;
+            int packetCount = 0;
 
             while (true)
             {
@@ -32,10 +33,14 @@ namespace ServerCore
                 // 여기까지 오면 패킷 조합 가능
                 // 패킷의 유효 범위를 집어줌 - 1)사이즈 전체를 넘겨줄건지 or 2)패킷내용만 넘길건지)
                 OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize));
+                packetCount++;
                 // buffer.Slice() or new ArraySegment<T> 둘 중 하나로, ArraySegment는 힙 영역이 아니므로 같은 결과다.
                 processLength += dataSize;
                 buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + dataSize, buffer.Count - dataSize);
             }
+            if (packetCount > 1)
+                Console.WriteLine($"패킷 모아보내기 : {packetCount}");
+
             return processLength;
         }
         // 처리한 바이트 수
@@ -47,7 +52,7 @@ namespace ServerCore
     {
         Socket _socket;
         int _disconnected = 0;
-        RecvBuffer _recvBuffer = new RecvBuffer(1024);      // 버퍼
+        RecvBuffer _recvBuffer = new RecvBuffer(65535);      // 버퍼
         object _lock = new Object();    // 락을 쓰기 위해서
         Queue<ArraySegment<byte>> _sendQueue = new Queue<ArraySegment<byte>>(); // sendBuff를 넣어 한 번에 보내기용
         // 다른 쓰레드가 예약했는지 구분
@@ -94,7 +99,24 @@ namespace ServerCore
 
             Clear();
         }
+        // 오버로딩
+        public void Send(List<ArraySegment<byte>> sendBuffList)       // 언제 할 지 예측 불가
+        {
+            if (sendBuffList.Count == 0)        // 예외 처리
+                return;
 
+            lock (_lock)    // 한 번에 한 쓰레드만 들어올 수 있게 한다.
+            {
+                foreach (ArraySegment<byte> sendBuff in sendBuffList)
+                    _sendQueue.Enqueue(sendBuff);       // Queue에만 넣고 스킵할 수도 있다.
+
+                if (_pendingList.Count == 0)  // 쓰레드 1빠로 send() 호출(전송까지 할 수 있다)
+                {
+                    RegisterSend();
+                }
+            }
+        }
+        // 오버로딩
         public void Send(ArraySegment<byte> sendBuff)       // 언제 할 지 예측 불가
         {
             lock (_lock)    // 한 번에 한 쓰레드만 들어올 수 있게 한다.
@@ -106,7 +128,6 @@ namespace ServerCore
                 }
             }
         }
-
         #region 네트워크 통신
         void RegisterSend()
         {
