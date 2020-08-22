@@ -40,10 +40,6 @@ namespace ServerCore
 
         public ArraySegment<byte> Open(int reserveSize)     // 예약 공간을 매개 변수
         {
-            if (reserveSize > FreeSize)
-            {
-                return null;
-            }
             return new ArraySegment<byte>(_buffer, _usedSize, reserveSize);
         }
         public ArraySegment<byte> Close(int usedSize)       // 실제로 사용한 사이즈가 매개 변수
