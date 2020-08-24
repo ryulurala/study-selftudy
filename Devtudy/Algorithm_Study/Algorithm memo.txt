@@ -88,7 +88,7 @@ X
 - m1.begin() / m1.end() : 첫 번째 원소 / 마지막의 *다음* 포인터 리턴(iterator 사용)
 
 삽입
-- m1.insert(pair<key, value>) / m1[key] = value : pair 객체로 삽입 / []연산자로 삽입
+- m1.insert(pair<key, value>) / m1[key] = value : pair 객체로 삽입 / []연산자로 삽입, 수정
     ex) m1.insert(make_pair(key, value))
 
 삭제
