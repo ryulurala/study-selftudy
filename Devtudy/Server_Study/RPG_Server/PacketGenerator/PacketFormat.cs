@@ -8,7 +8,7 @@ namespace PacketGenerator
 using System.Collections.Generic;
 using ServerCore;
 
-class PacketManager
+public class PacketManager
 {{
     #region Singleton       
     static PacketManager _instance = new PacketManager();

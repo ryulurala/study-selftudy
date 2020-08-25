@@ -7,12 +7,25 @@ using ServerCore;
 // 패킷이 조립되면 무엇을 호출할 건지
 class PacketHandler
 {
-    public static void S_ChatHandler(PacketSession session, IPacket packet)
+    public static void S_BroadcastEnterGameHandler(PacketSession session, IPacket packet)
     {
-        S_Chat chatPacket = packet as S_Chat;
+        // S_Chat chatPacket = packet as S_Chat;
+        ServerSession serverSession = session as ServerSession;
+    }
+    public static void S_BroadcastLeaveGameHandler(PacketSession session, IPacket packet)
+    {
+        // S_Chat chatPacket = packet as S_Chat;
+        ServerSession serverSession = session as ServerSession;
+    }
+    public static void S_PlayerListHandler(PacketSession session, IPacket packet)
+    {
+        // S_Chat chatPacket = packet as S_Chat;
         ServerSession serverSession = session as ServerSession;
 
-        // if (chatPacket.playerId == 1)
-        // System.Console.WriteLine(chatPacket.chat);
+    }
+    public static void S_BroadcastMoveHandler(PacketSession session, IPacket packet)
+    {
+        // S_Chat chatPacket = packet as S_Chat;
+        ServerSession serverSession = session as ServerSession;
     }
 }
