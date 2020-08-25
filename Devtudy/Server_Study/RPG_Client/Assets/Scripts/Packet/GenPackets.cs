@@ -7,11 +7,11 @@ using ServerCore;
 public enum PacketID
 {
     C_Chat = 1,
-    S_Chat = 2,
-
+	S_Chat = 2,
+	
 }
 
-interface IPacket
+public interface IPacket
 {
     ushort Protocol { get; }
     void Read(ArraySegment<byte> segment);
@@ -30,10 +30,10 @@ class C_Chat : IPacket
         count += sizeof(ushort);
         count += sizeof(ushort);
         ushort chatLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
-        count += sizeof(ushort);
-        this.chat = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, chatLen);
-        count += chatLen;
-
+		count += sizeof(ushort);
+		this.chat = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, chatLen);
+		count += chatLen;
+		
     }
 
     public ArraySegment<byte> Write()
@@ -45,10 +45,10 @@ class C_Chat : IPacket
         Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_Chat), 0, segment.Array, segment.Offset + count, sizeof(ushort));
         count += sizeof(ushort);     // 나중에 자동화
         ushort chatLen = (ushort)Encoding.Unicode.GetBytes(this.chat, 0, this.chat.Length, segment.Array, segment.Offset + count + sizeof(ushort));
-        Array.Copy(BitConverter.GetBytes(chatLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-        count += sizeof(ushort);
-        count += chatLen;
-
+		Array.Copy(BitConverter.GetBytes(chatLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		count += chatLen;
+		
         Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
         return SendBufferHelper.Close(count);
@@ -57,7 +57,7 @@ class C_Chat : IPacket
 class S_Chat : IPacket
 {
     public int playerId;
-    public string chat;
+	public string chat;
 
     public ushort Protocol { get { return (ushort)PacketID.S_Chat; } }
 
@@ -67,12 +67,12 @@ class S_Chat : IPacket
         count += sizeof(ushort);
         count += sizeof(ushort);
         this.playerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-        count += sizeof(int);
-        ushort chatLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
-        count += sizeof(ushort);
-        this.chat = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, chatLen);
-        count += chatLen;
-
+		count += sizeof(int);
+		ushort chatLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+		count += sizeof(ushort);
+		this.chat = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, chatLen);
+		count += chatLen;
+		
     }
 
     public ArraySegment<byte> Write()
@@ -84,12 +84,12 @@ class S_Chat : IPacket
         Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_Chat), 0, segment.Array, segment.Offset + count, sizeof(ushort));
         count += sizeof(ushort);     // 나중에 자동화
         Array.Copy(BitConverter.GetBytes(this.playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
-        count += sizeof(int);
-        ushort chatLen = (ushort)Encoding.Unicode.GetBytes(this.chat, 0, this.chat.Length, segment.Array, segment.Offset + count + sizeof(ushort));
-        Array.Copy(BitConverter.GetBytes(chatLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-        count += sizeof(ushort);
-        count += chatLen;
-
+		count += sizeof(int);
+		ushort chatLen = (ushort)Encoding.Unicode.GetBytes(this.chat, 0, this.chat.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		Array.Copy(BitConverter.GetBytes(chatLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+		count += sizeof(ushort);
+		count += chatLen;
+		
         Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
         return SendBufferHelper.Close(count);

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
 using ServerCore;
-using DummyClinet;
+using DummyClient;
+using System;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class NetworkManager : MonoBehaviour
         string host = Dns.GetHostName();
         IPHostEntry ipHost = Dns.GetHostEntry(host);
         IPAddress ipAddr = ipHost.AddressList[0];
-        IpEndPoint endPoint = new IpEndPoint(ipAddr, 7777);
+        IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
 
         Connector connector = new Connector();
 
@@ -24,11 +25,32 @@ public class NetworkManager : MonoBehaviour
             () => { return _session; },
             1
         );
+
+        StartCoroutine("CoSendPacket");
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // 1 Frame에 1 Packet
+        IPacket packet = PacketQueue.Instance.Pop();
+        if (packet != null)
+        {
+            PacketManager.Instance.HandlePacket(_session, packet);
+        }
+    }
 
+    IEnumerator CoSendPacket()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1.0f);
+
+            // 3초 후
+            C_Chat chatPacket = new C_Chat();
+            chatPacket.chat = "Hello Unity !";
+            ArraySegment<byte> segment = chatPacket.Write();
+
+            _session.Send(segment);
+        }
     }
 }
