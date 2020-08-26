@@ -49,6 +49,9 @@
 - 삭제된 것이 아니다!
 - [git log]로 HEAD가 가리키는 곳을 확인
 
+* 참고
+[git checkout (branch 이름)]: 해당 branch의 마지막 commit으로 간다.
+
 -------------------------------------------------------------------------------
 [Git CLI 버전관리-8: 보충 수업]
 
@@ -56,6 +59,7 @@
 - [git commit -am "message"] : add와 commit을 동시에 가능
 - [git commit]: 디폴트 에디터로 commit message를 작성할 수 있다.
 - [git config --global core.editor "(에디터 URL)"]: 디폴트 에디터를 설정
+- [git commit --amend]: default editor로 commit 수정 가능
 
 -------------------------------------------------------------------------------
 [Git CLI 버전관리-9: 삭제-git reset]
@@ -193,4 +197,108 @@ ex) 누군가가 push를 하면 해당 코드를 실행해준다 등
 
 * Project
 - Trello, Notion 등의 카드 형태로 View를 제공
+-------------------------------------------------------------------------------
+===============================================================================
+-------------------------------------------------------------------------------
+[Git-CLI Branch & ConFlict 1: 수업 소개]
+
+* Branch: 가지
+- 사용 이유:
+1) 고객사마다 다른 기능을 요구할 경우, 각각 고객사마다 계속 Repository를 생성하는 것은 비효율
+2) 각각 Repository를 생성했을 경우, 같은 기능에 대한 것을 빠르게 복사하고 싶을 때
+
+- 충돌: 같은 파일에서 같은 부분을 수정했을 경우 발생한다.
+
+-------------------------------------------------------------------------------
+[Git-CLI Branch & ConFlict 2: 실습 준비]
+
+* git 버전관리 시작
+1) 디렉토리 생성 또는 해당 디렉토리에서 [git init]: .git 파일 생성 -- [ls -al]로 검색
+2) 파일 생성 및 수정 후 [git add (URL)]
+3) 버전 생성 [git commit -m "(message)"]
+
+-------------------------------------------------------------------------------
+[Git-CLI Branch & ConFlict 3: Branch 사용법]
+
+* [git log --all --graph --oneline]
+- (--all): 모든 branch의 commit 확인
+- (--graph): 그래프 형태(가지가 뻗는 식) 조회
+- (--oneline): 한 줄로 나오게 함(branch만 나올 수 있도록)
+
+* Branch 사용
+[git branch]: branch 조회
+[git branch (branch 이름)]: branch 생성
+- Master는 root branch다.
+- HEAD가 가리키는 것이 현재 branch다.
+- 가리키는 곳에 commit을 변경하면 다른 branch에는 영향이 안간다.
+
+[git checkout (branch 이름)]: 해당 branch의 버전으로 간다.
+
+-------------------------------------------------------------------------------
+[Git-CLI Branch & ConFlict 4: Merge]
+
+* Merge(병합)
+- 서로 다른 commit끼리 합칠 때 자동화로 해준다.
+
+[git merge (branch 이름)]: master branch에서 해당 branch와 Merge
+- master branch로 이동 후 병합
+
+* Conflict(충돌)
+- 같은 파일의 같은 부분 수정했을 경우, 충돌 발생
+- Auto merge failed: 자동 합병 실패
+- "=======": 구분자
+
+- 충돌 해결
+1) [git status]: 충돌에 대한 상태 조회
+2) 구분자는 다 제거한다.
+3) [git add (URL)]
+4) [git commit]: 자동으로 merge commit 생성
+
+-------------------------------------------------------------------------------
+[Git-CLI Branch & ConFlict 5: 3-Way Merge]
+
+* 3-way merge
+- 2개의 branch를 병합: 2-way merge
+- base: 자신의 상위 branch
+- base를 보고 수정한 branch 우선으로 merge한다.
+- base의 하위 branch 2개 모두 수정하였을 경우, 직접 충돌 수정해야한다.
+
+-------------------------------------------------------------------------------
+[Git-CLI Branch & ConFlict 6: 외부 도구를 이용한 Merge]
+
+* git mergetool
+- p4Merge
+- ~(root)에 있는 .config파일을 수정
+[git config --global merge.tool p4mergetool]: p4merge tool로 merge한다는 설정
+
+-------------------------------------------------------------------------------
+[Git-CLI Branch & ConFlict 7: 수업을 마치며]
+
+* Keywords
+- git workflow: 개발자들의 다양한 workflow 규칙 확인
+- git flow: workflow하는 프로그램
+- cherry-pick: 부분적으로 branch끼리 병합(master로 merge할 필요 X)
+- rebase: base(자신의 상위 branch)를 수정한다(merge와 비슷하지만 다르다), 타임라인이 깔끔하다
+
+-------------------------------------------------------------------------------
+[Git-CLI Branch & ConFlict 8: 부록]
+
+* checkout: HEAD를 제어한다.
+- HEAD: 기본적으로 branch를 가리킨다.
+- branch: commit(버전)을 가리킨다.
+- commit: 저장소 버전
+- 현재 저장소의 상태는 HEAD가 가리키는 branch의 commit의 버전이다.
+
+[git checkout (commit id)]: HEAD가 commit을 가리킨다.(branch 건너 뛰고)
+
+* reset: branch를 제어한다(HEAD가 branch를 가리킬 때)
+
+ex) reset 이해
+[git checkout (branch name)]
+: 저장소의 상태는 HEAD를 해당 branch로 가리키고 branch는 마지막 commit을 가리킨다.(이동)
+[git reset (branch name)]
+: 저장소의 상태는 현재 branch가 가리키는 commit을 해당 branch가 가리키는 마지막 commit으로 바꾼다.(삭제)
+[git reset (commit id)]
+: 저장소의 상태는 현재 branch가 가리키는 commit을 해당 commit으로 바꾼다.(삭제)
+
 -------------------------------------------------------------------------------
