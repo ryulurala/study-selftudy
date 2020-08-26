@@ -22,7 +22,7 @@ public interface IPacket
     ArraySegment<byte> Write();
 }
 
-class S_BroadcastEnterGame : IPacket
+public class S_BroadcastEnterGame : IPacket
 {
     public int playerId;
 	public float posX;
@@ -69,7 +69,7 @@ class S_BroadcastEnterGame : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-class C_LeaveGame : IPacket
+public class C_LeaveGame : IPacket
 {
     
 
@@ -97,7 +97,7 @@ class C_LeaveGame : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-class S_BroadcastLeaveGame : IPacket
+public class S_BroadcastLeaveGame : IPacket
 {
     public int playerId;
 
@@ -129,7 +129,7 @@ class S_BroadcastLeaveGame : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-class S_PlayerList : IPacket
+public class S_PlayerList : IPacket
 {
     public struct Player
 	{
@@ -211,7 +211,7 @@ class S_PlayerList : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-class C_Move : IPacket
+public class C_Move : IPacket
 {
     public float posX;
 	public float posY;
@@ -253,7 +253,7 @@ class C_Move : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-class S_BroadcastMove : IPacket
+public class S_BroadcastMove : IPacket
 {
     public int playerId;
 	public float posX;

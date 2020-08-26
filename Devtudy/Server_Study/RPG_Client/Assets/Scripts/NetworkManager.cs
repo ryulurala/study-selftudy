@@ -10,6 +10,10 @@ public class NetworkManager : MonoBehaviour
 {
     ServerSession _session = new ServerSession();
 
+    public void Send(ArraySegment<byte> sendBuff)
+    {
+        _session.Send(sendBuff);
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -25,32 +29,15 @@ public class NetworkManager : MonoBehaviour
             () => { return _session; },
             1
         );
-
-        StartCoroutine("CoSendPacket");
     }
 
     void Update()
     {
-        // 1 Frame에 1 Packet
-        IPacket packet = PacketQueue.Instance.Pop();
-        if (packet != null)
+        // 1Frame에 모든 패킷 처리
+        List<IPacket> packetList = PacketQueue.Instance.PopAll();
+        foreach (IPacket packet in packetList)
         {
             PacketManager.Instance.HandlePacket(_session, packet);
-        }
-    }
-
-    IEnumerator CoSendPacket()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(1.0f);
-
-            // 3초 후
-            C_Chat chatPacket = new C_Chat();
-            chatPacket.chat = "Hello Unity !";
-            ArraySegment<byte> segment = chatPacket.Write();
-
-            _session.Send(segment);
         }
     }
 }

@@ -17,7 +17,7 @@ public class PacketQueue : MonoBehaviour
         }
     }
 
-    public IPacket Pop()   // 메인 쓰레드가 쓰도록
+    public IPacket Pop()   // 메인 쓰레드가 쓰도록(1 Frame 1개 패킷)
     {
         lock (_lock)
         {
@@ -26,5 +26,18 @@ public class PacketQueue : MonoBehaviour
 
             return _packetQueue.Dequeue();
         }
+    }
+
+    public List<IPacket> PopAll()
+    {
+        List<IPacket> list = new List<IPacket>();
+
+        lock (_lock)
+        {
+            while (_packetQueue.Count > 0)
+                list.Add(_packetQueue.Dequeue());
+        }
+
+        return list;
     }
 }

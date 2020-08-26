@@ -3619,7 +3619,148 @@ ex) [PDL.xml]
 ------------------------------------------------------------------------------------------------------------------------
 [유니티 연동 #4]
 
+* Unity Player 이동 동기화
+1) Player(PlayerId 포함), MyPlayer(Player를 상속, 내 움직임 관련) script를 작성 --- 나중에는 PlayerManager로 방에 입장하는 Player들을 추가한다.
+ex) [Player.cs]
+  public class Player : MonoBehaviour
+  {
+      public int PlayerId { get; set; }
+  }
+ex) [MyPlayer.cs]
+  public class MyPlayer : Player
+  {
+    NetworkManager _network;
+    // Start is called before the first frame update
+    void Start()
+    {
+      _network = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();        // NetworkManager 오브젝트의 Script 연결
+      StartCoroutine("CoSendPacket");
+    }
 
+    IEnumerator CoSendPacket()
+    {
+      while (true)
+      {
+        // 이동 패킷은 1초에 4번
+        yield return new WaitForSeconds(0.25f);
 
+        // 0.25초 후
+        C_Move movePacket = new C_Move();
+        movePacket.posX = UnityEngine.Random.Range(-50, 50);    // 랜덤값
+        movePacket.posY = 0;    // 높이는 0
+        movePacket.posZ = UnityEngine.Random.Range(-50, 50);    // 랜덤값
+
+        _network.Send(movePacket.Write());      // ArraySegment를 보내줌
+      }
+    }
+  }
+- 이동 패킷은 1초에 4번 정도가 평균이다.
+- MyPlayer의 나의 움직임은 NetworkManager에서 send()를 한다
+
+2) Player, MyPlayer를 관리하는 PlayerManager를 만든다.
+- Monobehaviour를 상속X, 데이터만 들고있음(컴포넌트 기생X)
+- 컴포넌트로 기생하는 것은 Monobehaviour를 상속받는다.
+
+ex) [PlayerManager.cs]
+  public class PlayerManager
+  {
+    MyPlayer _myPlayer;
+    Dictionary<int, Player> _players = new Dictionary<int, Player>();
+
+    public static PlayerManager Instance { get; } = new PlayerManager();   // 어디서든 접근할 수 있도록
+
+    public void Add(S_PlayerList packet)
+    {
+      Object obj = Resources.Load("Player");
+
+      foreach (S_PlayerList.Player p in packet.players)
+      {
+        GameObject go = Object.Instantiate(obj) as GameObject;
+        if (p.isSelf)    // 내가 관리
+        {
+          MyPlayer myPlayer = go.AddComponent<MyPlayer>();        // MyPlayer Script 첨가
+          myPlayer.PlayerId = p.playerId;
+          myPlayer.transform.position = new Vector3(p.posX, p.posY, p.posZ);
+          _myPlayer = myPlayer;
+        }
+        else    // 남들이 관리
+        {
+          Player player = go.AddComponent<Player>();      // Player Script 첨가
+          player.transform.position = new Vector3(p.posX, p.posY, p.posZ);
+          player.PlayerId = p.playerId;
+          _players.Add(p.playerId, player);
+        }
+      }
+    }
+    public void Move(S_BroadcastMove packet)
+    {
+      // 서버 응답이 와서 움직일 수 있다.
+      if (_myPlayer.PlayerId == packet.playerId)
+      {
+        _myPlayer.transform.position = new Vector3(packet.posX, packet.posY, packet.posZ);
+      }
+      else
+      {
+        Player player = null;
+        if (_players.TryGetValue(packet.playerId, out player))
+        {
+          // PlayerId를 찾았다.
+          player.transform.position = new Vector3(packet.posX, packet.posY, packet.posZ);
+        }
+      }
+    }
+    public void EnterGame(S_BroadcastEnterGame packet)
+    {
+      if (packet.playerId == _myPlayer.PlayerId)
+        return;
+
+      Object obj = Resources.Load("Player");
+      GameObject go = Object.Instantiate(obj) as GameObject;
+
+      Player player = go.AddComponent<Player>();      // Player Script 첨가
+      player.transform.position = new Vector3(packet.posX, packet.posY, packet.posZ);
+      _players.Add(packet.playerId, player);
+    }
+    public void LeaveGame(S_BroadcastLeaveGame packet)
+    {
+      if (_myPlayer.PlayerId == packet.playerId)
+      {
+        GameObject.Destroy(_myPlayer.gameObject);
+        _myPlayer = null;
+      }
+      else
+      {
+        Player player = null;
+        if (_players.TryGetValue(packet.playerId, out player))
+        {
+          // PlayerId를 찾았다.
+          GameObject.Destroy(player.gameObject);
+          _players.Remove(packet.playerId);
+        }
+      }
+    }
+  }
+- PlayerList의 Player를 이동시킬 때, 자신도 이동시키는 것을 유의(Handler)
+- 순간적인 이동에 대한 것은 부드럽게 lerp로 이동시킨다.
+- Handler에서는 함수들을 호출하는 식의 코드를 작성한다.(MonoBehaviour 상속 X)
+- Packet Queue는 Broadcast 가능하도록 PopAll()을 구현한다.
+
+ex) PopAll() 함수
+  public List<IPacket> PopAll()
+  {
+    List<IPacket> list = new List<IPacket>();
+
+    lock (_lock)
+    {
+      while (_packetQueue.Count > 0)
+        list.Add(_packetQueue.Dequeue());
+    }
+
+    return list;
+  }
+
+3) 이동 동기화(2가지 방법)
+a. 서버에서 허락 패킷이 왔을 때만 이동 가능 --- ex) LOL
+b. 클라이언트에서 이동하고 있다가 서버에서 응답이 오면 보간   --- ex) 배틀그라운드 등의 FPS 게임
 
 ------------------------------------------------------------------------------------------------------------------------
