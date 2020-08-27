@@ -1,0 +1,90 @@
+--------------------------------------------------------------------------------------
+[SQL JOIN-1: 수업 소개]
+
+- JOIN: RDB(관계형 DB)의 핵심
+
+--------------------------------------------------------------------------------------
+[SQL JOIN-2: 테이블 분할]
+
+* 테이블 분할
+- 중복을 제거
+- 하나의 주제만을 가지는 표
+- 부품이 되기 위해 표마다 ID 값을 지정
+
+--------------------------------------------------------------------------------------
+[SQL JOIN-3: JOIN 실습 준비]
+
+* JOIN
+- 테이블을 분할하기 전의 모습으로 조회
+- ON의 조건으로 질의
+- 종류:
+1) INNER JOIN: 교집합
+2) LEFT JOIN(LEFT OUTER JOIN):
+3) FULL JOIN: 잘 안쓰인다
+
+--------------------------------------------------------------------------------------
+[SQL JOIN-4: LEFT JOIN]
+
+* LEFT OUTER JOIN
+- 기준의 테이블을 출력
+- 기준의 테이블에는 있지만 JOIN한 테이블에는 있으면 NULL 값을 출력한다.
+
+ex) SQL
+- SELECT * FROM topic
+: "topic"테이블에 모든 정보 조회
+
+- SELECT * FROM topic LEFT JOIN author ON topic.author_id = author.aid
+: "topic"테이블을 기준으로 "topic"테이블의 author_id와 author테이블의 aid가 같을 경우를 조회
+: "topic"테이블에는 존재하지만 "author"테이블에는 존재하지 않으면 "NULL" 값을 출력
+
+- SELECT * FROM topic LEFT JOIN author ON topic.author_id = author.aid LEFT JOIN profile ON id=profile.pid
+: "topic"테이블을 기준으로 author를 LEFT JOIN 후, profile을 LEFT JOIN
+
+- SELECT tid, topic.title, author_id, name, profile.title AS job_title FROM topic LEFT JOIN author ON topic.author_id = author.aid LEFT JOIN profile ON author.profile_id = profile.pid
+: tid, topic의 title, author_id, name, profile의 title을 job_title로 출력, "topic"테이블을 기준으로 "author"테이블 LEFT JOIN 후, "profile"테이블을 LEFT JOIN
+
+--------------------------------------------------------------------------------------
+[SQL JOIN-5: INNER JOIN]
+
+* INNER JOIN
+- 교집합만을 출력(NULL 값이 존재 X)
+- 새로운 테이블을 만든다
+- 성능이 좋다.
+
+ex) SQL
+- SELECT * FROM topic INNER JOIN author ON topic.author_id = author.aid
+: "topic"테이블을 기준으로 "author"테이블을 INNER JOIN 하는데 조건은 "topic"테이블의 author_id와 "author"테이블의 aid가 같을 경우를 조회한다.
+
+- SELECT * FROM topic INNER JOIN author ON topic.author_id = author.aid INNER JOIN profile ON profile.pid = author.profile_id
+: "topic"테이블을 기준으로 "author"를 "topic"의 author_id와 "author"의 aid가 같을 경우만을 출력하면서 "profile"테이블이 pid와도 같은 경우까지 출력
+
+--------------------------------------------------------------------------------------
+[SQL JOIN-6: FULL OUTER JOIN]
+
+* FULL OUTER JOIN
+- 합집합 출력
+- 많은 DB 시스템에서 FULL OUTER JOIN을 지원 X --- UNION (DISTINCT)으로 구성 가능
+
+ex) SQL
+- SELECT * FROM topic FULL OUTER JOIN author ON topic.author_id = author.id
+- (SELECT * FROM topic LEFT JOIN author ON topic.author_id = author.id) UNION (SELECT * FROM topic RIGHT JOIN ON topic.author_id = author.id)
+: "topic"테이블과 "author"테이블을 합치고 중복을 모두 없앤 것을 출력
+
+--------------------------------------------------------------------------------------
+[SQL JOIN-7: EXCLUSIVE JOIN]
+
+* EXCLUSIVE JOIN
+- 배제해서 출력 (= 교집합을 빼고 출력)
+- 각각 테이블에 있는 것만 출력
+
+ex) SQL
+- SELECT * FROM topic LEFT JOIN author ON topic.author_id = author.aid WHERE author.aid is NULL
+
+--------------------------------------------------------------------------------------
+[SQL JOIN-8: 수업을 마치며]
+
+* Keywords
+- DB에 따라 Join의 성능이 다르다.
+- Modeling, normalization: 좋은 테이블을 만들기(테이블 분할)
+
+--------------------------------------------------------------------------------------
