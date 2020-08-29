@@ -43,8 +43,8 @@ ex) vector<Data type> 변수 명;
 삽입
 - v1.push_back(element) : 마지막 원소 뒤에 element 삽입
 - v1.resize(n) : 크기를 n으로 변경(커진 메모리는 0으로 초기화)
-- v1.insert(index, element) : index위치에 element삽입(삽입한 위치 iterator 리턴)
-- v1.insert(index, n, element) : index위치에 element으로 초기화된 n개 삽입(밀린다)
+- v1.insert(iterator, element) : iterator위치에 element삽입(삽입한 위치 iterator 리턴)
+- v1.insert(iterator, n, element) : iterator위치에 element으로 초기화된 n개 삽입(밀린다)
 - v1.insert(v1.end(), v2.begin(), v2.end()) : v1에 v2를 이어 붙인다.(v1 + v2)
 삭제
 - v1.pop_back() : 마지막 원소 제거
