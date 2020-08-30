@@ -2,68 +2,68 @@ var http = require("http");
 var fs = require("fs");
 var url = require("url"); // url 모듈을 사용
 
+function templateHTML(title, list, body) {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>WEB1 - ${title}</title>
+        <meta charset="utf-8" />
+      </head>
+      <body>
+        <h1><a href="/">WEB</a></h1>
+        ${list}
+        ${body}
+      </body>
+    </html>`;
+}
+
+function templateList(files) {
+  var list = "<ul>";
+  for (i = 0; i < files.length; i++) {
+    var index = files[i].lastIndexOf(".");
+    files[i] = files[i].substring(0, index);
+    list += `<li><a href="/?id=${files[i]}">${files[i]}</a></li>`;
+  }
+  list += "</ul>";
+  return list;
+}
+
 var app = http.createServer(function (request, response) {
   var _url = request.url;
   var queryData = url.parse(_url, true).query;
   var pathName = url.parse(_url, true).pathname;
   var title = queryData.id;
 
-  // console.log("pathName :>> ", pathName);
-  // console.log("queryData :>> ", queryData);
   if (pathName === "/") {
     if (title === undefined) {
-      fs.readFile(`./public/data/${title}.txt`, "utf-8", function (
-        err,
-        description
-      ) {
-        title = "Welcome";
+      fs.readdir("./public/data", function (err, files) {
+        var list = templateList(files);
         var description = "Hello, Node.js";
-        var template = `
-    <!DOCTYPE html>
-  <html>
-    <head>
-      <title>WEB1 - ${title}</title>
-      <meta charset="utf-8" />
-    </head>
-    <body>
-      <h1><a href="/">WEB</a></h1>
-      <ul>
-        <li><a href="/?id=HTML">HTML</a></li>
-        <li><a href="/?id=CSS">CSS</a></li>
-        <li><a href="/?id=JavaScript">JavaScript</a></li>
-      </ul>
-      <h2>${title}</h2>
-      ${description}
-    </body>
-  </html>`;
+        var template = templateHTML(
+          title,
+          list,
+          `<h2>${title}</h2>${description}`
+        );
         response.writeHead(200); // 파일을 성공적으로 전송
         response.end(template);
       });
     } else {
-      fs.readFile(`./public/data/${title}.txt`, "utf-8", function (
-        err,
-        description
-      ) {
-        var template = `
-    <!DOCTYPE html>
-  <html>
-    <head>
-      <title>WEB1 - ${title}</title>
-      <meta charset="utf-8" />
-    </head>
-    <body>
-      <h1><a href="/">WEB</a></h1>
-      <ul>
-        <li><a href="/?id=HTML">HTML</a></li>
-        <li><a href="/?id=CSS">CSS</a></li>
-        <li><a href="/?id=JavaScript">JavaScript</a></li>
-      </ul>
-      <h2>${title}</h2>
-      ${description}
-    </body>
-  </html>`;
-        response.writeHead(200); // 파일을 성공적으로 전송
-        response.end(template);
+      fs.readdir("./public/data", function (err, files) {
+        fs.readFile(`./public/data/${queryData.id}.txt`, "utf-8", function (
+          err,
+          description
+        ) {
+          var list = templateList(files);
+          var title = queryData.id;
+          var template = templateHTML(
+            title,
+            list,
+            `<h2>${title}</h2>${description}`
+          );
+          response.writeHead(200); // 파일을 성공적으로 전송
+          response.end(template);
+        });
       });
     }
   } else {
