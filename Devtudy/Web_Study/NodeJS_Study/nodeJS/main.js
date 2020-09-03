@@ -2,85 +2,58 @@ var http = require("http");
 var fs = require("fs");
 var url = require("url"); // url 모듈을 사용
 var qs = require("querystring");
-
-function templateHTML(title, list, body, control = "") {
-  return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>WEB1 - ${title}</title>
-        <meta charset="utf-8" />
-      </head>
-      <body>
-        <h1><a href="/">WEB</a></h1>
-        ${list}
-        ${control}
-        ${body}
-      </body>
-    </html>`;
-}
-
-function templateList(files) {
-  var list = "<ul>";
-  for (i = 0; i < files.length; i++) {
-    list += `<li><a href="/?id=${files[i]}">${files[i]}</a></li>`;
-  }
-  list += "</ul>";
-  return list;
-}
+var template = require("./lib/template.js");
+var path = require("path");
+var sanitizeHTML = require("sanitize-html");
 
 var app = http.createServer(function (request, response) {
   var _url = request.url;
   var queryData = url.parse(_url, true).query;
   var pathName = url.parse(_url, true).pathname;
-  var title = queryData.id;
-  console.log(pathName);
+  console.log(`path = ${pathName}`);
   if (pathName === "/") {
-    if (title === undefined) {
-      fs.readdir("./public/data", function (err, files) {
+    if (queryData.id === undefined) {
+      fs.readdir("./data", function (err, files) {
         var title = "Welcome";
-        var list = templateList(files);
+        var list = template.list(files);
         var description = "Hello, Node.js";
-        var template = templateHTML(
+        var html = template.html(
           title,
           list,
           `<h2>${title}</h2>${description}`,
           `<a href="/create">create</a>`
         );
         response.writeHead(200); // 파일을 성공적으로 전송
-        response.end(template);
+        response.end(html);
       });
     } else {
-      fs.readdir("./public/data", function (err, files) {
-        fs.readFile(`./public/data/${queryData.id}`, "utf-8", function (
-          err,
-          description
-        ) {
-          var list = templateList(files);
-          var title = queryData.id;
-          var template = templateHTML(
+      fs.readdir("./data", function (err, files) {
+        var filteredId = path.parse(queryData.id).base;
+        fs.readFile(`data/${filteredId}`, "utf8", function (err, description) {
+          var title = filteredId;
+          var list = template.list(files);
+          var html = template.html(
             title,
             list,
             `<h2>${title}</h2>${description}`,
             `
-            <a href="/create">create</a>
             <a href="/update?id=${title}">update</a>
-            <form action="/delete_process" method="post">
+            <form action="delete_process" method="post">
               <input type="hidden" name="id" value="${title}">
               <input type="submit" value="delete">
             </form>
             `
           );
           response.writeHead(200); // 파일을 성공적으로 전송
-          response.end(template);
+          response.end(html);
         });
       });
     }
   } else if (pathName === "/create") {
-    fs.readdir("./public/data", function (err, files) {
-      var title = "WEB - create";
-      var list = templateList(files);
-      var template = templateHTML(
+    fs.readdir("./data", function (err, files) {
+      var title = "create";
+      var list = template.list(files);
+      var html = template.html(
         title,
         list,
         `
@@ -98,7 +71,7 @@ var app = http.createServer(function (request, response) {
         `
       );
       response.writeHead(200); // 파일을 성공적으로 전송
-      response.end(template);
+      response.end(html);
     });
   } else if (pathName === "/create_process") {
     // Post 방식의 request 데이터 받기
@@ -112,21 +85,19 @@ var app = http.createServer(function (request, response) {
       var post = qs.parse(body);
       var title = post.title;
       var description = post.description;
-      fs.writeFile(`public/data/${title}`, description, "utf8", function (err) {
+      fs.writeFile(`data/${title}`, description, "utf8", function (err) {
         // 파일 저장이 끝난 후
         response.writeHead(302, { Location: `/?id=${title}` }); // 302: 리다이렉션
         response.end();
       });
     });
   } else if (pathName === "/update") {
-    fs.readdir("./public/data", function (err, files) {
-      fs.readFile(`./public/data/${queryData.id}`, "utf-8", function (
-        err,
-        description
-      ) {
-        var list = templateList(files);
-        var title = queryData.id;
-        var template = templateHTML(
+    fs.readdir("./data", function (err, files) {
+      var filteredId = path.parse(queryData.id).base;
+      fs.readFile(`data/${filteredId}`, "utf8", function (err, description) {
+        var list = template.list(files);
+        var title = filteredId;
+        var html = template.html(
           title,
           list,
           `
@@ -147,10 +118,10 @@ var app = http.createServer(function (request, response) {
           <a href="/update?id=${title}">update</a>`
         );
         response.writeHead(200); // 파일을 성공적으로 전송
-        response.end(template);
+        response.end(html);
       });
     });
-  } else if ((pathName = "update_process")) {
+  } else if (pathName === "/update_process") {
     // Post 방식의 request 데이터 받기
     var body = "";
     request.on("data", function (data) {
@@ -163,10 +134,8 @@ var app = http.createServer(function (request, response) {
       var title = post.title;
       var description = post.description;
       var id = post.id;
-      fs.rename(`public/data/${id}`, `public/data/${title}`, function (err) {
-        fs.writeFile(`public/data/${title}`, description, "utf8", function (
-          err
-        ) {
+      fs.rename(`data/${id}`, `data/${title}`, function (err) {
+        fs.writeFile(`data/${title}`, description, "utf8", function (err) {
           // 파일 저장이 끝난 후
           response.writeHead(302, { Location: `/?id=${title}` }); // 302: 리다이렉션
           response.end();
@@ -180,10 +149,11 @@ var app = http.createServer(function (request, response) {
       // 주기마다 실행
       body += data; // 콜백이 실행할 때마다 추가
     });
-    request.end("end", function () {
+    request.on("end", function () {
       var post = qs.parse(body);
       var id = post.id;
-      fs.unlink(`public/data/${id}`, function (err) {
+      var filteredId = path.parse(id).base;
+      fs.unlink(`data/${filteredId}`, function (err) {
         response.writeHead(302, { Location: `/` }); // 302: 리다이렉션
         response.end();
       });

@@ -623,11 +623,117 @@ ex) unlink를 통해서 파일 삭제
 - fs.unlink({delete file path}, call-back function): 파일 삭제
 
 ------------------------------------------------------------------------------------------------------------------
-[NodeJS-39: JavaScript 객체의 형식]
+[NodeJS-39, 40, 41, 42: JavaScript 객체]
 
+* Object vs Array
+- Object: 역할에 따라서, "[ ... ]"
+ex) 객체 생성
+var roles = {
+  programmer: 'kim',      // (Key): (Value)
+  designer: 'choi',
+  manager: 'lee'
+}
 
+- Array: 순서에 따라서, "{ ... }"
+ex) 배열 생성
+var members = ['kim', 'choi', 'lee'];
 
+- JavaScript에서 function은 값이다.
+- while, if 등의 function은 값이 아니다.
 
+- 성격이 비슷한 함수를 객체로 만들어 정리-정돈하는 것을 권장
+
+------------------------------------------------------------------------------------------------------------------
+[NodeJS-43, 44, 45: App 제작]
+
+* module
+- 객체를 라이브러리 형태로 사용 가능하게 한다.
+
+ex) 모듈 만들기
+1) part.js
+var part = {
+  p: 'p'
+}
+module.exports = part;    // module.exports = <객체명>;
+
+2) main.js
+var part = require('./part.js');    // 모듈 import
+part.p;     // 모듈 사용
+
+------------------------------------------------------------------------------------------------------------------
+[NodeJS-46, 47: App 제작-보안]
+
+* Security(Input, Output)
+1) Input
+- path를 parse해서 써야한다.
+- 출력
+console.log(path.parse('../password.js'));
+{
+  root: '',
+  dir: '..',
+  base: 'password.js',
+  ext: '.js',
+  name: 'password'
+}
+
+ex) 안전하게 사용(base만 사용)
+var path = require('path');
+var filterId = path.parse('../password.js').base;
+- ../을 무시할 수 있다.
+
+2) Output
+- <script> ... </script> 소스를 보내서 JavaScript 실행
+
+ex) 네이버로 사용자를 보내버림
+<script>
+  location.href = "https://www.naver.com"
+</script>
+
+- 해결:
+a) script 태그를 지운다
+b) script의 "<, >"(꺽쇠)까지 string으로 출력
+: "<" => "&lt;", ">" => "&gt";
+c) npm을 이용해서 모듈을 사용(sanitize-html)
+:
+1. [npm init] --- project를 npm으로 관리
+2. [npm install sanitize-html] --- <-S>: 부품으로서(vs <-g>) 다운로드
+3. var sanitizeHTML = require("sanitize-html"); --- in (.js파일)
+4. sanitizeHTML(...): ...에 html source 값을 넣으면 태그를 없앤다.
+
+ex) title, description 소독(sanitize)
+  var sanitizedTitle = sanitizeHTML(title);
+  var sanitizedDescription = sanitizeHTML(description, {
+    allowedTags: ['h1']     // 'h1' tag 허용
+  });
+
+------------------------------------------------------------------------------------------------------------------
+[NodeJS-48: API와 CreateServer]
+
+* API(Application Programming Interface)
+- 개발자가 프로그래밍을 제공하는 기능을 제어할 수 있도록 만든 규격
+ex) http.createServer([requestListener])
+requestListener: function(request, response) --- request: 클라이언트 요청, response: 서버 응답
+returns: http.Server
+
+ex) server.listen()
+- 매개 변수(오버로딩 돼있음)
+a) port
+b) host
+c) backlog
+d) call-back
+
+------------------------------------------------------------------------------------------------------------------
+[NodeJS-49: 수업을 마치며]
+
+* Keywords
+- Web browser: Web browser는 JavaScript로 만들어졌고 이를 제어하기
+- Database: file의 형태가 아닌 데이터로서 저장  ex) MySQL, MongoDB
+- framework:
+- module:
+- API:
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------
 Node.JS <모듈 1 : 기초>
