@@ -344,7 +344,7 @@ ex) 연결된 개수 리턴하는 DP BFS
     return count;
   }
 
-************************ Union_Fined(집합 만들기 알고리즘) ************************
+************************ Union_Find(집합 만들기 알고리즘) ************************
 vector<int> root; // 각 root
 vector<int> rank; // 트리의 높이를 저장
 vector<int> nodeCount;
