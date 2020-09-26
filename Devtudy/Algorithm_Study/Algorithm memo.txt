@@ -126,14 +126,18 @@ X
 삭제
 - q.pop() : 가장 처음 원소 삭제
 
-************************ Priority_Queue 자료 구조(vector, deque 컨테이너 기반) ************************
+************************ 우선순위 큐(Priority_Queue) 자료 구조(vector, deque 컨테이너 기반) ************************
 1. <queue> 헤더 선언
 - #include <queue>
 
 2. 생성자
 - priority_queue<T> pq; : 기본 선언
+    (default(넣은 방향 기준 오름차순): less<T>) --- top은 큰 것부터 먼저 나온다
+
 - priority_queue<T, deque<T>> pq; : deque 구조 선언(default: vector<T>)
-- priority_queue<T, vector<T>, greater<T>> pq; : vector 구조, 내림차순 정렬 방식 선언(default: less<T>)
+
+- priority_queue<T, vector<T>, greater<T>> pq; : vector 구조,
+    넣은 방향 기준 내림차순 정렬 방식 선언(top은 작은 것부터 나온다)
 
 3. 멤버 함수(if: priority_queue<T> q)
 할당
@@ -221,7 +225,11 @@ ex) 문자열 대체 예제
 2) str1.replace(str1.find(""), "".length(), str2) : str1에서 찾은 문자열을 대체
 - str1.find("...") : "..."을 찾는다.
 
-************************ Sort(Algorithm 클래스) ************************
+************************ 정렬-Sort(Algorithm 클래스) ************************
+
+default 정렬은 무조건 less<T>: 넣은 방향 기준 오름차순 돼있다
+  (우선순위 큐도 less<T>지만 나오는 방향이 다르다) --- 인덱스 커짐에 따라 수가 커진다.
+
 ex) value값을 비교하여 key값 정렬 예제
 bool cmp(pair<T, T> a, pair<T, T> b)
 {
