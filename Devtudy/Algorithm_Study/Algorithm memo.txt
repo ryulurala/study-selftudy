@@ -464,17 +464,82 @@ float, double 등의 부동 소수점 비교는 정확하지 않다.
 ************************ 구조체 ************************
 typedef struct Name{
   int a, b, c, d;
-  Robot(int _a, int _b, int _c, int _d){
+  Robot(int _a, int _b, int _c, int _d){    // 생성자
     a = _a;
     b = _b;
     c = _c;
     d = _d;
   }
+  Robot(const Robot& robot){      // 복사 생성자
+    a = robot.a;
+    b = robot.b;
+    c = robot.c;
+    d = robot.d;
+  }
+  bool operator ==(const Robot& robot){       // 비교 연산자 오버로딩
+    if(a != robot.a) return false;
+    if(b != robot.b) return false;
+    if(c != robot.c) return false;
+    if(d != robot.d) return false;
+    return true;
+  }
+  void operator =(const Robot& robot){        // 대입 연산자 오버로딩
+    a = robot.a;
+    b = robot.b;
+    c = robot.c;
+    d = robot.d;
+  }
 }Name;
 
 main()
 {
-  Robot robot(0, 0, 0, 0);  
+  Robot robot1(0, 0, 0, 0);  
+  Robot robot2(1, 1, 1, 1);
+  if(robot1 == robot2){
+    return 1;
+  }
+  return 0;
 }
 
-************************  ************************
+************************ 튜플(tuple)<tuple>  ************************
+- pair 객체는 first, second 두 개만 사용 가능하지만, tuple은 다수의 개가 가능하다.
+
+#include <tuple> 헤더 선언
+
+int main()
+{
+    tuple<int, int, int, int> t;      // 튜플 선언
+    t = make_tuple(1, 2, 3, 4);       // make_tuple로 추가
+
+    printf("<before>\n");
+    printf("%d\n", get<0>(t));        // 조회, 0, 1, 2, 3은 0부터 시작하는 Index다.
+    printf("%d\n", get<1>(t));        // 특정 변수 Index로 조회할 수 없다.
+    printf("%d\n", get<2>(t));
+    printf("%d\n", get<3>(t));
+
+    get<2>(t) = 10;               // 수정도 가능
+    get<3>(t) = 20;
+
+    printf("<after>\n");
+    printf("%d\n", get<0>(t));
+    printf("%d\n", get<1>(t));
+    printf("%d\n", get<2>(t));
+    printf("%d\n", get<3>(t));
+
+    return 0;
+}
+
+-> 1, 2, 3, 4 출력 후 1, 2, 10, 20이 출력됨.
+
+
+
+************************   ************************
+************************   ************************
+************************   ************************
+************************   ************************
+************************   ************************
+************************   ************************
+************************   ************************
+
+
+
