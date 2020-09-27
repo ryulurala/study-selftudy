@@ -2,28 +2,25 @@
 #include <vector>
 #include <iostream>
 #include <tuple>
+#include <algorithm>
 
 using namespace std;
 
 int main()
 {
-    tuple<int, int, int, int> t;
-    t = make_tuple(1, 2, 3, 4);
+    vector<int> v;
+    v.push_back(5);
+    v.push_back(4);
+    v.push_back(2);
+    v.push_back(9);
+    v.push_back(1);
+    v.push_back(3);
 
-    printf("<before>\n");
-    printf("%d\n", get<0>(t));
-    printf("%d\n", get<1>(t));
-    printf("%d\n", get<2>(t));
-    printf("%d\n", get<3>(t));
+    sort(v.begin(), v.end());
 
-    get<2>(t) = 10;
-    get<3>(t) = 20;
-
-    printf("<after>\n");
-    printf("%d\n", get<0>(t));
-    printf("%d\n", get<1>(t));
-    printf("%d\n", get<2>(t));
-    printf("%d\n", get<3>(t));
-
+    for (auto e : v)
+    {
+        printf("%d\n", e);
+    }
     return 0;
 }
