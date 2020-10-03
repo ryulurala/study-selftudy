@@ -447,6 +447,10 @@ ex)
 max(1, 2) -> 2 리턴
 min('b', 'd') -> 'b' 리턴
 
+* min_element(), max_element()
+max_element(vector.begin(), vector.end()): 최대값을 가리키는 반복자 리턴(*max_element(...) 로 최대값을 알 수 있다.)
+min_element(vector.begin(), vector.end()): 최소값을 가리키는 반복자 리턴(*min_element(...) 로 최소값을 알 수 있다.)
+
 ************************ 소수 구하기 ************************
 * 소수 구하기
 1) 에라토스테네스의 체: 체로 걸어서 남는 수가 소수이다.
