@@ -6,21 +6,40 @@
 
 using namespace std;
 
+int jjj(int i){
+    return i--;
+}
+
+int kkk(int i){
+    return i++;
+}
+
+
+class A{
+public:
+    int a;
+    A(){
+        cout<<"hi"<<endl;
+    }
+    ~A(){
+        cout<<"bye"<<endl;
+    }
+
+};
+
 int main()
 {
-    vector<int> v;
-    v.push_back(5);
-    v.push_back(4);
-    v.push_back(2);
-    v.push_back(9);
-    v.push_back(1);
-    v.push_back(3);
+    int i=0;
+    cout<< i++ <<" "<< i-- <<" "<< i <<endl;
+    int k=3;
 
-    sort(v.begin(), v.end());
+    cout<< --k <<" "<<k++<<" "<< k--<<endl;
 
-    for (auto e : v)
-    {
-        printf("%d\n", e);
-    }
-    return 0;
+    i=jjj(-2);
+    cout<<i<<endl;
+    cout<<jjj(i)<<kkk(i)<<endl;
+
+    A a;
+    cout<<sizeof(A)<<endl;
+    A();
 }
