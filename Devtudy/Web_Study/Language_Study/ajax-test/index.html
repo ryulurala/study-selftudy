@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajax test</title>
+    <script>
+      function fetchPage(name) {
+        fetch(name).then((res) => {
+          res.text().then((text) => {
+            document.querySelector("article").innerHTML = text;
+          });
+        });
+      }
+      if (location.hash) {
+        fetchPage(location.hash.substr(2));
+      } else {
+        fetchPage("welcome");
+      }
+      window.onload = () => {
+        fetch("list.json").then((res) => {
+          res.json().then((res) => {
+            console.log(res);
+            for (item of res) {
+              document.querySelector(
+                "#nav"
+              ).innerHTML += `<li><a href="#!${item.id}" onclick="fetchPage('${item.id}')">${item.title}</a></li>`;
+            }
+          });
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <h1><a href="index.html">WEB</a></h1>
+    <ol id="nav"></ol>
+    <article></article>
+  </body>
+</html>
