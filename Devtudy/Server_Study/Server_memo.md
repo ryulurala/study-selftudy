@@ -21,7 +21,7 @@
 
 - 어떤 이벤트가 발생했을 때, 수행해야 하는 함수
 
-`Example 1: delegate(대리자) 이용`
+#### Example 1: delegate(대리자) 이용
 
 - `=`, `+=`, `-=` 로 참조 가능
   - `=`: `new` 대신 사용
@@ -70,7 +70,7 @@ namespace DelegateExample
 }
 ```
 
-`Example 2: event 이용`
+#### Example 2: event 이용
 
 - 객체 상태 변화, 이벤트 발생 용도로 사용
 
@@ -124,7 +124,7 @@ namespace DelegateExample
 }
 ```
 
-`Exmaple 3: Action 이용`
+#### Exmaple 3: Action 이용
 
 - Action\<T, T, T, ...>  
   : Action 변수 명: 매개 변수 없음
@@ -176,7 +176,7 @@ namespace ActionExample
 }
 ```
 
-`Example 4: Func 이용`
+#### Example 4: Func 이용
 
 - Func\<T, T, T, ..., return type>  
   : Func\<T1>: return T1, 매개 변수 없음  
