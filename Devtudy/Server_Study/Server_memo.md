@@ -242,54 +242,58 @@ namespace FuncExample
 
 ---
 
-[서버 OT]
+## 서버 개요
 
-\*서버 : 다른 컴퓨터에서 연결이 가능하도록 대기 상태로 상시 실행 중인 프로그램 (ex 영업 중인 식당)
+### 서버
 
-\*게임 서버의 종류
+- 다른 컴퓨터에서 연결이 가능하도록 대기 상태로 상시 실행 중인 프로그램
 
-1. Web Server(aka. HTTP Server)
+### 서버 종류
 
-- 음식을 받고, 이후론 연락 끊김. 질의/응답 형태. (ex 테이크아웃 포장 전문 식당)
-- 드물게 정보 요청/갱신.
-- 먼저 접근할 일이 없다. (ex 물 따라드릴까요? 등)
-- 실시간 Interaction X
-- ASP.NET(C#), Spring(Java), NodeJS(JavaScript), Django, Flask(Python), PHP, ...
-- Stateless
+#### Web Server vs Game Server
 
-2. Game Server(aka. TCP Server, Binary Server, Stateful Server ...)
+|           Web Server            |          Game Server           |
+| :-----------------------------: | :----------------------------: |
+|            Stateless            |            Stateful            |
+|       실시간 상호 작용 X        |       실시간 상호 작용 O       |
+| 질의(Query) / 대답(Answer) 형태 | 요청(Request) / 응답(Response) |
 
-- 실시간 Interaction이 있다. (ex 일반 식당)
-- 요청/갱신 횟수가 많다.
-- 실시간 Interaction이 필요.
-- 언제라도 직원이 손님한테 접근 가능.
-- Stateful
-- 게임/장르에 따라 요구 사항이 다르다.
-- 최적의 프레임워크라는 것이 존재하기 힘듬.
+#### 1. Web Server(aka. HTTP Server)
 
-\*식당 = 게임 서버 비유
+- 질의(Query) / 대답(Answer) 형태
+- 실시간 상호 작용 X
+- `Stateless`: 서버가 (현재 클라이언트의)상태를 모름
+- 프레임워크 종류
+  - `ASP.NET(C#)`
+  - `Spring(Java)`
+  - `NodeJS(JavaScript)`
+  - `Django`
+  - `Flask(Python)`
+  - `PHP`
+  - ...
 
-- 손님 한도 = 최대 동시 접속자
-- 손님의 일행 한도(인테리어) = 게임 장르 및 채널링
-- 직원 역할 = 게임 로직(요리사), 네트워크(서빙), DB(결제)
-- 직원 수 = 쓰레드 개수
-- 요리사/서빙/결제 직원 비율 = 쓰레드 모델
-- 주문 받는 방법 = 네트워크 모델
-- 손님이 기다리는 시간 한도 = 반응성(FPS, MMORPG, ...)
-- 장부 및 결제 = DB
+#### 2. Game Server(aka. TCP Server, Binary Server, Stateful Server ...)
+
+- 요청(Request) / 응답(Response) 형태
+- 실시간 상호 작용 O
+- `Stateful`: 서버가 (현재 클라이언트의)상태를 알고 접근도 가능.
+- 게임 장르에 따라 요구 사항이 천차만별.
+- 최적의 프레임워크라는 것이 존재하기 힘들다.
+
+### Game Server : 식당
+
+|   게임 서버    |               식당               |
+| :------------: | :------------------------------: |
+| 동시 접속자 수 |             손님 수              |
+|   게임 장르    |             인테리어             |
+|    직원 수     |            쓰레드 수             |
+|   게임 로직    |              요리사              |
+|    네트워크    |            서빙 직원             |
+|  데이터베이스  |           장부 및 결제           |
+|  쓰레드 모델   | 요리사 / 서빙 / 결제 직원들 비율 |
+| 네트워크 모델  |          주문하는 방법           |
 
 ---
-
-[환경 설정]
-
-- VS code에서 최상위 폴더를 만들고 Project 하위 폴더로 Server, ServerCore, DummyClient를 만든다.
-- 각각 Project이므로 각 위치에서 "dotnet new console"로 프로젝트를 기반을 다진다.
-- DummyClient는 Client역할을 한다.(500~1000명으로 인식되도록 패킷을 전달해준다)
-- Server는 실질적인 서버
-- ServerCore는 Server가 사용하는 핵심 기능들을 넣어 놓는다.
-- "dotnet new sln"을 통해서 최상위 폴더에 솔루션 파일을 만든다
-- "dotnet sln add \*"로 해당 폴더부터 하위 폴더 모두를 검사하여 .csproj를 담는다.
-- "dotnet run -p (프로젝트 이름)" sln 파일 위치에서 실행 or 해당 디렉토리에서 "dotnet run" 으로 실행
 
 ---
 
