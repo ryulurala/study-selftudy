@@ -22,7 +22,7 @@ Develop & Design Study
 
 [Git](./Devtudy/Git_Study "Git")
 
-[Server](./Devtudy/Server_Study "Server")
+[Server](./Devtudy/Server_Study/Server_memo.md "Server")
 
 [Unity](./Devtudy/Unity_Study "Unity")
 
