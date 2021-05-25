@@ -12,6 +12,11 @@ Develop & Design Study
 
 ## Develop
 
+- 정보처리기사 2021
+  1. [소프트웨어 설계](./Devtudy/Engineer_Study/design.md)
+  2. [소프트웨어 개발](./Devtudy/Engineer_Study/develop.md)
+  3. [데이터베이스 구축](./Devtudy/Engineer_Study/database.md)
+
 [AWS](./Devtudy/AWS_Study/ "AWS")
 
 [Algorithm](./Devtudy/Algorithm_Study "Algorithm")
