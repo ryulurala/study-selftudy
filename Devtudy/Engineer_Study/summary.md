@@ -459,3 +459,339 @@ tags: [정보처리기사2021]
       > 추상화 구현, 상세 내용은 하위 클래스에서 구현
 
 ---
+
+## DataBase
+
+### 절차형 SQL
+
+- 트리거(Trigger)
+
+  > DB System에서 삽입, 갱신, 삭제 등의 Event가 발생할 때마다 관련 작업이 자동적으로 수행되는 절차형 SQL  
+  > 데이터 무결성 유지 및 LOG 메시지 출력 등의 별도 처리를 위해 사용되기도 함.
+
+  ```sql
+  CREATE TRIGGER T_STUDENT
+  BEFORE INSERT ON STUDENT
+  BEGIN
+    IF(AGE < 19) THEN
+      RAISE_APPLICATION_ERROR(-20502, '미성년자 삽입 불가');
+    END IF;
+  END;
+  ```
+
+- 이벤트(Event)
+
+  > 특정 시간에 특정한 Query, Procedure, Function 등을 실행시키는 기능
+
+  ```sql
+  CREATE EVENT T_TEST
+    ON SCHEDULE
+      EVERY 50 SERCOND
+    DO
+      INSERT INTO TEST
+        SET REGDATE=NOW();
+  ```
+
+- 사용자 정의 함수(User-Defined Function)
+
+  > 일련의 연산 처리 결과를 단일 값으로 반환  
+  > 프로시저와 다른 점은 **종료 시 단일 값으로 반환**한다는 점.
+
+  ```sql
+  CREATE FUNCTION GET_AGE(V_BIRTH_YEAR IN CHAR(4))
+  IS
+    V_THIS_YEAR CHAR(4);
+  BEGIN
+    SELECT TO_CHAR(SYSDATE, 'YYYY')
+        INTO V_THIS_YEAR
+        FROM DUAL;
+
+      RETURN V_THIS_YEAR - V_BIRTH_YEAR+1;
+  END;
+  ```
+
+### SQL
+
+- SQL(Structured Query Language)
+
+  > DB를 접근하고 조작하는데 필요한 표준 언어
+
+  - 종류: 사용 용도에 따라
+
+    - DDL(Data Definition Language)
+      > 데이터를 정의하는 언어
+      - `CREATE`, `ALTER`, `DROP`, `TRUNCATE`
+    - DML(Data Manipulation Language)
+      > DB에 저장된 자료들을 입력, 수정, 삭제, 조회하는 언어
+      - `SELECT`, `INSERT`, `UPDATE`, `DELETE`
+    - DCL(Data Control Language)
+      > DBA가 데이터 보안, 무결성 유지, 병행 제어, 회복을 위해 사용하는 언어
+      - GRANT, REVOKE
+
+  - WHERE 조건
+
+    - 비교
+
+      > `=`, `<>`(다름), `<`, `<=`, `>`, `>=`
+
+      ```sql
+      -- PRICE가 50000이 아닐 경우
+      WHERE PRICE <> 50000
+      ```
+
+    - 범위
+
+      > `BETWEEN 숫자 AND 숫자`
+
+      ```sql
+      -- PRICE가 50000 이상 80000 이하일 경우
+      -- PRICE >= 50000 AND PRICE <= 80000
+      WHERE PRICE BETWEEN 50000 AND 80000
+      ```
+
+    - 집합
+
+      > `IN`, `NOT IN`
+
+      ```sql
+      -- PRICE가 40000 or 50000 or 60000 일 경우
+      WHERE PRICE IN (40000, 50000, 60000)
+      ```
+
+    - 패턴
+
+      > `LIKE`
+
+      ```sql
+      -- NAME이 김으로 시작하는 사람
+      WHERE NAME LIKE '김%'
+
+      -- NAME이 최_률 인사람
+      WHERE NAME LIKE '최_률'
+      ```
+
+    - NULL
+
+      > `IS NULL`, `IS NOT NULL`
+
+      ```sql
+      -- PRICE가 NULL이 아닐 경우
+      WHERE PRICE IS NULL
+      ```
+
+    - 복합 조건
+
+      > `AND`, `OR`, `NOT`
+
+      ```sql
+      -- PRICE가 50000 초과이고 NAME이 김으로 시작하는 사람
+      WHERE (PRICE < 50000) AND (NAME LIKE '김%')
+      ```
+
+### DML(Data Manipulation Language)
+
+- 데이터 조작어
+
+  > DB에 저장된 자료들을 입력, 수정, 삭제, 조회하는 언어
+
+  - `SELECT`
+
+    > 데이터 조회
+
+    ```sql
+    SELECT [DISTINCT] 속성명
+      FROM 테이블명
+    [WHERE 조건]
+    [GROUP BY 속석명]
+    [HAVING 그룹 조건]
+    [ORDER BY 속성];
+    ```
+
+  - `INSERT`
+
+    > 데이터 생성
+
+    ```sql
+    INSERT INTO 테이블명(속성명, ...)
+    VALUES(데이터, ...);
+    ```
+
+  - `UPDATE`
+
+    > 데이터 변경
+
+    ```sql
+    UPDATE 테이블명
+      SET 속성명 = 데이터, ...
+    WHERE 조건;
+    ```
+
+  - `DELETE`
+
+    > 데이터 삭제
+
+    ```sql
+    DELETE FROM 테이블명
+    WHERE 조건;
+    ```
+
+### DCL(Data Control Language)
+
+- 데이터 제어어
+
+  > DB 관리자가 데이터 보안, 무결성 유지, 병행 수행 제어, 회복을 위해 사용하는 언어
+
+  - `GRANT`
+
+    > 사용 권한 부여
+
+    ```sql
+    -- 시스템 권한 부여
+    GRANT 권한 TO 사용자;
+
+    -- 객체 권한 부여
+    -- [WITH 권한 옵션]: 옵션을 나눠 가지기 가능
+    GRANT 권한 ON 테이블 TO 사용자 [WITH 권한 옵션];
+    ```
+
+  - `REVOKE`
+
+    > 사용 권한 취소
+
+    ```sql
+    -- 시스템 권한 회수
+    REVOKE 권한 FROM 사용자;
+
+    -- 객체 권한 회수
+    -- [CASCADE]: 연쇄적인 권한을 해제할 때
+    REVOKE 권한 ON 테이블 FROM 사용자 [CASCADE];
+    ```
+
+  - `COMMIT`: TCL(Transaction Control Language)
+
+    > 트랜잭션 확정
+
+    ```sql
+    -- 시스템 권한 회수
+    COMMIT;
+    ```
+
+  - `ROLLBACK`: TCL
+
+    > 트랜잭션 취소
+
+    ```sql
+    -- 권한 회수
+    ROLLBACK 이름;
+    ```
+
+  - `SAVEPOINT`(= `CHECKPOINT`): TCL
+
+    > 저장 시기 설정
+
+    ```sql
+    -- 포인트 지정
+    SAVEPOINT 이름;
+
+    -- 롤백
+    ROLLBACK TO SAVEPOINT 이름;
+    ```
+
+### DDL(Data Definition Language)
+
+- 데이터 정의어
+
+  > 테이블(데이터 저장공간)과 같은 데이터 구조를 정의하는 데 사용되는 명령어
+
+  - CREATE
+
+    > DB 오브젝트 생성
+
+    ```sql
+    CREATE TABLE 테이블명{
+      속성명 데이터타입 [NOT NULL], ...
+      PRIMARY KEY(속성명)
+      FOREIGN KEY(속성명) REFERENCES 참조테이블(속성명)
+      CONSTRAINT 제약조건명 CHECK(조건식)
+    };
+    ```
+
+  - ALTER
+
+    > DB 오브젝트 변경
+
+    ```sql
+    ALTER TABLE 테이블명 ADD 컬럼명 데이터타입;
+    ALTER TABLE 테이블명 MODIFY 컬럼명 데이터타입 [DEFAULT 값] [NOT NULL];
+    ALTER TABLE 테이블명 DROP 컬럼명;
+    ALTER TABLE 테이블명 RENAME COLUMN 변경 전 컬럼명 TO 변경 후 컬럼명;
+    ```
+
+  - DROP
+
+    > DB 오브젝트 삭제
+
+    ```sql
+    -- CASCADE: 참조하는 테이블까지 연쇄적 제거
+    -- RESTRICT: 참조 중이면 제거 [X]
+    DROP TABLE 테이블명 [CASCADE | RESTRICT];
+    ```
+
+  - TRUNCATE
+
+    > DB 오브젝트 내용 삭제
+
+    ```sql
+    TRUNCATE TABLE 테이블명;
+    ```
+
+### Window Function
+
+- 윈도우 함수
+
+  > 행과 행 간의 관계를 쉽게 정의하기 위해 만든 함수  
+  > `OLAP`(On-Line Analytical Processing)
+
+  - 집계 함수
+    - `COUNT`
+      > 복수 행의 줄 수를 구하는 함수
+    - `SUM`
+      > 복수 행의 해당 컬럼에 대한 합계를 구하는 함수
+    - `AVG`
+      > 복수 행의 해당 컬럼 간의 평균을 구하는 함수
+    - `MAX`
+      > 복수 행의 해당 컬럼 중 최댓값을 구하는 함수
+    - `MIN`
+      > 복수 행의 해당 컬럼 중 최솟값을 구하는 함수
+    - `STDDEV`
+      > 복수 행의 해당 컬럼에 대한 표준편차를 구하는 함수
+    - `VARIAN`
+      > 복수 행의 해당 컬럼에 대한 분산을 구하는 함수
+  - 순위 함수
+    - `RANK`
+      > 특정 컬럼에 대한 순위를 구하는 함수  
+      > ex) 2위, 2위, 2위, 5위, ...
+    - `DENSE_RANK`
+      > 동일 순위가 존재해도 후순위로 넘어가지 않음  
+      > ex) 2위, 2위, 2위, 3위, ...
+    - `ROW_NUMBER`
+      > 동일 순위의 값이 존재해도 무관하게 연속적으로 순위 부여  
+      > ex) 2위, 3위, 4위, 5위, ...
+  - 행 순서 함수
+    - `FIRST_VALUE`
+      > 가장 먼저 나오는 값을 반환하는 함수  
+      > 집계 함수의 `MIN`과 동일한 결과
+    - `LAST_VALUE`
+      > 가장 늦게 나오는 값을 반환하는 함수  
+      > 집계 함수의 `MAX`와 동일한 결과
+    - `LAG`
+      > 이전 행의 값을 반환하는 함수
+    - `LEAD`
+      > 이후 행의 값을 반환하는 함수
+  - 그룹 내 비율 함수
+    - `RATIO_TO_REPORT`
+      > 그룹의 합을 기준으로 각 행의 상대적 비율을 반환하는 함수(**0 ~ 1**)
+    - `PERCENT_RANK`
+      > 그룹에서 제일 먼저 나온 것은 0, 제일 나중에 나온 것은 1로 하여 순서별 백분율을 구하는 함수(**0 ~ 1**)
+
+---
