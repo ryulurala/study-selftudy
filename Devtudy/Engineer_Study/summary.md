@@ -1230,9 +1230,9 @@ tags: [정보처리기사2021]
 
   - 발생 조건
 
-    - 상호배제(Mutual Exclusive)
+    - 상호배제(Mutual Exclusion)
       > 한 프로세스가 자원을 점유해서 다른 프로세스가 자원 사용 불가
-    - 점유와 대기(Block & Wait)
+    - 점유와 대기(Block(Hold) & Wait)
       > 한 프로세스가 자원을 점유하고 있지만 다른 자원을 요청해 대기함.
     - 비선점(Non-Preemption)
       > 한 프로세스가 점유한 자원에 대해 선점 불가(Only 그 프로세스만 해제 가능)
