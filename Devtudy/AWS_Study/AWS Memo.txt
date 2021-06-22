@@ -1,6 +1,4 @@
-﻿ioWe.SSU@gmail.com / Dodream2020ioWe!
-
-인프런 AWS
+﻿인프런 AWS
 [AWS 개요]
 
 1강, 2강<Amazon Web Services 수업소개> <수업의 목적>
