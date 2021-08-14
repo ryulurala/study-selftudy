@@ -1,0 +1,1666 @@
+#1(OT)
+
+Analog -> Digital
+Sampling - 점을 찍는다(소리는 시간에 따라서)
+Quantization(or Encoding) - Sample에 대한 값을 준다(그림은 색깔 정보)
+
+---------------------------------------------------------------------------------------
+#2
+<Part 1>
+
+* POSIX Standards
+- Portable Operating System Interface for Unix
+- 각 회사의 Unix의 이식성을 위해 만들어짐(Portablity)
+
+1970: Unix, C --- by AT&T
+1990: Linux
+
+* 컴퓨터 구조(폰 노이만 아키텍처): CPU + Memory
+- Memory
+1) Code=Text: 명령 코드 = 실행 코드 저장(기계어)
+2) Data: 정적(Static) 변수 ex) 전역 변수, 지역의 static 변수 등
+3) Stack: 지역 변수
+4) Heap: 동적 할당 영역 ex) malloc, new 등
+
+- CPU
+1) Decoder(= Control Unit)
+2) ALU
+Register: CPU의 저장 변수 ex) PC(Program Counter)
+
+CPU 흐름
+Instruction Fetch(PC) -> Decoding Instruction -> Execution -> Interrupt
+- Interrupt: 1. H/W or S/W(2. Exception, 3. System Call-File Open, Read)
+
+* 프로그래밍 언어 문장 종류
+1) 배정문(Assignment Statement): 식
+2) 제어문(Control Statement): 반복문 + 조건문
+
+* 명령어 종류
+1) Load: 읽기
+2) Store: 쓰기
+3) ALU: 연산
+4) Jump: 제어
+
+* OS
+a) User View: OS 입장에서는 CPU는 고객이다(여러 고객이 모두 실행 가능하도록)
+b) System View:
+- Resource Allocator(Resource Manager): Process들 관리
+c) Define: 어디까지 OS인가(Netscape의 웹 브라우저와 Microsoft의 Windows OS의 웹 브라우저로 인해 법적 싸움)
+- Kernel: 핵심이라는 뜻, Memory의 Resident(항상 상주): OS 위에서 Program이 실행
+- Bus: 데이터 통로, CPU와 메모리간의 통로
+- Device driver: OS와 입출력의 커뮤니케이션 통로
+
+* Interrupts
+- OS는 Interrupts의 Handler다.
+- OS에게 권한이 넘어감
+- 파일 읽기, 쓰기 등
+
+* Event-Vector Table: Interrupts Number
+- 0 ~ 31: Exception(S/W)
+- 32 ~ 255: Maskable interrupts(H/W)
+- 128: System-Call(Unix or Linux)
+
+* Storage Structure
+- Ram / Rom : Volatile O / X
+
+* Clustered Systems
+- 네트워크 분산 시스템
+
+* Operating System
+- System daemons: OS 내부에서 처리할 프로세스
+- Trap: Control 권한이 OS로 넘어옴 ex) System-Call
+
+---------------------------------------------------------------------------------------
+#3
+
+* 폰 노이만 아키텍처
+- 현재 사용하고 있는 컴퓨터 구조
+- CPU와 Memory로 구성됨
+- Bus(데이터 통로)로 연결돼 있다.
+
+* CPU
+- Decoder: 명령어를 해독, Control Unit이라기도 함
+- ALU: 온갖 종류 연산, 논리 연산 처리
+- 레지스터: CPU 안의 메모리 --- PC(프로그램 카운터), IR(명령어 레지스터)
+- Instruction Fetch: 명령어를 가지고 온다.
+
+* Memory
+- Code=Text: 기계어 = 실행 코드 저장
+- Data: Static 영역 ex) 전역 변수
+- Stack & Heap: Dynamic 영역 ex) 지역 변수
+
+* Process
+- Instruction Cycle: Fetch + Decode + Execution Loop(반복)
+- Interrupt 발생: OS trap(OS 제어) + Resume(재실행)
+
+* 운영체제는 Resource Manager 또는 Resource Locator다.
+
+* 입출력 장치의 컨트롤러 함수 = 드라이버
+
+* Interrupt(3종류)
+1) H/W: 입출력장치
+2) Exception
+3) System Call
+- Vector number = Interrupt number: 0~31: Non-maskable, 32~255: Maskable
+
+* Instruction Fetch의 속도를 위해 CPU와 메모리 사이에 캐시 메모리 사용
+
+* User mode(0이 아닌) vs Kernel mode(0)
+- User mode: 일반 프로그램 실행될 때
+- Kernel mode: Interrupt(System Call)가 걸릴 때
+- Unix에서는 2 bits를 사용한다. (00은 Kernel, 나머지 User mode)
+
+* Timer(타이머) 종류
+1) CPU clock: 1GHz = 1s 에 10의 9제곱번 동작
+2) Wall clock: 일반 시계
+3) Timer Interrupt: OS 에서 사용하는 시계, Interrupt를 주기적으로 건다
+, "Tick"(OS 시간 단위), 1s = 1000 tick
+
+* Resource Management(OS = Resource Manager)
+1) Process Management: 다음 실행될 명령어의 주소를 가리킴(PC), 
+    PC가 가리키는 메모리 번지를 Fetch
+2) Memory Management: 메모리를 효율적으로 사용
+3) File-System Management: 파일 시스템 관리 방법
+4) Mass-Storage Management: 디스크 관리
+5) Cache Management: 캐시 메모리 관리, CPU는 실제 캐시 메모리로 접근함(Hit or Miss)
+- 캐시 메모리를 키우는 방법으로 Hit Rate를 높여서 실행 속도를 상승시킨다.
+- 기대치: 시그마XiPi(나올수 있는 모든 값[이산변수] X [확률])
+ex)
+hit rate: 0.9, hit: 1ms, miss(miss+fetch): 1ms(다시 읽는데) + 10ms(fetch) = 11ms
+기대치: 0.9 x 1ms + 0.1 x 11ms = 2.0ms
+명령어 하나 접근하는데 2.0ms 걸리고 캐시를 안쓰면(miss만) 5배 빠름 - 10ms/2ms = 5배
+
+6) I/O System Management: 입출력 장치 관리
+
+* Virtualization
+- OS 위에 또 다른 OS를 올릴 수 있는 기술
+- Virtual Machine(가상 머신) - OS Level
+- Emulator - App Level
+
+* Kernel Data Structure
+- Lists, Stacks, Queues, Tree(balanced tree: 양쪽의 차가 1이상이 아니다) 등
+- List를 많이 사용
+- Hashing function: Sorting을 안하고 Search하기 위함
+- Bitmaps: 비트 블락으로 구분(사용 유무 표시)
+
+* Unix
+- System 5 Unix: 유닉스 회사에서 Unix를 발전시킨 버전
+- BSD Unix: 버클리 대학에서 Unix를 발전시킨 버전
+
+
+* OS-System Services
+1) User Interface: GUI or CLI로 사용자와 인터페이스
+2) Program execution: 프로그램을 실행시켜주는 부분
+3) I/O Operation: 
+4) File-system manipulation:
+5) Communications: Process-Process간 자료 주고받기, System-System간 자료 주고받기
+6) Error detection: 문제가 생겼을 때, Exception 관련
+7) Resource allocation: 리소스 할당
+8) Logging: 작업 Log
+9) Protection and Security: 보안
+
+* OS-Interface
+1) Command Interpreters
+- Shells
+
+2) Graphical User Interface
+- 제녹스에서 시작해서 Mac이 전파하고 MS는 Dos에서 Windows로 바뀜
+
+* System Calls: Process에서 OS와 소통하는 API
+- 일반 함수 구조(1.return value, 2.function name, 3.parameters)
+하지만, Process가 OS에게 리소스를 넘길 수 없다.(-> 레지스터로 넘긴다)
+
+- Call 발생 -> 커널모드로 전환 -> Resume(프로세스로 전환)
+- Linux에서는 Interrupt table의 128번(File-open, read or fork 모두)
+ -> System call의 table(fork, File-read, open 번호 목록)
+
+- 종류
+1) Process control: fork, ...
+2) File management: read, open, ...
+3) Device management: request device, ...
+4) Information maintenance: get time or date, ...
+5) Communications: send, recive, remote devices, ...
+6) Protection: permissions(권한)
+
+- Windows랑 UNIX는 System call이 다르다.
+ex) CreateProcess()와 fork() 등
+
+- System call을 해도 바로 Kernel mode로 가는 것이 아니고 C Library로 중계하여 간다.
+
+* Linkers and Loader
+- 메모리: 주소 변환
+
+==========
+<Part 2>
+
+[Process Management]
+- Process=Task: 하나의 독립된 실행 단위
+- OS는 Process가 필요한 Resource를 적절히 할당
+- Time sharing: 시분할 방식으로, 실행을 "동시에" 실행시키는 것처럼 보여준다.
+
+---------------------------------------------------------------------------------------
+#4
+
+* Shell
+- Command Interpreter: 명령어(실행 파일) 해석기
+- 사용자랑 대화
+- prompt(%): Shell의 "I am ready"라는 신호
+
+- 보충 자료 참고(Shell)
+
+- 실행 종류
+1) Unix에서 미리 만들어놓은 프로그램(함수): ls, cat, ps 등
+2) 사용자가 만드는 프로그램(함수): sort 등
+
+ex) OS 로그인
+1. OS에서 사용자를 위한 Shell 프로그램이 실행되고 Prompt(%)를 보내줌.
+2. Command(실행 파일)을 처리
+3. fork(자식프로세스) -> execve(코드 변환) 을 하여 새로운 프로그램 실행
+- 확인: &(백그라운드)?, redirect?, pipeline?
+
+* 함수가 호출되면 activation record(함수가 사용하는변수공간)가 만들어진다.(Stack에 할당됨)
+- activation record: Formal parameter, static variable, return address 등이 들어감
+
+new -> ready: admitted, 준비 상태로 받아들임
+ready -> running: scheduler dispatch, 스케줄링, CPU를 사용할 시간을 지정, 할당된 시간을 넘으면 Timeout 발생
+running -> terminated: exit, 시스템을 떠남 = 정상 종료 <----> 비정상종료는 abort(예외 처리의 default action)
+
+- 시분할 방식 진행 2가지(loop를 돌면서 끝날 때까지 진행)
+1) wait state: 기다리기
+(ready -> running -> waiting -> ready): sleep, wait 등 기다림
+
+2) preempt state: 선점하기
+running -> ready: preempt(interrupt), 자원을 뺏어옴(강제로)
+
+---------------------------------------------------------------------------------------
+#5
+
+* PCB(Process Control Block) --- 하나의 PCB당 하나의 프로세스
+- Process state: 상태(state save 후 ready queue로 들어간다)
+- Program counter: 읽어야할 명령어 위치
+- CPU registers: 레지스터의 값들을 PCB에 저장됨(프로세스 전환시 필요)
+- CPU-scheduling information: 프로세스의 정보
+- Memory-management information: 프로세스 메모리 정보
+- Accounting information: 
+- I/O status information: 프로세스가 사용하는 파일 정보
+
+* Threads
+- 프로세스 안에 독립된 실행 단위
+
+* Process Scheduling
+- Throughput(단위 시간당 처리량)을 높이기 위해 사용
+- 여러 프로세스를 언제 실행하고 전환할 건지 정한다.
+
+- Scheduling Queues: Ready Queue에서 하나씩 꺼내며 Run한다.
+1) ready queue: 실행이 준비된 상태(Run되기 위한 단계 - 하나의 Run당 큐 1개)
+2) wait queue: 기다리는 상태(하나의 Run당 큐 N개)
+3) time slice expired(= Timeout): Preemption됨(ready queue로 들어감)
+
+- Context Switch: 상태가 바뀐다.
+: Context Free Grammer(간단, 문맥에 관계없이 같은 의미)
+    <->  Context Sensitive Language(복잡, 문맥에 따라 다른 의미)
+: Timeout마다 해당 프로세스는 PCB에 state save 후 
+    Preemption이 되면서 ready queue로 들어가고 다른 process가 run된다.
+: Process끼리 Switching할 때 Overhead(전환할 때 PCB에 상태 저장)가 있다.
+
+- Process Tree
+: 부모와 자식 관계를 만들어 나뭇 가지처럼 뻗어나간다.
+
+ex) 윈도우에서 사용자로 로그인 했을 경우 사용자 프로세스를 만들고
+        사용자 기반에서 실행되는 모든 프로그램은 사용자의 자식 프로세스이다.
+
+* 자식 프로세스 생성
+- 리눅스: fork() -> execve()
+- 윈도우: CreateProcess()
+
+* Termination
+: 프로세스 실행이 끝나면 exit()의 System call을 해야한다.
+: OS가 자원을 회수
+- 컴파일러가 자동으로 코드에 exit()을 넣어준다.
+
+* 자식이 있는데 프로세스 종료
+- OS에 따라 처리가 다르다, 
+    비정상종료(강제 종료) = abort(예외 처리의 default action) 호출을 할지 말지
+
+- 예외 처리를 사용자가 정의: 
+1) 무시하고 계속 수행(Ignore)
+2) 작성된 Handler로 처리하고 계속 수행
+
+- UNIX: "orphans"를 자신의 부모로 연결시킨다, 끝까지 돌게 해준다.
+
+ex) A의 자식 B, B의 자식 C 프로세스
+B 프로세스를 종료시키면 C 프로세스를 A의 자식으로 연결시킨다.
+- Zombie 상태: A의 자식으로 연결시키기 전의 프로세스 상태(B는 종료)
+- orphans 상태: 부모가 종료되어 tree의 가지가 끊긴 프로세스 상태
+
+* Android Process Hierarchy
+- 메모리가 적은 휴대폰은 정해진 등급으로 자원을 회수한다.
+- 프로세스 등급 종류
+1) Foreground
+2) Background
+3) Visible
+4) Service
+5) Empty
+
+* PCB 및 Interrupt 과정
+- 보충자료 참고
+
+---------------------------------------------------------------------------------------
+#6
+
+* IPC(Interprocess Communication): 프로세스끼리 통신(파일 시스템을 이용)
+
+* 병렬처리(병행처리)
+- Time sharing을 통해 동시에 처리한 것처럼 처리
+
+* Thread
+: 프로세스 안에 존재하는 독립된 실행 단위
+- CPU의 스케줄링 대상이 된다(CPU 에게 자원을 할당 받는 독립된 단위)
+- 프로세스에 존재함으로써 프로세스가 가지고 있는 code, data, files 영역은 공유한다.
+- 각 스레드마다 registers, stack, PC 영역은 독립.
+- 경량 프로세스(Lightweight Process="LWP")로 불린다.
+- Process를 만드는 시간 = Thread를 만드는 시간 * 10배 정도.
+
+* 멀티스레드 장점
+- 응답성(Responsiveness): 작업을 요청했을 때, 바로 응답을 받을 수 있다.
+- 자원 공유(Resource sharing): 스레드는 프로세스 안의 자원을 공유한다.
+- 경제성(Economy): Context switching 비용이 적다, 시간과 공간의 효율
+- 확장성(Scalability): 코어 갯수에 따라 종속되지 않는다.
+
+* 멀티스레드 프로그래밍 순서
+1) Identifying tasks: 병렬로 실행할 작업들을 식별
+2) Balance: 독립된 작업을 균형적으로 프로그래밍
+3) Data splitting: 데이터를 어떻게 나눌지 파악
+4) Data dependency: 데이터의 종속성을 인식(중요!!)
+5) Testing and debugging: 결과가 제대로 나오는지 테스트와 디버깅(중요!!!)
+    (간혹, 디버깅은 통과하지만 테스팅은 실패하는 경우가 있다)
+
+* 병렬처리 타입 2가지
+- Data parallelism: 같은 데이터를 분산하여 처리
+- Task parallelism: 독립된 작업을 분산하여 처리
+
+* Multithreading Models
+- User (level) threads: Thread Library가 1차적으로 관리, 2차적으로 커널에서 관리(Many-to-one model)
+- Kernel (level) threads: 스레드를 커널에서 직접적으로 관리(One-to-one model)
+- 성능이 더 좋기 때문에 현재는 리눅스, 맥OS는 커널에서 관리한다(One-to-one model)
+- Many-to-many model도 있다: 스레드 수 제한
+
+* Thread Library: 스레드를 관리하기 위한 S/W
+- 프로그래머에게 스레드의 생성과 관리 API를 제공한다.
+
+A) User Level에 존재: 속도가 느려지지만 휴대성이 있다,
+    스레드를 스케줄링 -> 그다음 커널에서 CPU의 스케줄링
+
+B) Kernel Level에 존재: 커널의 System call의 결과를 만든다,
+    대부분은 kernel level에서 제공
+
+- 종류
+    A) POSIX의 Pthreads: user-level, kernel-level 모두 가능
+    - Pthread API
+    : pthread_attr_init() --- 스레드의 속성을 정해줌
+    : pthread_create(스레드id, 속성, 이 스레드가 실행할 함수, 실행 함수의 요소) --- 스레드를 생성
+    : pthread_join(스레드id, NULL) --- 메인 스레드가 해당 스레드가 끝날 때까지 대기(= join)
+
+    B) Windows: kernel-level에서만 함
+    - API
+    : CreateThread(속성, 스택크기, 이 스레드가 실행할 함수, 실행 함수의 요소, 플래그, 스레드id) --- 스레드 생성
+    : WaitForSingleObject(스레드변수, ) --- Join에 해당됨.
+    : CloseHandle(스레드변수) --- 스레드 닫기
+
+    C) Java: JVM에서 처리
+    - 스레드 생성과 실행
+    1. Thread class 상속 -> run 메소드 오버라이딩(overriding) 
+        -> thread.start() -> join(): Timeout 예약
+    2. (대부분) Runnable 인터페이스 구현 -> run 메소드 구현(implement) 
+        -> thread.start() -> join(): Timeout 예약
+
+    - 1.5v 이후로 새로운 API
+    1. Executor 인터페이스의 execute() --- 스레드 생성과 실행
+    2. Callable<> 인터페이스의 call() --- 제네릭타입 스레드 생성과 실행
+    3. Thread Pool 이용(Implicit Threading)
+
+    ...etc) Linux: clone()을 통해 스레드를 생성
+
+---------------------------------------------------------------------------------------
+#7
+
+* Implicit Threading
+: Threading 개발 편의를 위한 컴파일러, 런타임 라이브러리(Thread Pools 등)
+- 수백개, 수천개의 threads를 구현의 어려움을 도와줌.
+- 동기화 문제를 해결하는데 용이.
+
+- 종류
+    A) Thread Pools
+    : 미리 스레드들을 생성해 스레드 풀에 모아서 요청할 때마다 사용되고 반환하는 방식
+    - 미리 만들어놓은 스레드이므로 빠르다.
+    - 동적으로 스레드를 생성하는 것이 아닌 미리 할당후 재사용으로 효율적이다(Overload 방지)
+    - 요청자는 스레드를 할당받을 때까지 대기(스레드풀은 스레드 생성을 미리 제한했기 때문에)
+
+    - Thread 제한 갯수 조정: 경험적으로 조정
+    1) CPU 개수
+    2) Memory 크기
+    3) Request 빈도 수
+
+    - Java의 Thread Pool 종류
+    1) Single thread: newSingleThreadExecutor() --- 1개만 재사용
+    2) Fixed thread: newFixedThreadPool(int size) --- N개를 Fixing
+    3) Cached thread: newCachedThreadPool() --- request에 따라 동적으로 만들고 wait상태에서 reusing.
+
+    B) Fork-Join: 한 작업을 조각내어 처리
+    - 하나의 작업을 분할 후(Fork) 각 스레드들의 분할 작업이 각각 끝나기까지 대기하여(Join) 작업을 처리
+
+    - Java의 Fork-Join
+    1) ForkJoinTask<V>를 상속받는 RecursiveTask<V>를 extends하여 클래스 정의
+    2) Compute() 메소드: thread.run()에 해당됨, 임계값(Threshold)을 정해 확장(재귀)을 중지
+
+    C) OpenMP: 컴파일러에게 병렬 처리 지역(parallel regions)을 지시
+    - directives: 프로그래밍 언어가 아닌 "지시어", 컴파일러에게 지시. ex) #pragma
+
+    D) Grand Central Dispatch: directives로서 컴파일러나 런타임 라이브러리를 도와줌
+    - Mac OS에서 사용
+
+* Threading Issues
+A) [System calls] fork() and exec(): 시스템 콜에 대한 스레드 처리?
+  - 프로세스의 임의의 스레드가 fork() system call 했을 경우,
+      새로운 프로세스에 전 프로세스의 모든 스레드를 복제할지 또는 해당 스레드만 복제할지
+  - exec()을 할 경우, 해당 스레드만 복제하고
+      exec()을 안할 경우, 모든 스레드를 복제한다.
+  - 결국, 어플리케이션 종류에 따라 다르다.
+
+B) Signal Handling: 프로세스에게 Signal이 올 때, 특정 스레드 or 아무 스레드가 처리?
+  - Signal 전송의 주체는 OS or Process고
+      만약, OS가 Signal을 발생시켰을 경우(ex. kill), 일반적으로 아무 스레드가 처리 가능하고
+      처리 시점은 Process가 실행될 때이다.
+
+C) Thread Cancellation: 같은 작업을 스레드들이 처리하다 한 스레드가 작업을 끝낼 경우, 나머지 스레드 중지 방법?
+  ex) 데이터 검색을 Fork-Join 으로 처리
+  1) Off: 그대로 놔둠(무시) --- Unsafe
+  2) Asynchronous: 즉시, 나머지 스레드 중지
+    API: pthread_cancel(스레드id); --- Unsafe
+  3) Deferred: 어느 시점으로 요청하여 해당 스레드가 cancellation point에 닿으면 작업을 중지
+    API: pthread_testcancel(); --- Safe
+
+D) Thread-Local Storage: 각 Threads의 독립적이고 해당 Thread의 전역적인 데이터
+  - "TLS"라 불린다.
+
+E) Scheduler Activations: user-thread library와 kernel간의 커뮤니케이션 스키마
+  - 1차로 user-thread library로 thread를 Scheduling하고, 2차로 kernel에서 CPU Scheduling을 할 경우,
+      kernel에서 user-thread library로 upcall(System call)하여 user-thread library에
+      미리 작성된 upcall handler 함수로 virtual process에 대해 반드시 처리하게 한다.
+  - virtual process = lightweight process = thread
+
+* OS System
+- Window Threads
+: 윈도우에서는 각각의 프로세스에 하나 또는 많은 스레드들이 실행된다.
+
+- Linux Threads
+: 리눅스에서는 기본적으로 POSIX의 fork()와 구별되는 clone() system call로 스레드들이 실행된다.
+: clone() system call은 자원 공유 옵션 존재 --- 자원을 공유하지 않으면 fork() system call과 같다.
+: 공유 옵션
+  1) File-System information
+  2) Memory space
+  3) Signal handlers
+  4) Open files
+
+---------------------------------------------------------------------------------------
+#8
+
+* CPU Scheduling
+  - 4가지 State 전환
+  1) Run state -> Wait state
+  2) Run state -> Ready state
+  3) Wait state -> Ready state
+  4) Terminate
+
+  - Preemptive vs Non-preemptive
+  : CPU에게 자원을 반환하느냐, 서비스 받다가 멈추느냐
+
+  - Preemptive Scheduling: Timeout or Priority로 인해 preemption 발생
+  : Window, Linux, Mac 모두 이 방법 사용
+  : Race Conditions 문제가 있다(동기화 문제)
+  ex. 1), 2), 3), 4)
+
+  - Non-preemptive Scheduling: preemption이 발생하지 않음(프로세스 자원 선점X)
+  ex. 1), 4)
+
+* Dispatch
+  : 스케줄러가 멈춘 프로세스에 대해 다시 시작할 때, CPU에 올리는(환경을 만들어주는) 작업
+  - Dispatcher: 해당 작업을 하는 주체
+  - Dispatch latency: Dispatch 걸린 시간
+
+* 스케줄링 성능 척도(Performance Metric)
+  : 5가지 척도
+  1) CPU utilization: CPU가 사용된 양
+  2) Throughput: 처리량/단위시간당
+  ex. CPU-MIPS(Million Instructions Per Second), 통신-BPS(Bits Per Second)
+
+  3) Turn around time(TAT): Waiting Time(대기 시간) + Service Time(서비스 시간)
+  4) Waiting time: 시스템 안에서 대기 시간
+  5) Response time: 요청했을 때, 응답해 주는 시간
+
+* 요구사항=Requirement(-> Design -> Implement: 개발순서)
+  - Functional: 기능
+  - Performance: 성능
+  - Reliability: 신뢰도
+
+* 성능 분석 목적(Objective of Performance Analysis)
+  - 선정 평가(Selection evaluation) --- 고객
+  : 고객이 선정하는 것에 대한 평가
+
+  - 성능 예측(Performance projection) --- 개발자
+  : 성능을 예측하고 요구사항을 비교하며 재설계(Re-design)
+
+  - 성능 감시(Performance monitoring) --- 운영자
+  : 성능을 감시하면서 조율 or 조정(System tuning)
+
+* 분석 방법(Methods for Performance Analysis)
+  - Benchmark Test(BMT): 성능 테스트 --- 고객
+
+  - 시뮬레이션 모델링: 성능 예측, 알고리즘 --- 개발자
+  - 해석적 모델링: 성능 예측, 확률 --- 개발자
+
+  - 관찰(Observation): 성능 감시 --- 운영자
+
+* 모델링 --- 개발자
+  - 대체품으로 1) 조작, 2) 관찰, 3) 실제를 추측하는 행위
+
+* 분석 모델 --- 개발자
+  1) Probability: 확률
+  2) Expectation: 기대치
+  : 각 사건의 이득과 벌어질 확률을 곱한 값
+
+  3) Queueing Theory: 대기행렬 이론
+  : 시스템의 평균 대기시간, 대기행렬의 추정, 서비스의 예측 등을
+      현재 상태를 기반으로 한 시스템의 확률을 기반으로 하여 성능을 측정
+  : 서비스 공급에 얼만큼의 리소스를 투입하느냐는 비즈니스 결정을 내림
+  : 통신망, 도로망 등에 쓰임
+
+---------------------------------------------------------------------------------------
+#9
+
+* Scheduling Algorithms
+  1) First-Come, First-Served(FCFS): 먼저 오면, 먼저 제공
+  - Non-preemptive 방식
+
+  2) Shortest-Job-First(SJF): 가장 처리할 시간이 짧은 것부터 먼저
+  - Non-preemptive 방식
+  - 평균 대기 시간이 짧아짐 -> 고객 만족도 증가
+
+  3) Shortest-Remaining-Time-First(SRTF): 중간에 남은 시간과 비교해서 처리 시간이 짧은 것부터 먼저
+  - Preemptive 방식
+  - Shortest-Job-First의 Preemptive 버전
+  - 마찬가지로 평균 대기 시간 줄임
+
+  4) Round-Robin(RR): 주기마다 계속 번갈아가며 반복 실행 ex) ABCDE-ABCDE-ABCDE
+  - Preemptive 방식
+  - Time quantum(부여되는 tick)을 적절하게 정해야함
+  - Context Switching이 증가 -> 오버헤드(overhead)가 많다.
+  - 응답성은 빠르다.
+
+  5) Priority: 우선 순위로 실행
+  - Preemptive 방식
+  - "starvation" 문제(계속 우선순위가 밀려서 서비스 받지 못하는 문제)가 있다
+  - "aging"(시간이 지날수록 우선순위를 높여줌)으로 해결
+  - "aging"의 유무(처음 할당한 Priority가 바뀌는지 여부)에 따라 Dynamic과 Static으로 나뉨
+
+  6) Multi-Level Queue(MLQ): 여러 개의 레벨로 작업 중요도를 나누어 우선순위를 부여
+  - Batch process(예약 프로세스)는 최하 레벨
+
+  7) Multi-Level Feedback Queue(MLFQ)
+  : Time quantum으로 FCFS를 실행하면서 남은 작업에 대해 Time quantum(부여되는 tick)을 수정하며 실행(반복)
+  - 모든 스케줄링 속성이 다 들어가며, 이를 최적화하는 것은 어렵다.
+
+* Thread Scheduling
+  1) Contention Scope
+  - Process-Contention Scope(PCS): User-level(Thread Library)에서의 스케줄링
+  - System-Contention Scope(SCS): System-level(Kernel)에서의 스케줄링
+
+  2) Pthread Scheduling
+  - PTHREAD_SCOPE_PROCESS or PTHREAD_SCOPE_SYSTEM: User, System-level thread로 구체화
+  - pthread_attr_getscope(): 현재 Scheduling Algorithm 확인
+  - pthread_attr_setscope(): Scheduling Algorithm PCS or SCS 지정
+
+* Multi-Processor Scheduling
+  a) Common Ready Queue: Common 큐 1개
+  - Load balance
+  - Cache Hit Ratio 감소
+
+  b) Per-core Run Queues: 각 코어마다 Private 큐
+  - Load Unbalance
+  - Cache Hit Ratio 증가
+  - 작업 분산(Process Migration): Push(일 넘김) or Pull(일 요청)
+
+* Memory stall: CPU가 낭비되는 시간   ex) Cache miss날 경우 CPU가 일을 못한다.
+  - core당 thread가 n개로 실행되어 Memory stall을 줄인다.
+  - 각 스레드는 독립적인 Register-Set을 가진다.
+
+---------------------------------------------------------------------------------------
+#10
+
+* Real-Time Systems(Embedded System)
+  - Temporary: 일시적, 시간 제약이 있다.
+  - Soft real-time systems: 우선적이되, 보장은 못한다.
+  - Hard real-time systems: 시간 제약이 엄격하다, "Latency(지연시간)"를 줄여야 한다.
+    ex) 무인자동차, 무기시스템
+
+  - Real-Time OS: 실시간 작업을 우선적으로 실행하게 하는 OS(Priority & Preemptive based)
+    1) Rate-Monotonic Scheduling: 실행 주기가 짧은 작업을 우선 순위를 주는 스케줄링
+    2) Earliest-Deadline-First Scheduling: 마감 시간이 먼저인 작업을 우선 순위를 주는 스케줄링
+    3) Proportional Share Scheduling: 중요도에 따라 우선순위, Soft real-time systems에서 쓰임
+    4) POSIX Real-time Scheduling
+      - SCHED_FIFO: Non-preemptive 방식, Hard real-time systems 분야
+      - SCHED_RR: 같은 Priority가 여러 작업 있을 경우에 RR방식을 사용
+
+    - Linux
+      1) Linux v2.5 이전까지는 기존의 UNIX 환경의 스케줄링이다.
+        (Real-Time, SMP, Multi-Core에 염두한 스케줄링 X)
+      2) Priorities(숫자가 작을수록 우선순위가 높다)
+        : 0 ~ 99: Real-Time Task(Static-우선순위 불변, Non-preemptive) --- higher
+        : 100 ~ 139: Normal Task(Dynamic-CPU시간을 많이 쓰면 우선순위 밀려남, Preemptive) --- lower
+      3) Normal Task의 priority는 120이고, nice values를 줘서 우선순위가 낮아진다. 
+
+    - Window
+      1) Priority-based, preemptive scheduling
+      2) Priorities(숫자가 클수록 우선순위가 높다)
+        - 6개의 Class로 나누고 Class마다 7개의 Level로 나뉜다.
+        - Real-Time Class의 어떤 Level이든 다른 Class의 Priority보다 높다.
+      3) Realtime이 아닌 Class들은 Priority가 Dynamic한 스케줄링을 사용
+
+    - Solaris
+      1) Priority-based thread scheduling을 쓰고 Thread는 6개의 class에 속한다.
+      2) Priorities(숫자가 클수록 우선순위가 높다)
+        - 0~59: Normal
+        - 100~159: Real-Time
+      3) sleep했다가 다시 Run될 때 Priority가 높아진다.
+
+* Algorithm evaluation
+  - 해당 시스템에 어떤 CPU 스케줄링 알고리즘을 사용해야 하는가?
+  - 방법 종류
+    1) Deterministic Modeling: 주어진 데이터를 가지고 분석하여 모델링
+    2) Queueing Model: 현재 상태 기반의 확률 분포로 수학적으로 계산하여 분석
+    3) Simulations: 시뮬레이션
+    4) Implementation: 구현
+
+---------------------------------------------------------------------------------------
+#11
+
+* Synchronization
+  - Concurrent (process / threads)
+    1) Compete: 자원 공유, 배타적 사용권(상호 배제, lock)
+    2) Cooperate: Parallel execution(등분해서 처리), Pipeline(전달)
+
+  - "Critical Section": 자원이 공유되는 범위 vs "Remainder Section": 나머지 구역
+    1) 상호 배제(Mutual Exclusion): 내가 진행할 때는 다른 이는 진행 불가
+    2) 진행(Progress): Critical Section이 비어있을 때, 진입하려는 이가 있으면 결정
+    3) 한정된 대기(Bounded Waiting): 진입할 때까지 걸리는 시간 제한이 존재
+    : 3가지 조건을 만족해서 "Critical Section" 문제를 해결해야 함
+
+  - "Race condition": 공유 자원을 두고 경쟁하는 조건
+  - 만약, Race condition일 때, orderly execution(순서대로 실행)한다.
+  - 공유 자원 사용 방법
+    1) 시분할방식
+    2) 동기화(for. 자유 경쟁)
+
+  - "Preemptive Kernel": 실행중인 프로세스를 멈추고 긴급한 프로세스를 실행(현재 OS)
+  - "Non-preemptive Kernel": 실행중인 프로세스를 다 끝내고 긴급한 프로세스 실행
+  - 만약, 실행이 멈추고 긴급한 프로세스가 공유 자원을 건드리면 Consistency가 붕괴 
+
+  - Peterson's Solution: 락 기초
+
+  - H/W Synchronization
+    1) Memory Barriers(= Memory Fences): 순서가 바껴서 실행 불가능하게 함.
+    2) *H/W Instructions: 하나의 유닛 실행 --- atomically(= uninterruptible, 동시 진입 불가)
+      - test_and_set()
+        1) 특정 메모리 위치를 읽기
+        2) 해당 위치를 true(1)로 만들기
+        : 1), 2)를 atomic, 하나의 과정처럼 진행된다.
+
+      - compare_and_swap()
+        1) compare_and_swap()이 실행돼 현재 값(value)을 읽어 임시 변수(temp)에 저장
+        2) 현재 값(value)이 기대한 값(expected)이랑 같을 때, 새로운 값(new_value)을 저장
+        3) 임시 변수(temp) 반환(return)
+        : 1), 2), 3)이 atomic, 하나의 과정처럼 진행된다.
+
+      - 하지만, test_and_set(), compare_and_swap() 방법 모두 bounded-waiting 조건 만족 X
+      - 임시 키(key)를 두어 bounded-waiting 조건 만족 O
+    
+    3) Atomic Variables: 간단한 Increase, Decrease 연산을 Atomic하게 해준다.
+
+  - S/W Synchronization
+    1) (Mutex) Locks: OS Level에서 S/W 코드로서 제공되어, lock을 획득하고 lock을 해제하는 방식이다.
+      - acquire lock(lock 획득)~~~ critical section ~~~ release lock(lock 해제)
+    2) **Semaphores:
+
+---------------------------------------------------------------------------------------
+#12
+
+* S/W Synchronization
+  - Bounded-waiting 만족 조건(Non-preemptive vs Preemptive)
+    1) Busy-waiting(Spin-lock)
+      - 계속 검사하면서 CPU 자원을 넘겨주지 않음(Non-preemptive)
+      - CPU가 여러 개면서 짧은 작업 시간일 때, context switching의 overhead 비용 적어 유용할 수도 있다.
+    2) Sleep-waiting
+      - Sleep()으로 Context switching을 하며 CPU 자원 넘김(Preemptive)
+      - CPU가 1개라면 다른 프로세스 실행을 위해서 preemption이 발생하는 것이 유용하다.
+
+  - 동기화 방법
+    1) (Mutex) Locks
+      - "Critical Section"을 Lock 획득(Acquire)과 Lock 해제(Release)로 감싸 상호 배제한 진행
+      ex) pseudo-code of Mutex lock
+        while(true){
+          acquire_lock()
+            "critical section"
+          release_lock()
+            "remainder section"
+        }
+      - busy-waiting 방식(lock을 얻을 때까지 preemption이 일어나지 않음)
+
+    2) **Semaphores
+      - (Mutex) Locks 보다 더 좋은 솔루션을 제공하며 대표적인 동기화 기법이다.
+      - 1), 2), 3)이 어우러진 동기화 기법
+        1) Integer 변수, "S": 토큰 수, "Critical Section"에 들어갈 수 있는 프로세스 수 결정
+        2) wait() 연산, "P": "Critical Section"에 진입 가능 여부 연산, 가능하면 S--;(for. lock)
+        3) signal() 연산, "V": "Critical Section"에 퇴출 연산, 퇴출하면 S++;(for. 다른 프로세스)
+
+      - 장점
+        1) Counting: 프로세스 진입 개수 결정 가능
+        2) Busy-waiting, Sleep-waiting 방식 모두 가능
+      
+      - 종류
+        1) Binary Semaphore: "S"의 값이 0 or 1 --- mutex(=1) 변수 사용
+        2) Counting Semaphore: "S"의 값을 0 ~ N 까지 결정(범위) --- empty(=N), full(=0) 변수 사용
+
+      ex 1) busy-waiting 방식의 wait(), signal()
+        wait(S){
+          while(S <= 0) ;   // busy wait
+          S--;
+        }
+        
+        signal(S){
+          S++;      // 다른 프로세스를 위해 토큰 수 증가
+        }
+
+      ex 2) sleep-waiting 방식 wait(), signal()
+        typedef struct{
+          int value;        // "S" 값
+          struct process *list      // 작업 리스트(큐)
+        }semaphore;
+
+        wait(semaphore *S){     // sleep-wait
+          S->value--;       // (S--;)와 동일
+          if(S->value < 0){     // 토큰 수("S")가 없을 경우
+            add this process to S->list;    // 나중에 깨워줄 리스트? 에 add
+            sleep();      // 그리고 sleep, preemption 발생
+          }
+        }
+
+        signal(semaphore *S){   // sleep-wait
+          S->value++;       // (S++;)와 동일
+          if(S->value <= 0){      // 대기하는 프로세스가 존재하는 지
+            remove a process P from S->list;    // 대기 작업을 꺼냄
+            wakeup(P);      // 대기 작업을 깨워줌
+          }
+        }
+
+    3) Monitor
+      - ADT(abstract data type): = class
+      - monitor의 변수들
+        1) Initialization code: 생성자
+        2) Operation: 메소드, 배타적으로 실행
+        3) x, y conditions: condition variable, 각 대기열 이름, 특정 조건 만족까지 기다림
+          ex) 생산자는 소비자만 깨울 수 있고, 소비자는 생산자만 깨울 수 있는 변수
+        4) Shared data: Critical section
+        5) Entry queue: 순서대로 실행, Java의 "synchronized"랑 같다.
+
+      - ADT 안에서 순서대로 실행되도록 한다.
+
+
+* 동기화 문제
+  1) Bounded-buffer problem(= Circular-array problem)
+    - 생산자와 소비자가 하나의 순환하는 버퍼(이상적으로 무한한 버퍼)를 사용하기 위한 문제
+      1) 생산자(Producer Process): Data를 Push(), 정보를 생산(제공)
+      2) 소비자(Consumer Process): Data를 Pop(), 정보를 소비
+  
+    - 무한한 버퍼를 이상적으로 구현하기 위해 "in"과 "out"의 pointer로 순환하는 배열로 버퍼를 구성
+      1) in: next free position, 다음 빈 위치를 가리킴.
+      2) out: first full position, 처음으로 꽉 차 있는 위치를 가리킴.
+
+    - 생산자와 소비자가 공유하는 버퍼에 대해 동기화 기법이 필요!("S"는 Semaphore)
+      1) "S" mutex(=1): 0(false) or 1(true)
+        - 생산자: for. 생산자들끼리 상호 배타적인 실행
+        - 소비자: for. 소비자들끼리 상호 배타적인 실행
+      2) "S" empty(=n): 빈 공간 차지 가능 여부, n(개수)으로 초기화
+        - 생산자: for. wait(empty)로 빈 공간을 차지하기 위해 경쟁
+        - 소비자: for. signal(empty)로 빈 공간 제공(소비했으니)
+      3) "S" full(=0): 소비 가능 여부, 꽉 찬 상태
+        - 생산자: for. signal(full)로 꽉 찬 상태 제공(제공했으니)
+        - 소비자: for. wait(full)로 꽉 찼을 때, 소비하기 위해 경쟁
+
+  2) Reader-Writers Problem
+    - "Transaction System"을 사용할 경우의 문제
+    - "Reader" 팀과 "Writer" 팀이 하나의 DB(데이터베이스)를 공유할 경우에 발생하는 문제
+      1) "Reader" 팀: Read하는 processes -> only Read할 지 or Write까지 할지
+        - 공유 DB에 대해 자료 수정 X -> Reader 팀은 배타적 접근 필요 X
+      2) "Writer" 팀: Write하는 processes
+        - 공유 DB에 대해 자료 수정 O -> Writer 팀은 배타적 접근 필요 O
+    
+    - 공유하는 자료에 대해서 동기화할 필요!("S"는 Semaphore)
+      1) "S" mutex(=1): 0(false) or 1(true)
+      2) "S" rw_mutex(=1): 0(false) or 1(true)
+      3) int read_count: 0으로 초기화
+
+      ex) for. Writer process
+        while(true){
+          wait(rw_mutex);
+          
+          ... // writing
+
+          signal(rw_mutex);
+        }
+
+      ex) for. Reader process
+        while(true){
+          wait(mutex);    // Reader 팀끼리의 경쟁
+          read_count++;   // 공유 DB 자료를 읽는 이 1개 증가
+          if(read_count == 1)   // 처음 Reader process에 대해
+            wait(rw_mutex);     // 처음 Reader는 쓰기 경쟁 + 나머지는 only Read
+          signal(mutex);      // Reader 팀끼리의 경쟁 끝
+          ...
+          // 읽는 중(reading)   // 읽는 것에 대해서는 경쟁 X(why. 정보 수정 X)
+          ...
+          wait(mutex);      // Reader 팀끼리 경쟁(for. Next writing)
+          read_count--;   // 공유 DB 자료를 읽는 이 1개 감소
+          if(read_count == 0)   // 마지막 Reader process에 대해
+            signal(rw_mutex);   // Reader들에게 write 가능하도록 함(Next writing 가능)
+          signal(mutex);    // Reader 팀끼리 경쟁 끝
+        }
+
+      - 해당 코드 문제점
+        1) writer가 먼저 일어나도 나중에 처리되는 공평성 문제(= "Starvation" 문제)
+        2) writer보다 늦게 온 reader는 예전 데이터를 읽을 가능성 문제
+        -> writer 처리를 먼저 온 reader가 끝나는 시점까지만 writer를 우선 처리하고 다음 reader가 처리되게 한다.
+
+  3) Dining-Philosophers Problem
+    - 식탁에 앉은 철학자들(생각 or 식사)이 양쪽의 손잡이 위치에 포크가 놓여있을 때,
+        가운데에 놓여있는 스파게티를 먹기 위해선 양손의 포크를 들으면 먹을 수 있다.
+        이때, 철학자들이 모두 왼쪽 포크를 동시에 들었을 경우에 다른 손의 포크를 들기 위해
+        계속 기다리다가 아무도 스파게티를 못먹게 되는 문제
+
+    - 교착 상태(Dead-Lock)
+
+---------------------------------------------------------------------------------------
+#13
+
+* Synchronization in Kernel
+  1) Windows
+    - Single-core: Interrupt(preemption) disable -> enabe
+    - Multi-core: Spin lock
+  2) Linux
+    - Single-core: Interrupt(preemption) disable -> enable
+    - Multi-core: Spin lock
+
+* POSIX Synchronization
+  - Mutex
+  - Semaphores
+    1) Named
+    2) Unnamed
+  - Condition variables
+
+* Synchronization in Java
+  - 상호배제, 데드락 발생(서로 계속 안깨워줌)
+    ex)
+      public synchronized void insert(E item){    // synchronized는 순서대로 실행한다는 뜻
+        while(count == BUFFER_SIZE){    // 버퍼가 꽉참
+          try{
+            wait();     // 기다리기
+          }
+          catch(InterruptedException ie){}
+        }
+        buffer[in] = item;
+        in = (in+1) % BUFFER_SIZE;      // circular buffer
+        count++;
+
+        nofify();       // 상대방 하나만 깨워줌
+      }
+
+      public synchronized E remove(){   // synchronized는 순서대로 실행한다는 뜻
+        E item;
+
+        while(count == 0){        // 버퍼가 비어있음
+          try{
+            wait();     // 기다리기
+          }
+          catch(InterruptedException ie){}
+        }
+        item = buffer[out];
+        out = (out+1) % BUFFER_SIZE;      // circular buffer
+        count--;
+
+        notify();     // 상대방 하나만 깨워줌, notifyAll()도 있다() --- 모두 깨움
+
+        return item;
+      }
+
+  - Reentrant Locks
+    : "synchronized"에서 조금 개선된 lock
+    : 시작점과 끝점을 명시할 수 있는 lock이다.
+
+*Liveness
+  - Deadlock: 서로 기다려주다 아무도 실행 X
+  - Priority Inversion: lock을 풀어주는 프로세스가 우선순위가 낮아 lock을 못 풀고 있을 때
+
+---------------------------------------------------------------------------------------
+#14
+
+*Deadlock
+  - 교착상태
+  - 필요 조건
+    1) Mutual exclusion: 자원이 상호 배제한 상태로 사용될 때
+    2) Hold and wait: 잡으려는 것과 기다리는 것이 동시에 존재
+    3) No preemption: 데드락 상태에서 자원 선점(뺏기)이 없어야 한다.
+    4) Circular wait: Resource-allocation graph가 순환이 발생
+  
+  - 해결책
+    1) Prevention: 자원 요청 제한
+      - 4가지 필요 조건을 하나라도 불만족하도록 한다.
+      - 필요 조건 1, 3은 불가 / 2 가능: 한꺼번에 요청 - 대신, 성능 저하가 있다.
+      - 4)가 제일 현실적인 방법: Resource를 orderly하게(순서 있게) 요청한다. 
+
+    2) Avoidance: 자원요청 시 검사
+      - safe, unsafe state 검사
+      - Banker's algorithm: 1) Max, 2) Allocated, 3) Available
+      - 요청마다 처리해야하므로 오버헤드가 크다.
+
+    3) Detection & Recovery: 데드락 발생 후에 처리
+      - Detection
+        : Banker's algorithm과 유사
+      - Recovery
+        1) Process and Thread Termination
+          - Victim 정하기
+            1) priority 낮은 프로세스
+            2) 얼마나 오랫동안 실행된 프로세스인지
+            3) 쓰는 자원 종류에 따라
+            4) 
+            5)
+
+        2) Resource Preemption
+          - Selecting a victim
+          - Rollback & Retry: Safe state를 표시했던 곳으로 되돌아 간다.
+          - Starvation
+
+---------------------------------------------------------------------------------------
+#15
+
+*File system
+  - File: Data container
+  - File Control Block(FCB): Linux의 inode
+  - Alocation Method
+    1) Contiguous Allocation: 연속적으로 배치
+      - 파일이 삭제되면 hole 생성
+      - external fragmentation 문제: 빈 공간이 생긴다
+        -> compacts(압축)로 해결 
+    2) Linked Allocation: (block) 연결리스트처럼 공간 위치를 가리키는 포인터로 연결
+      - 헤더의 움직임으로 인해 느린 속도
+    3) Indexed Allocation: (block) 파일당 한 개의 인덱스 블록(포인터의 모음)
+      - 대중적이다.
+      - 인덱스 블록 할당에 따른 저장공간 손실
+      -> Linked, Multilevel, Combined(Linked + Multilevel)로 해결
+
+---------------------------------------------------------------------------------------
+#16
+
+*File System
+  - Free-Space Management
+    1) bit vector
+      - 안전하다, 추가적인 bit map 공간이 필요하다.
+    2) Linked list
+      - 포인터를 유지하면서 모든 빈 디스크 연결, 인접한 파일을 쉽게 얻기 불가
+    3) Grouping
+      - n개의 빈 블록의 주소를 첫 번째 블락에 저장
+    4) Counting
+      - 전체를 적절한 크기로 나눠서 관리
+
+---------------------------------------------------------------------------------------
+중간고사 대비
+
+- Preemptive scheduling
+  1) 대화형 시스템에 좋다. -> 자원 선점으로 응답 시간이 빠르다.
+  2) 실시간 작업에 좋다. -> 빠른 속도로 처리하므로
+  3) Overhead 존재 -> Context Switching할 때
+  4) 동기화 어려움
+  5) RR, Priority, SJF(Shortest Job First)(Preemptive 방식)
+
+- Non-Preemptive scheduling
+  1) Overhead 아예 없다. - Context Switching 없다.
+  2) 동기화할 때 쉬움
+  3) FCFS(First Come First Served), SJF(Non-preemptive 방식)
+
+- Contiguous allocation method vs block(indexed)
+  1) External fragmentation(공간 낭비) 문제가 있다.
+  2) Extent based allocation: 하나의 file이 하나 이상의 extent를 가짐
+  3) Compact(압축)할 필요가 있다.
+  4) Read-only 파일에 좋음 -> 쓰고 나면 크기에 따라 copy-paste가 일어나므로 오버헤드 증가
+
+- clone() in UNIX: fork()는 프로세스
+  1) clone()은 스레드 생성이므로 자원을 공유한다.
+  2) 
+
+- Resource Allocation Graph
+  
+---------------------------------------------------------------------------------------
+#17
+
+
+
+---------------------------------------------------------------------------------------
+#18
+
+- UFS(Unix File Systems) 파일 시스템은 6개의 System Call 제공
+  1) Create: 파일 생성
+    - inode(FCB) 할당
+    - Directory에 등록(pathName)
+
+  2) Open(pathName, openMode): 파일 사용
+    - pathname으로 inode 번호를 찾음
+    - 디스크에서 해당 inode 번호를 메모리로 읽어들임(Disk Cache를 먼저 검사)
+    - inode 접근 권한 확인
+    - File table 생성
+    - PCB 안의 FDT(File Descriptor Table)의 포인터를 File table을 가리키게 함
+    - return 값으로 FDT의 entry 번호(fd)를 리턴
+
+  3) Read, Seek
+    - offset을 이용해 몇 번째 block에 data가 있는지 확인(offset/block size)
+
+  4) Write
+
+  5) Close(fd)
+    - FDT 삭제
+    - fd 해제
+
+  6) Delete: 파일 삭제
+    - inode 해제
+    - data block(파일이 저장되는 곳) 해제
+    - directory에서 등록했던 pathName 제거
+
+- Disk Cache: Super block은 항상 캐싱, Data block과 inode block은 일정 부분 캐싱
+
+* Cache-Update Policy: 작업은 Cahce에서 하고 Disk의 원본과의 동기화(Sync) 정책
+  1) Write-Through: 작업 중요도 높음
+    - 캐싱된 내용이 고쳐졌을 때, 즉시 원본도 같이 고친다.
+    - 캐시 내용이 고쳐질 때마다 원본 내용을 고치므로 overhead가 크다.
+
+  2) Write On-Close: 작업 중요도 낮음
+    - 작업이 끝났을 때, 한꺼번에 동기화(Sync)를 해준다.
+    - 작업 중 Crash가 일어날 경우, 원본이 바뀌질 않아 작업 내용이 날라감.
+
+  3) Delayed-Write: 작업 중요도 중간(일반적)
+    - 주기적으로 일정 시간마다 동기화(Sync)를 해준다.
+
+
+- UFS -> ext2 -> ext3 -> ext4
+
+* Linux의 파일 시스템
+  1) ext2: 'Group' 개념 도입
+    - Disk 접근이 빠르다.
+
+  2) ext3: 'Log' 기능 제공
+    - 부팅할 때 실행되는 fsck(file system check) 구동 시간을 줄임, Log만 확인
+    - Inconsistency(원본이 고쳐지지 않는 상태에서 Crash) 문제 해결
+    - Log를 먼저 고침 -> 원본 고침
+    - Log를 고치던 중 Crash가 난 경우, 안된 작업으로 판별
+    - 원본을 고치던 중 Crash가 난 경우, Log를 보고 복구
+    - Log 작성과 원본 수정의 overhead가 크다.
+    - Meta data(Super block, Bitmap 등)에 대해서만 Log를 기록 --- Data block은 overhead가 크기 때문에(옵션으로 가능)
+
+  3) ext4: 'extent' 기능
+    - File 저장 방식(연속 or 블락, index 단위)에서 파일 시스템이 커질 경우, 'extent' 방법 사용
+
+* VFS(Virtual File System)
+  - OS가 여러 종류의 파일 시스템을 제공하는데 사용자들은 동일한 인터페이스로 파일을 접근 가능하게 해준다.
+  - seamlessly(원활하게)
+  - Remote에 있는 파일이어도 Sementic하게 파일을 사용할 수 있도록 해줌(NFS)
+
+
+---------------------------------------------------------------------------------------
+#19
+
+* NFS(Network File System) --- 상표명, by Sun Micro
+  - 사용자 입장에서 Local이든 Remote든 같은 Sementic(의미론적)으로 파일을 접근할 수 있다.
+  - transparent: Local이든 Remote든 똑같은 서비스를 제공받아야함.
+  - File-System Mounting을 실제로 하는 것이 아니다.(가상)
+    : RPC(Remote Procedure Calls)로 Remote 파일 시스템을 사용한다.
+    : Root File System부터 여러 개의 새로운 File System과 연결돼 트리처럼 구성되는 상태
+    : Mount point: 마운트될 파일 시스템이 연결되는 기존 파일 시스템의 디렉토리
+
+  - RPC를 사용할 경우에 XDR 포맷으로 보냄 --- 같은 데이터 표현(자료구조)
+
+  ex) A System -> B System 파일 사용 
+  A System -> VFS interface -> NFS client -> RPC/XDR -> (network)
+    -> RPC/XDR -> NFS server -> VFS interface -> B System
+
+---------------------------------------------------------------------------------------
+#20
+
+- CPU는 시분할 방식, Memory는 공간분할 방식
+* Memory
+  - Dynamic memory로 사용하는 종류
+    1) Process
+    2) (OS의) Disk Cache: Disk에 있던 data를 가져와서 씀
+    3) (OS의) 동적 자료구조(= Memory Cache): OS에서 동적 table을 위해 캐싱을 하며 씀
+
+* Address Binding
+  - Compile time: absolute address
+  - Loading time: reletive address -> absoulte address
+  - Execution time: 실행 시에 주소가 동적으로 바뀜
+
+* Logical address vs Physical address
+  - Logical address(= virtual address)
+  - Physical address: 메모리에서 사용
+
+  - MMU(Memory management unit)이 주소 변환해줌(Logical-> Physical), (CPU -> Memory address)
+
+* Dynamic Loading
+  - 실행 시에 새로운 프로그램이 Link가 될 경우에 주소 변환해준다.
+  - Link할 시에는 DLLs(= Dynamically linked libraries)를 사용
+
+* Contiguous Allocation vs Paging
+  - Contiguous Allocation: 연속 할당
+    : Fragmentation 문제 발생
+    : Compaction으로 해결
+    1) First fit(권장): 처음 찾은 영역
+    2) Best fit: 최적으로 찾은 작은 영역
+    3) Worst fit: 가장 큰 영역으로 찾음
+  
+  - Paging: Page 단위 할당
+    : 논리 주소 단위: page / 물리 주소 단위: frame
+    : page 단위로 주소 변환이 일어나야 함.
+    : page -> frame으로 주소 변환해야 함.
+
+    : 논리 주소는 page number('p') + page offset('d'isplacement)로 구성된다.
+    : page offset bits 수는 page 크기로 결정되고 page number bits 수가 결정됨
+      ex)
+        page size=1k -> offset은 10bits
+        32bit System이면 page는 22bits(32-10)다.
+
+    : MMU에 의해서 Logical address -> Physical address로 translate하는 순서
+    : p -> f로, d는 그대로
+      1) page number 'p'를 page table에 넣음
+      2) page table에서 일치하는 frame number 'f'를 추출
+      3) logical address안에 page number 'p'를 frame number 'f'로 교체
+
+
+---------------------------------------------------------------------------------------
+#21
+
+- process안의 page table이 있고 이를 이용해 logical address를 frame 번호를 찾아 physical address를 참조(변환)
+
+* TLB(Translation Look-aside Buffer)
+  - CPU에서 메모리를 접근할 때마다 매번 주소 변환 시간이 걸린다.
+    -> 'TLB'를 이용하여 빠른 속도
+  - 일종의 캐시메모리 = Associative memory(최근에 참조된 frame 번호가 존재)
+  - Hit: frame 번호 바로 찾아서 physical address 참조(변환)
+  - Miss: Page table에서 찾음
+
+* Pageing 기법
+  - Protection: page table의 valid, invalid bit를 통하여 보호
+  - Shared Pages: 같은 frame 번호를 참조하면 같은 Physical memory를 참조한다.
+  - structure(자료 구조)
+    1) Hierarchy: page number를 n-level로 나눈다.
+    2) Hashed Page table: Collision(중복)이 발생 방지를 위해 연결 리스트로 구성
+    3) Inverted Page table
+      : main memory의 frame 수만큼 테이블을 만듬
+      : pid, page number, offset인 frame table(inverted page table) 이용
+      : searching을 빠르게 해야 함.
+
+* Swapping 기법: 대형 시스템 주로 사용
+  - memory 내용(process 단위)을 disk(backing store)에 저장하거나(swap out) 다시 메모리에 올려서 사용하거나(swap in) 한다.
+  - 나중에는 process 단위가 아닌 page 단위로 swap(= 가상 메모리)
+  - Mobile system: 일종의 플래시 메모리처럼 사용(Swapping X)
+
+* IA(Intel Architecture)-32
+  - [CPU] ---logical address--- [segmentation unit] ---linear address--- [paging unit] ---physical address--- [physical memory]
+  - page size가 커지면 Internal fragmentation 문제가 있다.
+
+
+---------------------------------------------------------------------------------------
+#22
+
+* 가상 메모리(Virtual Memory)
+  - Main memory에 Process가 사용하는 모든 공간 크기를 Main memory에 할당하면 비효율
+    -> 'Virtual Memory' 사용
+      : Process가 당장 쓰는 공간만 메모리에 할당할 수 있게 함
+      : Process가 나중에 쓸 공간은 Main Memory에 할당 X
+  
+  - Demand paging 기법 이용
+    : 요구 or 요청이 있을 때, valid bit를 체크
+    : invalid일 경우에 trap(exception) 발생(= Page Fault)을 Handling으로 frame을 할당
+  
+  - Page Fault(Exception)
+    : Page table을 참조할 경우에 해당 Page number가 invalid일 때 발생
+    : Handling --- Kernel단으로 권한이 넘어감
+      1) free frame 할당(physical memory 할당)
+      2) disk에서 읽어들임
+      3) Page table을 수정(valid로)
+      4) 해당 Process는 restart
+
+  - Pure demand paging
+    : process가 만들어지면 모두 invalid bit로 초기화된 page table만 생성
+    : 처음부터 Page Fault 발생 -> Handling(해당 page number에 frame 할당)
+      -> 실제로는 여러 frame을 같이 할당
+
+  - free-frame list: 사용 가능한 frame 목록
+
+* Copy on Write: Write 시에 복제본을 만듦.
+  - fork()하고 바로 exec()을 해버린다면 할당된 공간 낭비가 생긴다.
+    ex) 600k가 할당된 process가 fork()하여 같은 600k 공간 할당 받은 자식 프로세스가 바로 exec()
+    -> fork()할 경우에 Page table을 Copy(모든 영역 공유: text(read-only), data, stack&heap)
+      1) exec()할 경우에는 모든 영역 page 단위 분리
+      2) write 가능한 영역(data, stack&heap)에 수정이 일어날 경우 Page를 Copy
+
+  - vfork(): copy-on write를 안씀
+    : 자식 process가 부모 process 공간에 바로 접근하여 실행(= 공유)
+    : 부모 process를 suspend(중지) 상태로 만들고 자식 process를 부모 process의 page의 코드 실행
+    : fork()의 초기 page copy를 안하므로 더 효율적(공간 낭비 X, 속도 빠름)
+    : 자식 process가 exec()할 경우에 부모 process가 suspend가 끝난다.
+
+* Page Replacement
+  - 프로세스가 많아지면 over-allocating이 되고 메모리(frame)가 부족해진다.
+    -> physical memory 공간이 부족할 시에 page 교체로 frame을 회수
+    -> victim(회수 대상)을 backing store(= disk)에 저장
+
+  - Replacement algorithm
+    : page fault 수가 적을수록 좋은 알고리즘
+    : 알고리즘 자체에 complexity(복잡도)도 고려
+    : frame을 많이 할당하면 어느 순간 page fault 수가 동일한 지점에 이른다
+
+    1) FIFO page-replacement: 먼저 넣은 것을 먼저 회수
+      - Belady's anomaly: frame 수를 증가할 경우, page-fault rate가 증가되는 경우가 존재함을 밝힘
+    2) Optimal(이론적) page-replacement: 적게 쓰일 것을 예측하여 해당 frame 회수 --- 제일 효율적
+    3) LRU(least recently used) page-replacement: 최근에 참조가 안된 것을 회수
+      - "최근에 참조 안되면 나중에도 참조 안될 확률이 높다" 라는 이유
+      - FIFO 방식보다 효율적임
+      - 매번 Process가 Page를 참조할 때마다 최근 참조 순서를 갱신해야 하므로 Overhead가 크다.
+
+
+---------------------------------------------------------------------------------------
+#23
+
+    4) LRU-Approximation page-replacement: LRU의 overhead가 큰 점을 개선
+      - LRU page-replacement와 유사한 algorithm
+      - 방식은 FIFO 기반
+      - 유사 알고리즘 종류
+        1) Shift Register
+          - Page table의 각각의 page를 참조하는 register(8 bits) 이용
+          - 참조되면 MSB(Most Significant Bit)를 '1'로 바꿈
+          - 특정 시간(periods)이 지날수록 Shift right
+          ex) (A)1000 0000 vs (B)0010 0000: (A)가 더 크므로 최근에 참조된 것이고 (B)가 Victim이 됨
+
+        2) Second-Chance Algorithm(Clock algorithm)
+          - reference bit(1 bit) 이용: Access되면 '1'로 바꿈(초기값은 '0')
+          - replace할 경우에는 '1'이면 '0'으로 바꾸고 넘어감(Chance), '0'이면 victim
+
+        3) Enhanced Second-Chance Algorithm(Clock algorithm)
+          - reference bit(1 bit) + modify bit(1 bit) 이용
+          ex) 교체 순위) [reference bit, modify bit]: 각 page
+            교체 1 순위) [0, 0]: 다시 참조될 확률 제일 적음, victim 하기 제일 좋음
+            2 순위) [0, 1]: 최근에 참조되지 않았지만 수정됐으므로 disk에 write를 해야 함
+            3 순위) [1, 0]: 최근에 참조됐고 다시 사용될 확률이 있음
+            4 순위) [1, 1]: 최근에 참조와 수정됐으므로 다시 선택될 확률 제일 높음
+
+          - 만약, reference bit가 '1'을 만나면 '0'으로 바꿔주고 넘어감(Second-Chance 기반)
+
+    5) Counting-Based page-replacement
+      - Access된 횟수(= frequency)를 각 page에 저장
+      - 종류
+        1) LFU(Least Frequently Used): 빈도(frequency)가 가장 적은 page를 victim
+          - "앞으로도 선택 안될 것이다" 라는 이유
+        2) MFU(Most Frequently Used): 빈도(frequency)가 가장 많은 page를 victim
+          - "많이 참조했으니 앞으로는 참조 안될 것이다" 라는 이유
+
+
+* Allocation of Frames
+  : Minimum frame 수(default), Maximum frame 수를 정함
+  : frame을 많이 할당할수록 page fault 수가 줄어드므로 실행 속도가 빨라진다.
+  : frame 할당양이 많아지면서 어느 순간부터는 page fault 수가 줄어드는 비율이 줄어든다(= 효과가 없다.)
+  - 할당 frame 수 설계 과정
+    1) minimum frame, maximum frame 수를 정함
+    2) process size에 따라 차등
+    3) process priority에 따라 차등
+    4) Global replacement or Local replacement(process 단위) 정함
+      - 대부분 OS는 Global replacement가 효율적이기 때문에 사용
+      - Maximum threshold, Minimum threshold를 사용하여 free-memory space를 확보
+        ex) free-memory space가 Minimum threshold보다 적어지면 Maximum threshold 까지 확보
+    5) (NUMA)Non-Uniform Memory Access
+      - 상대적으로 "Memory와 Process 간의 위치"에 따라 실행 속도가 다르다.
+      - 가능한 한 가까운 memory를 접근하도록 한다.
+
+
+* Thrashing(스레싱): frame 수를 적절치 못해서 Page Fault가 빈번하게 일어나 시스템 성능 저하 발생
+  -> 어떤 순서로 reclaiming(회수)
+  : prcoess 수가 많아지면서 전체적으로 Throughput이 증가하다가 중간에 급격하게 감소하는 시점
+  : process 수가 많아지면 나중에는 process에 할당하는 frame수가 적어지고 Page-fault가 많아지면서 Thrashing이 일어남
+  - 지역성(locality) 측정하여 나온 locality model 기반 종류
+    1) Working-Set Model
+      - 델타 시간동안 참조된 frame-set인 working-set에 있는 중복 없는 frame 수 할당
+      - Runtime overhead가 크다
+    2) Page-Fault Frequency(이걸 사용)
+      - prepaging(먼저 할당한 frame)으로 frquency를 계산하면서 page-fault rate를 조절
+
+
+* Memory Compression
+  - 일시적 메모리 확보를 위한 메모리 내부 압축
+  - Mobile System(Android, iOS) 주로 사용
+  - 압축 비율(Compression ratio)를 조절하여 사용(높으면 압축 알고리즘을 돌리느라 overhead가 크다)
+  - 'Microsoft's Xpress'와 'Apple's WKdm' compression algorithm은 30 ~ 50%의 Comression ratio를 사용
+
+* Main memory 사용자
+  1) Process
+  2) Disk Cache
+  3) Kernel의 동적 자료구조
+
+* Allocating Kernel Memory
+  - Allocating Process Memory와 다른 점
+    1) Kernel에는 다양한 크기의 동적 자료구조를 사용하고 Page 크기보다 작은 것도 존재하기 때문에 조각화 낭비 최소화할 필요 있음.
+    2) Disk Cache는 DMA(Direct Memory Access) 방식을 사용하기 때문에 연속적인 physical memory address를 받아야 함.
+
+
+---------------------------------------------------------------------------------------
+#24
+
+  1) Buddy System: 연속된 메모리를 할당할 때, 1/2으로 분할해서 사용
+    : external fragmentation 없음, internal fragmentation 가 발생
+    : 관리 간편하다.
+
+  2) Slab Allocation
+    : Slab Allocator가 Table Size(2^5~2^17)별로 관리하여 Kernel Routine에 메모리를 할당해줌
+    : Buddy System으로부터 frame을 할당 받음
+    : 할당이 끝난 후에도 Slab Allocator가 메모리 공간은 추후 요청을 대비해 갖고 있다.(= Memory Cache)
+    - State
+      1) Full: 꽉 참(모두 사용중)
+      2) Empty: 사용중이지 않음
+      3) Partial: 사용중이지만 빈 객체(공간) 존재
+
+    - Partial Slab에 공간이 있으면 Partial을 주고 아니면 Empty를 준다.
+
+    - 장점
+      1) External Fragmentation이 발생하지 않음
+      2) Request가 들어오면 빠르게 할당해줌
+
+
+- Process 할당은 frame 단위로 Page Fault 방법
+- File System 할당은 Disk Cache + Buddy System
+- Kernel Memory 할당은 Slab Allocator + Buddy System
+
+
+* 기타
+  - Prepaging: page fault가 발생하면 해당 frame만 할당하는 것이 아니고 연속적인 갯수의 frame을 할당
+  - Page Size: Page size가 점점 커진다, 관리 편함, internal fragmentation이 생김
+  - TLB Reach: 주소 변환을 빠르게 하기 위한 캐시, hit ratio를 높여야 함.
+  - Page Locking: Page 교체 대상에서 제외됨, 사용하던 메모리를 회수하지 않음
+
+
+* Memory-Mapped Files
+  : 가상 주소 공간의 일부분을 File이 올라온 상태(memory-mapping)로 작업
+  - Solaris에는 open(), read() write()를 내부적으로 mmap() system calls로 진행
+  - 같은 Physical memory를 mapping하여 Shared Memory 형태로 처리 가능
+  - Windows의 MapViewOfFile()
+
+
+* IPC Systems
+  1) POSIX Shared Memory
+    : shm_open() -> ftruncate() -> mmap() 로 같은 Physical memory를 공유
+
+    - shm_open(): 공유될 파일(빈 파일) 만들기
+    - ftruncate(): 파일 크기를 정함
+    - mmap(): Physical memory를 memory-mapped
+
+  2) Pipes
+    : Pointer가 2 개(Read, Write)인 file을 만들어 통신
+
+    - 파이프(단방향), 양방향 할거면 두 개의 파이프를 만들어야 함
+    - pipe() system call: File descriptor table에 read, write 2개의 Pointer가 생기고 File table도 별도로 생김
+    - 종류
+      1) Unnamed pipe(anonymous): 임시 파일(디렉토리에 등록 X)
+      2) Named pipe(FIFO type): 일반 file 로 생성됨, mkfifo() system call
+
+
+
+---------------------------------------------------------------------------------------
+#25
+
+  3) Sockets
+    : 논리적인 통신망(IP address, Port number)
+    - Session Layer
+    - 소켓 종류
+    1) Socket
+      - TCP: Connection-oriented, reliable
+    2) DatagramSocket
+      - UDP: Connectionless
+    3) MulticastSocket extends DatagramSocke
+      - Broadcast
+  
+  4) RPC(Remote Procedure Calls)
+    : Client가 Server에 요청
+    - 실제는 Server에서 처리, 결과는 Client에게
+
+
+* HDDs(Hard Disk Drives)
+  - Nonvolatile(비휘발성) Memory Devices
+  - sector: 가장 기본적인 단위(= block은 OS의 기본적인 단위)
+  - 데이터를 읽기 위해서는 Head가 해당 sector를 찾아야 함
+  - seek time: track을 찾는데 걸리는 시간(arm이 track을 찾는 시간)
+  - rotational latency: sector를 찾기 위해 걸리는 시간(platter를 돌리는 시간)
+  - positioning time(access time or random-access time) = seek time + rotational latency
+
+
+* HDD Scheduling
+  - OS가 Disk Controller에게 요청할 시에 어떤 방법으로 요청해야 효율적인지(Head가 움직인 거리 최소)
+  1) FCFS Scheduling: 대기열(Queue)에 먼저 온 것은 먼저 요청
+  2) SCAN Scheduling(= Elevator algorithm)
+    : 한쪽 끝에서 반대쪽으로 스캔하면서 마지막 실린더에 도착하면 반대 방향으로 요청
+    - 작업량이 많을 때
+  3) (Circular)C-SCAN Scheduling
+    : 한쪽 끝에서 반대쪽으로 스캔하지만 마지막 실린더면 다시 시작점부터 되돌아가서 요청
+    - 공평성(들어온 순서에 대한)
+    - 작업량이 많을 때
+
+
+* Error Detection & Correction
+  1) Memory: Valid code vs Invalid code
+    : Parity bit(Even parity bit) 방법 사용
+    - 홀수 bit error가 나면 invalid code가 됨
+    - 짝수 bit error가 나면 valid code가 또다른 valid code가 될 수 있다.
+    - information bit 이외에 check(redundant) bit을 추가하기 때문에 overhead가 발생
+    - check bit가 많아질수록 Error detection 확률이 높아짐
+    - valid code간 distance가 2이상이어야 함.
+
+
+  2) Disk(RAID)
+  3) Network(전송시)
+    : CRCs(Cyclic Redundancy Check) 방법 사용
+    - 여러 개의 bits가 깨질 때 사용(parity bit 불가)
+    - Modulo-2 나눗셈으로 나머지를 check bits로 사용하고 뒤에 이어붙임
+    - 다시 generator 함수로 나눠서 0이 되는지 확인
+    - check bit가 많아질수록 Error detection 확률이 높아짐
+
+
+* Swap-Space Management
+  1) 빈 큰 파일로 저장했다가 다시 읽어들임
+  2) 파티션을 따로 해서 읽어들임
+
+* Storage Attachment
+  1) host-attached storage: host랑 연결
+  2) network-attached storage(NAS): network 통해서 Remote storage 사용
+  3) cloud storage
+  4) storage-area network(SAN): storage 접근을 빠르게 하기 위한 private network 사용
+
+
+---------------------------------------------------------------------------------------
+#26
+
+* RAID(Redundant Arrays of Independent Disks)
+  - 목적
+    1) Reliability: 신뢰도 향상 --- 이중화, parity bit
+    2) Performance: 성능 향상 --- parallel data 처리
+
+  - Level 0: parallel data 처리 --- 한 번에 4개의 disks를 읽음(striping)
+  - Level 1: 이중화 --- 2개의 set를 만들어 문제가 생기면 다른 set로 처리(mirroring)
+  - Level 2 ~: parity bit 사용
+
+
+* IO Systems
+  - CPU 연산보다 I/O(입출력)가 더 많다.
+  - OS(S/W): Device driver
+  - I/O(H/W): Device controller = I/O(입출력)장치를 관리
+
+  - 입출력장치별로 4개의 register가 할당됨
+    1) data-in register
+    2) data-out register
+    3) status register
+    4) control register
+
+  - 입출력 방법
+    1) Polling: host(OS)에서 주기적으로 확인
+    2) Interrupts(주 방식): I/O에서 Interrupt를 걸어 Driver에서 처리하도록 함
+      - IRQ(Interrupts Request Queue) -> (A)PIC -> CPU
+      - Fetch -> Execution -> Interrupts -> Handler
+
+      - CPUs have two interupt request lines
+        1) Non-maskable(Exception): 즉시 Handling
+          - vector table: 0~31, 14=page fault
+          - 0으로 나누기
+          - 보호되거나 존재하지 않는 메모리 접근
+          - 사용자 모드에서 특정한 권한으로 실행을 시도
+        2) Maskable(H/W Interrupts): 정지시켜놓고 나중에 처리
+          - vector table: 35~255
+
+      - Interrupt priority level로 우선 순위로 처리(preemption 발생)
+      - Program 상의 system call을 하면 libC에 있는 함수 안에서 매개변수를 register에 넣고 S/W interrupt(= trap, 128번 interrupt)
+
+    3) DMA(Direct Memory Access)
+      - transfer 하기 위한 4가지 필요한 정보
+        1) Read / Write: 방향
+        2) Memory address: 
+        3) Size
+        4) Disk Block number:
+      - bus를 CPU와 Disk controller가 공유하기 때문에 "cycle stealing"을 사용(시분할 방식)
+      - OS와 독립적으로 처리(= OS가 관여안함, 나중에 Interupt 받음)
+
+- 정리
+  1) Bus: 데이터 통로
+  2) Conroller: Device를 관리
+  3) I/O port & Registers: port = device
+  4) handshaking relationship between the host and device controller
+    : 메모리 주소가 입출력 장치마다 할당돼있고 실제로는 register가 들어있음, register로 data를 주고 받음
+  5) execution of this handshaking in a polling loop or via interrupts
+    : polling은 주기적으로 확인, Interrupt는 controller가 interrupt를 걸어 처리하게 함
+  6) offloading of this work to a DMA controller for large transfers
+    : offloading: load를 줄임, OS가 관여하지 않고 DMA controller가 처리, block devices(disk, tape)
+
+
+* Clocks and Timers
+  - CPU: clock
+  - 일반 시계
+  - OS: Timer(Tick), programmable interval timer: timer interrupt가 걸리는 주기를 정함
+
+
+* Streams(스트림)
+  - kernel 안에 새로운 모듈을 집어넣기 좋게 함(새로운 입출력 장치, 네트워크 프로토콜 등)
+  - user process --- stream head --- steam modules(0 or more) --- driver end --- device 
+
+
+---------------------------------------------------------------------------------------
+#27
+
+- OS는 Resource Manager 다.
+
+- Authentication(인증): security
+- Authorization(권한): protection
+
+- Attack 종류
+  1) Breach of confidentialit: 남의 자원을 권한 없이 읽는것
+  2) Breach of integrity: 남의 데이터 변경
+  3) Breach of availability: 남의 데이터 파괴
+  4) Theft of service: 남의 자원 사용
+  5) Denial of service: 서비스를 마비시킴
+
+
+* Malware
+  - Trojan horse(트로이 목마): 정상적인 프로그램 안에 몰래 비정상 코드를 넣음.
+  - Ransomware(랜섬웨어): 파일에 암호를 걸어 접근 못하도록 함.
+  - trap door(= back door):
+  - logic bomb: 
+
+* Viruses and Worms
+  - Virus: 다른 프로그램에 침투
+  - Worms: 자기가 스스로 복제해서 CPU 점유율을 늘려서 정상적인 사용자가 사용 못하도록 함.
+    ex) phising? (fishing?)
+
+* Denial of Service
+  - 네트워크에서 해당 서비스를 마비시킴.
+  ex) DOS or DDOS(Distributed Denial of Service)
+
+* Encryption(암호화)
+  - Symmetric encryption algorithm: ex) DES(Data-encryption standard), AES(Advanced encryption)
+  - Asymmetric encryption algorithm: ex) RSA
+
+* anomaly detection: 비정상임을 탐지
+  - 기준을 너무 높이면 false alarm 으로 정상을 비정상으로 간주
+  - 기준을 너무 낮추면 missing alarm 으로 비정상을 정상으로 간주
+
+* firewall(방화벽)
+  - DMZ(demilitarized zone): 외부와 내부의 중간지역, 외부에서 직접 접근 가능
+
+
+- protection(보호)은 사용자(domain)과 자원(resources)과의 관계다.
+
+- principle of least privilege: 사용자에게 필요한 권한만 부여
+- Protection-ring structure: 권한을 반지 형태의 범위로 나눈 구조
+
+* setuid bit: 프로그램이 실행될 때, 누구의 권한을 도는지.
+  - setuid bit을 사용하면 owner의 권한
+  - inode 에 있다.
+
+* Access Matrix
+  - domain(user, process, procedure) - object(resouces)을 접근 관계를 행렬로 나타냄
+  - domain이 바뀔 수 있다.
+
+  1) Global Table: Size가 있는 system 에서는 비현실적
+  2) Access Lists for Objects: Resource(Object)별로 domain 을 가지고 있어 확인, 일반적, 많이 쓰임
+    ex) File 에 접근 권한이 있음.(inode)
+  3) Capability(= 권한) Lists for Domains: Domain 별로 Resource(Object) 권한을 가지고 있음
+  4) A Lock-Key Mechanism: key와 lock이 맞아야 함.(OS가 관리해야 함)
+
+  - 실제로는 2), 3)을 둘 다 혼합해서 사용
+
+
+---------------------------------------------------------------------------------------
+#28
+
+* Realtime Embedded System
+  : 내장 시스템, 어떤 기기에 컴퓨터 시스템이 내장돼 그 기기를 운영, 제어함.
+  - IoT(Internet of Things)에 기반
+
+  - 일반 OS: ex) Linux, Windows
+  - RT(Real-Time) OS: for. 임베디드 시스템, preemptive 스케줄링 필수, deadline 맞추는 스케줄링
+  - ASICs(Application-Specific Integrated Circuits): for. 특정 기기(ex. 세탁기, 건조기 등)
+
+  - Hard real-time OS: ex. 자동차 브레이크 등.
+  - real-time system은 logical 도 correct, temperal 도 correct 해야 한다.
+
+* Monolithic Structure: OS 가 하나의 함수처럼 유기적으로 연결돼있다.
+  - Unix 가 대표적
+  - 장점은 속도 면에서 효율적임(빠름)
+  - 단점은 하나를 변경, 추가하면 전체에 영향이 간다.(컴파일을 전체 다 해야 한다.)
+  - (종속적 -> 독립적)
+    1) Layered Approach(계층 방법)
+      : tightly coupled -> loosely coupled
+      - 변수 공유 등으로 coupled
+      - 속도가 느려짐
+
+    2) Micro-kernel Approach
+      : H/W 와 관련 없는 것들은 user-level 로 올림(ex. file system)
+      - kernel mode
+        1) CPU scheduling
+        2) Memory management
+        3) Interprocess communication
+      - 클라이언트 프로그램과 다른 서비스는 message passing 방법을 통해서 소통함.
+      - OS를 확장하기(extending) 쉽다.
+      - 속도 단점이 있다.(overhead)
+    3) Module Approach
+      : 필요한 기능, 필요 없는 기능 나눠서 사용
+    4) Hybrid System Approach
+      : ex. macOS, iOS
+
+
+* Virtual Machine
+  : virtualization - permeate(스며들다)
+  - H/W 는 같지만, 여러 OS 를 돌린다.
+  - Virtual machine manager(VMM): (= Hypervisor)
+  - host 는 직접적으로 H/W 관리, guest 는 VM 에 올라온 kernel
+  - 장점
+    1) 여러 개의 OS 를 실행시키기 때문에 예전 버전의 S/W 동시 실행 가능(Consolidation)
+    2) 개발할 때 용이
+    3) Cloud computing 용이
+  ex)
+    1) VMware: Hypervisor 2(대표적)
+      - Host OS + Guest OSs(Host 에서 보면 application-level)
+    2) Java Virtual Machine(JVM): (= Java interpreter), Java 언어의 OS
+      - machine code 가 아닌 byte code(.class) 를 만듬
+      - JIT(Just In Time) 컴파일러: 클래스가 사용될 때 컴파일해서 기계어로 만듬(캐싱이 됨), 속도를 빠르게 하기 위한 S/W 컴파일러
+      - AoT(Android of Time): 미리 실행 전에 모든 클래스의 byte code 를 machine code 로 바꾸고 함
+      - 제일 빠르게 하기 위함은 Java chip 으로 byte code 가 바로 실행될 수 있도록 한다.
+
+  - Hypervisor 0 은 실제로 여러 개의 CPU 가 있고(독립된 CPUs 연합) 입출력(I/O)만 hypervisor(in frimware) 가 처리
+  - Hypervisor 1 은 여러 개의 독립적인 Kernel 이 CPU 를 공유
+  - Hypervisor 2 는 Host OS + Guest OSs, (ex. VMware), OS 위에 OSs
+  - Interpreter 는 Programming 언어 레벨
+  - Emulator 는 Machine code 레벨의 Interpreter
+
+  - guest 가 H/W 와 관련된 명령어를(privileged instruction) 수행하면
+    1) VMM 에서 emulate action(Interpreter) 처리해줘야 함.
+    2) VMM 에서 translate 처리로 실행해줌
+
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
